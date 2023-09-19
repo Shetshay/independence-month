@@ -1,10 +1,8 @@
 
-all: lander test
+all: lander 
   
 lander: lander.cpp
-       g++ lander.cpp  -Wall -olander -lX11 -lGL -lGLU -lm
-test: lander.cpp
-       g++ lander.cpp  -Wall -o test -lX11 -lGL -lGLU -lm -D TESTING
+	g++ lander.cpp -Wall -olander -lX11 -lGL -lGLU -lm
   
 clean:
-    rm -f lander
+	rm -f lander
