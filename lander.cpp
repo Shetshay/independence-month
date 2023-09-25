@@ -1,3 +1,5 @@
+// modified by group 2 // andrew
+//
 //author: Gordon Griesel
 //date: Fall 2023
 //purpose: 1. learn OpenGL
@@ -128,7 +130,13 @@ void render(void);
 //=====================================
 int main()
 {
-	init_opengl();
+
+    Lz lpad_horiz[3];
+    Lz lpad_vert[3];
+
+
+    
+    init_opengl();
 	printf("Press T or Up-arrow for thrust.\n");
 	printf("Press Left or Right arrows for rocket thrust vector.\n");
 	//Main loop
@@ -322,6 +330,8 @@ void physics()
 	lander.pos[0] += lander.vel[0];
 	lander.pos[1] += lander.vel[1];
 	lander.vel[1] -= GRAVITY;
+    lz.pos[0] += 0.6f;
+    lz.pos[1] += 0.6f;
 	//cout << lander.vel[1] << endl;
 	//apply thrust
 	//convert angle to radians...
