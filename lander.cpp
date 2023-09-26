@@ -58,8 +58,8 @@ class Lz {
 	float width;
 	float height;
 	Lz() { // Landing zone
-		pos[0] = 100.0f;
-		pos[1] = 20.0f;
+		pos[0] = 200.0f; //X axis of platform
+		pos[1] = 350.0f; //Y axis of platform
 		width =  50.0f;
 		height =  10.0f;
 	}
@@ -80,10 +80,10 @@ class Lander {
 		pos[0] = 200.0f;
 		pos[1] = g.yres - 60.0f;
 
-		//#define TESTING
+		#define TESTING
 		#ifdef TESTING
-		pos[0] = 100.0f;
-		pos[1] = 50.0f;
+		pos[0] = 200.0f; //X axis of ship
+		pos[1] = 400.0f; //Y axis of ship
 		#endif
 
 		vel[0] = vel[1] = 0.0f;
@@ -131,8 +131,8 @@ void render(void);
 int main()
 {
 
-    Lz lpad_horiz[3];
-    Lz lpad_vert[3];
+    //Lz lpad_horiz[3]; //create an array of positions of new landers
+    //Lz lpad_vert[3];
 
 
     
@@ -325,13 +325,15 @@ void init_opengl(void)
 void physics()
 {
 	//Lander physics
-	if (g.failed_landing)
-	   return;
+	//if (g.failed_landing)
+	  // return;
 	lander.pos[0] += lander.vel[0];
 	lander.pos[1] += lander.vel[1];
 	lander.vel[1] -= GRAVITY;
-    lz.pos[0] += 0.6f;
-    lz.pos[1] += 0.6f;
+    //lz.pos[0] += 0.6f;
+    
+    lz.pos[1] -= 0.3f; //Control landing pad visual X coord
+    //lander.pos[1] += 0.6f; // Control lander pad ghost X coord
 	//cout << lander.vel[1] << endl;
 	//apply thrust
 	//convert angle to radians...
@@ -351,13 +353,22 @@ void physics()
 	if (g.keys[XK_Right])
 		lander.angle -= 0.5;
 	//check for landing failure...
-	if (lander.pos[1] <= lz.pos[0] && lander.pos[1] <= lz.pos[1]+10.0f){
+    cout << lz.pos[1]+10.0f << " X of Platform"  << endl;
+	cout << lander.pos[1] << "X of Lander" << endl;
+    //cout << endl << "Landing Zone of Y - Lander Position of Y " << lz.pos[1]+10.0f-lander.pos[1]+2.0f << endl;
+    if (lander.pos[1] <= lz.pos[1]+10.0f && lander.pos[0] <= lz.pos[0]+50.0f /*&& lander.pos[0] >= lz.pos[0]-100.0f && lander.pos[0] <= lz.pos[0]+100.0f*/) { 
 		//cout << lander.angle << endl;
 		if (lander.angle >= -8 && lander.angle <= 8){
 			g.temp_velocity = lander.vel[1];
 			g.failed_landing = 1;
-			if(g.temp_velocity <= 0.5 && g.temp_velocity >= -0.5) {
+			if(g.temp_velocity <= 0.9 && g.temp_velocity >= -0.9) {
 			g.landed = 1;
+            for (int i = 0; i < 1000; i++) {
+                for (int j = 0; j < 10000; j++) {
+                    lander.pos[0] = lz.pos[0]; // X Axis of Ship and Lander
+                    lander.pos[1] = lz.pos[1]+10.0f; //Y Axis of Ship and Lander
+                }
+            }
 			}
 		}
 		else {
