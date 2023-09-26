@@ -37,6 +37,7 @@ public:
 	unsigned int keys[65536];
 	int failed_landing;
 	int landed;
+    bool detach;
 	int color_reset;
 	double accptl_angle;
 	double temp_velocity;
@@ -304,6 +305,12 @@ int X11_wrapper::check_keys(XEvent *e)
 			case XK_Escape:
 				//Escape key was pressed
 				return 1;
+            case XK_space:
+                //Space bar was pressed
+                if (g.landed == true) {
+                g.detach = true;
+                }
+                break;
 		}
 	}
 	return 0;
@@ -360,15 +367,14 @@ void physics()
 		//cout << lander.angle << endl;
 		if (lander.angle >= -8 && lander.angle <= 8){
 			g.temp_velocity = lander.vel[1];
-			g.failed_landing = 1;
-			if(g.temp_velocity <= 0.9 && g.temp_velocity >= -0.9) {
-			g.landed = 1;
-            for (int i = 0; i < 1000; i++) {
-                for (int j = 0; j < 10000; j++) {
-                    lander.pos[0] = lz.pos[0]; // X Axis of Ship and Lander
-                    lander.pos[1] = lz.pos[1]+10.0f; //Y Axis of Ship and Lander
-                }
-            } 
+			if(g.temp_velocity <= 0.9 && g.temp_velocity >= -0.9) { // speed of rocket
+			    g.landed = 1; // we land on platform
+                g.detach = false; //snap to platform 
+                                  if(g.detach == false && g.keys[XK_space]) //If snapped and space bar, detach
+                        {
+                          g.detach = true;
+                        }
+                
 			}
             g.landed = 0;
            
@@ -376,6 +382,10 @@ void physics()
 		else {
 			g.failed_landing = 1;
 		}
+          if (g.detach == false) {
+            lander.pos[0] = lz.pos[0]; // X Axis of Ship and Lander
+            lander.pos[1] = lz.pos[1]+10.0f; //Y Axis of Ship and Lander
+          }            
 		//cout << "THIS IS THE VELOCITY: " << g.temp_velocity << endl; 
 	}
 	if (lander.pos[1] < 0.0) {
