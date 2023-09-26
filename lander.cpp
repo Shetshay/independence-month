@@ -197,7 +197,7 @@ void X11_wrapper::set_title()
 {
 	//Set the window title bar.
 	XMapWindow(dpy, win);
-	XStoreName(dpy, win, "3350 Aerospace Lander Challenge");
+	XStoreName(dpy, win, "Independence Month");
 }
 
 bool X11_wrapper::getXPending()
@@ -368,8 +368,10 @@ void physics()
                     lander.pos[0] = lz.pos[0]; // X Axis of Ship and Lander
                     lander.pos[1] = lz.pos[1]+10.0f; //Y Axis of Ship and Lander
                 }
-            }
+            } 
 			}
+            g.landed = 0;
+           
 		}
 		else {
 			g.failed_landing = 1;
@@ -421,8 +423,11 @@ void render()
 	glColor3ub(250, 250, 250);
 	if (g.failed_landing == 1)
 		glColor3ub(250, 0, 0); //Red color
-	if (g.landed == 1){
-		glColor3ub(0, 250, 0); //Green color
+	//if (g.landed == 1){
+	//	glColor3ub(0, 250, 0); //Green color
+    //}
+    if (g.landed == 0) {
+        glColor3ub(250,250,250); 
     }
 	glTranslatef(lander.pos[0], lander.pos[1], 0.0f);
 	glRotated(lander.angle, 0.0, 0.0, 1.0);
