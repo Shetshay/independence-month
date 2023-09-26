@@ -353,10 +353,10 @@ void physics()
 	if (g.keys[XK_Right])
 		lander.angle -= 0.5;
 	//check for landing failure...
-    cout << lz.pos[1]+10.0f << " X of Platform"  << endl;
-	cout << lander.pos[1] << "X of Lander" << endl;
-    //cout << endl << "Landing Zone of Y - Lander Position of Y " << lz.pos[1]+10.0f-lander.pos[1]+2.0f << endl;
-    if (lander.pos[1] <= lz.pos[1]+10.0f && lander.pos[0] <= lz.pos[0]+50.0f /*&& lander.pos[0] >= lz.pos[0]-100.0f && lander.pos[0] <= lz.pos[0]+100.0f*/) { 
+    //cout << lz.pos[1]+10.0f << " X of Platform"  << endl;
+	//cout << lander.pos[1] << "X of Lander" << endl;
+    if (lander.pos[1] <= lz.pos[1]+10.0f && lander.pos[0] <= lz.pos[0]+50.0f 
+            && lander.pos[0] >= lz.pos[0]-50.0f && lander.pos[1] >= lz.pos[1]-10.0f) { 
 		//cout << lander.angle << endl;
 		if (lander.angle >= -8 && lander.angle <= 8){
 			g.temp_velocity = lander.vel[1];
