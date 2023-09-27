@@ -29,7 +29,7 @@ using namespace std;
 #define rnd() (float)rand() / (float)RAND_MAX
 
 //gravity pulling the rocket straight down
-const float GRAVITY = 0.005;
+const float GRAVITY = 0.007;
 
 class Global {
 public:
@@ -279,8 +279,6 @@ void X11_wrapper::check_mouse(XEvent *e)
 			savex = e->xbutton.x;
 			savey = e->xbutton.y;
 			//Code placed here will execute whenever the mouse moves.
-
-
 		}
 	}
 }
@@ -311,6 +309,13 @@ int X11_wrapper::check_keys(XEvent *e)
                 g.detach = true;
                 }
                 break;
+            case XK_Up:
+                //Up key was pressed
+                if (g.landed == true) {
+                    g.detach = true;
+                }
+                break;
+
 		}
 	}
 	return 0;
@@ -353,12 +358,13 @@ void physics()
 	lander.thrust *= 0.95f;
 	if (g.keys[XK_t] || g.keys[XK_Up]) {
 		//Thrust for the rocket
-		lander.thrust = 0.01;
+        //This is also the up key!!!!!!!
+		lander.thrust = 0.02;
 	}
 	if (g.keys[XK_Left])
-		lander.angle += 0.5;
+		lander.angle += 0.9;
 	if (g.keys[XK_Right])
-		lander.angle -= 0.5;
+		lander.angle -= 0.9;
 	//check for landing failure...
     //cout << lz.pos[1]+10.0f << " X of Platform"  << endl;
 	//cout << lander.pos[1] << "X of Lander" << endl;
@@ -370,14 +376,12 @@ void physics()
 			if(g.temp_velocity <= 0.9 && g.temp_velocity >= -0.9) { // speed of rocket
 			    g.landed = 1; // we land on platform
                 g.detach = false; //snap to platform 
-                                  if(g.detach == false && g.keys[XK_space]) //If snapped and space bar, detach
-                        {
-                          g.detach = true;
-                        }
-                
+                if(g.detach == false && g.keys[XK_space]) //If snapped and space bar, detach
+                    {
+                        g.detach = true;
+                    }
 			}
             g.landed = 0;
-           
 		}
 		else {
 			g.failed_landing = 1;
