@@ -33,6 +33,7 @@ const float GRAVITY = 0.007;
 
 class Global {
 public:
+    int lives = 3;
 	int xres, yres;
 	unsigned int keys[65536];
 	int failed_landing;
@@ -42,6 +43,10 @@ public:
     int shiptrackX[2];
 	double accptl_angle;
 	double temp_velocity;
+    int nxtlander = 200.0f;
+    int nxtlander2 = 200.0f;
+    int lb = 50.0f;
+    int ub = 350.0f;
 	Global() {
 		xres = 400;
 		yres = 600;
@@ -66,6 +71,21 @@ class Lz {
 		height =  10.0f;
 	}
 } lz;
+
+class Lz2 {
+	//landing zone
+	public:
+	float pos[2];
+	float width;
+	float height;
+	Lz2() { // Landing zone
+		pos[0] = 117.0f; //X axis of platform
+		pos[1] = 650.0f; //Y axis of platform
+		width =  50.0f;
+		height =  10.0f;
+	}
+} lz2;
+
 
 class Lander {
 	//the rocket
@@ -344,7 +364,12 @@ void physics()
 	lander.pos[1] += lander.vel[1];
 	lander.vel[1] -= GRAVITY;
     //lz.pos[0] += 0.6f;
-    
+    g.nxtlander -= 0.3f;
+    g.nxtlander2 -= 0.3f;
+
+    lz.pos[1] -= 0.3f; //lander 1 decrease
+    lz2.pos[1] -= 0.3f; //lander 2 decrease
+
     //lz.pos[1] -= 0.3f; //Control landing pad visual X coord
     //lander.pos[1] += 0.6f; // Control lander pad ghost X coord
 	//cout << lander.vel[1] << endl;
@@ -390,42 +415,86 @@ void physics()
 		}
           if (g.detach == false) { //change variable name to snapon
             lander.pos[0] = g.shiptrackX[0]; // X Axis of Ship and Lander
-            lander.vel[0] = 0;
+            lander.vel[0] = 0; //Stop the velocity so it doesnt slide off
             lander.pos[1] = lz.pos[1]+10.0f; //Y Axis of Ship and Lander
           }            
-		cout << "THIS IS THE VELOCITY: " << g.temp_velocity << endl; 
+		//cout << "THIS IS THE VELOCITY: " << g.temp_velocity << endl; 
 	}
+
+ if (lander.pos[1] <= lz2.pos[1]+10.0f && lander.pos[0] <= lz2.pos[0]+50.0f 
+            && lander.pos[0] >= lz2.pos[0]-50.0f && lander.pos[1] >= lz2.pos[1]-10.0f) { 
+        g.shiptrackX[0] = lander.pos[0]; 
+		//cout << lander.angle << endl;
+		if (lander.angle >= -8 && lander.angle <= 8){
+			g.temp_velocity = lander.vel[1];
+			if(g.temp_velocity <= 0.9 && g.temp_velocity >= -0.9) { // speed of rocket
+			    g.landed = 1; // we land on platform
+                g.detach = false; //snap to platform 
+                if(g.detach == false && g.keys[XK_space]) //If snapped and space bar, detach
+                    {
+                        g.detach = true;
+                    }
+			}
+            g.landed = 0;
+		}
+		else {
+			g.failed_landing = 1;
+		}
+          if (g.detach == false) { //change variable name to snapon
+            lander.pos[0] = g.shiptrackX[0]; // X Axis of Ship and Lander
+            lander.vel[0] = 0; //Stop the velocity so it doesnt slide off
+            lander.pos[1] = lz2.pos[1]+10.0f; //Y Axis of Ship and Lander
+          }            
+		//cout << "THIS IS THE VELOCITY: " << g.temp_velocity << endl; 
+	}
+
+
 	if (lander.pos[1] < 0.0) {
 		g.failed_landing = 1;
 	}
-}
+    if (lz.pos[1] <= 0.0f) { // if lander y is less 
+    // a certain amount we make a new spawn of lander
+           g.nxtlander = ((rand() % (g.ub - g.lb + 1)) + g.lb);
+    }
 
+    if (lz2.pos[1] <= 0.0f) { // if lander y is less 
+    // a certain amount we make a new spawn of lander
+           g.nxtlander2 = ((rand() % (g.ub - g.lb + 1)) + g.lb);
+           
+    }
+}
 void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	//Draw Sky
-//	glPushMatrix();
-//	glBegin(GL_QUADS);
+	glPushMatrix();
+	glBegin(GL_QUADS);
 //		//Each vertex has a color.
-//		glColor3ub(250, 200,  90); glVertex2i(0, 0);
-//		glColor3ub(100,  80, 200); glVertex2i(0, g.yres);
-//		glColor3ub(100,  80, 200); glVertex2i(g.xres, g.yres);
-//		glColor3ub(250, 200,  90); glVertex2i(g.xres, 0);
-//	glEnd();
-//	glPopMatrix();
+		glColor3ub(250, 200,  90); glVertex2i(0, 0);
+		glColor3ub(100,  80, 200); glVertex2i(0, g.yres);
+		glColor3ub(100,  80, 200); glVertex2i(g.xres, g.yres);
+		glColor3ub(250, 200,  90); glVertex2i(g.xres, 0);
+	glEnd();
+	glPopMatrix();
+
+
+
+
+
 	//Draw LZ
 	if (g.color_reset == 1)
 		glColor3ub(0, 0, 0);
-
+ 
 	glPushMatrix();
-	glColor3ub(250, 250, 20);
-	glTranslatef(lz.pos[0], lz.pos[1], 0.0f);
-	glBegin(GL_QUADS);
+	glColor3ub(250, 250, 20);                                       
+        glTranslatef(lz2.pos[0], lz2.pos[1], 0.0f); //Lander spawning
+        glBegin(GL_QUADS);
 		glVertex2f(-lz.width, -lz.height);
 		glVertex2f(-lz.width,  lz.height);
 		glVertex2f( lz.width,  lz.height);
 		glVertex2f( lz.width, -lz.height);
 	glEnd();
+   // }
 //	glColor3ub(20, 20, 20);
 //	glBegin(GL_LINE_LOOP);
 //		glVertex2f(-lz.width, -lz.height);
@@ -435,6 +504,45 @@ void render()
 //		glVertex2f(-lz.width, -lz.height);
 //	glEnd();
 	glPopMatrix();
+
+
+
+
+        //SECOND PLATFORM
+    	if (g.color_reset == 1)
+		glColor3ub(0, 0, 0);
+
+	    glPushMatrix();
+	    glColor3ub(250, 250, 20);                             
+        glTranslatef(lz.pos[0], lz.pos[1], 0.0f); //Lander spawning
+        glBegin(GL_QUADS);
+		glVertex2f(-lz.width, -lz.height);
+		glVertex2f(-lz.width,  lz.height);
+		glVertex2f( lz.width,  lz.height);
+		glVertex2f( lz.width, -lz.height);
+	glEnd();
+   // }
+//	glColor3ub(20, 20, 20);
+//	glBegin(GL_LINE_LOOP);
+//		glVertex2f(-lz.width, -lz.height);
+//		glVertex2f(-lz.width,  lz.height);
+//		glVertex2f( lz.width,  lz.height);
+//		glVertex2f( lz.width, -lz.height);
+//		glVertex2f(-lz.width, -lz.height);
+//	glEnd();
+	glPopMatrix();
+
+
+
+
+
+
+
+
+
+
+
+
 	//Draw Lander
 	glPushMatrix();
 	glColor3ub(250, 250, 250);
