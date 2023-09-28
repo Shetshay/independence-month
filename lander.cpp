@@ -39,6 +39,7 @@ public:
 	int landed;
     bool detach;
 	int color_reset;
+    int shiptrackX[2];
 	double accptl_angle;
 	double temp_velocity;
 	Global() {
@@ -344,7 +345,7 @@ void physics()
 	lander.vel[1] -= GRAVITY;
     //lz.pos[0] += 0.6f;
     
-    lz.pos[1] -= 0.3f; //Control landing pad visual X coord
+    //lz.pos[1] -= 0.3f; //Control landing pad visual X coord
     //lander.pos[1] += 0.6f; // Control lander pad ghost X coord
 	//cout << lander.vel[1] << endl;
 	//apply thrust
@@ -370,6 +371,7 @@ void physics()
 	//cout << lander.pos[1] << "X of Lander" << endl;
     if (lander.pos[1] <= lz.pos[1]+10.0f && lander.pos[0] <= lz.pos[0]+50.0f 
             && lander.pos[0] >= lz.pos[0]-50.0f && lander.pos[1] >= lz.pos[1]-10.0f) { 
+        g.shiptrackX[0] = lander.pos[0]; 
 		//cout << lander.angle << endl;
 		if (lander.angle >= -8 && lander.angle <= 8){
 			g.temp_velocity = lander.vel[1];
@@ -386,11 +388,12 @@ void physics()
 		else {
 			g.failed_landing = 1;
 		}
-          if (g.detach == false) {
-            lander.pos[0] = lz.pos[0]; // X Axis of Ship and Lander
+          if (g.detach == false) { //change variable name to snapon
+            lander.pos[0] = g.shiptrackX[0]; // X Axis of Ship and Lander
+            lander.vel[0] = 0;
             lander.pos[1] = lz.pos[1]+10.0f; //Y Axis of Ship and Lander
           }            
-		//cout << "THIS IS THE VELOCITY: " << g.temp_velocity << endl; 
+		cout << "THIS IS THE VELOCITY: " << g.temp_velocity << endl; 
 	}
 	if (lander.pos[1] < 0.0) {
 		g.failed_landing = 1;
@@ -436,7 +439,7 @@ void render()
 	glPushMatrix();
 	glColor3ub(250, 250, 250);
 	if (g.failed_landing == 1)
-		glColor3ub(250, 0, 0); //Red color
+		glColor3ub(250, 0, 0); //Red color USLEEP WHILE LOOP TO INDICATE LIFE LOST
 	//if (g.landed == 1){
 	//	glColor3ub(0, 250, 0); //Green color
     //}
