@@ -24,13 +24,20 @@ using namespace std;
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
+#include "aibrahim.h"
+#include "classesLander.h"
+
+Global g;
+Lz lz;
+Lz2 lz2;
+Lander lander;
 
 //floating point random numbers
 #define rnd() (float)rand() / (float)RAND_MAX
 
 //gravity pulling the rocket straight down
 const float GRAVITY = 0.007;
-
+/*
 class Global {
     public:
         int lives = 3;
@@ -129,7 +136,7 @@ class Lander {
             g.failed_landing = 0;
         }
 } lander;
-
+*/
 class X11_wrapper {
     private:
         Display *dpy;
@@ -400,6 +407,7 @@ void physics()
     //check for landing failure...
     //cout << lz.pos[1]+10.0f << " X of Platform"  << endl;
     //cout << lander.pos[1] << "X of Lander" << endl;
+    /*
     if (lander.pos[1] <= lz.pos[1]+10.0f && lander.pos[0] <= lz.pos[0]+50.0f 
             && lander.pos[0] >= lz.pos[0]-50.0f && lander.pos[1] >= lz.pos[1]-10.0f) { 
         g.shiptrackX[0] = lander.pos[0]; 
@@ -479,6 +487,10 @@ void physics()
         lz2.pos[1] = 600.0f;
 
     }
+    */
+    handle_landerInter();
+
+    spawn_newLander();
 }
 void render()
 {
