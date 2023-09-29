@@ -6,7 +6,7 @@
 #include "jalejo.h"
 using namespace std;
 
-void test_function(){
+/*void test_function(){
 
     glPushMatrix();
     glBegin(GL_QUADS);
@@ -17,6 +17,6 @@ void test_function(){
     glPopMatrix();
     glEnd();
 
-}
+}*/
 
-Lz lz;
+//Lz lz;

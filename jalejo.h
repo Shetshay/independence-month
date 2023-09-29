@@ -6,7 +6,7 @@
 #include <iostream>
 using namespace std;
 
-class Lz {
+/*class Lz {
 	public:
 	float pos[2];
 	float width;
@@ -17,6 +17,6 @@ class Lz {
 	width = 200.0f;
 	height = 100.0f;
 	}
-};
+};*/
 
 //#endif
