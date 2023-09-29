@@ -1,14 +1,21 @@
 //Author: Justin Alejo
-/*#ifndef JUSTIN
-#define JUSTIN*/
+#ifndef _JALEJO_H
+#define _JALEJO_H
 
+#include <iostream>
 using namespace std;
 
-extern void test_function();
-
-/*void game_over(){
-
-    cout << "GAME OVER: PRESS R TO TRY AGAIN" << endl;
-}*/
+class Lz {
+	public:
+	float pos[2];
+	float width;
+	float height;
+	Lz(){
+	pos[0] = 120.0f;
+	pos[1] = 100.0f;
+	width = 200.0f;
+	height = 100.0f;
+	}
+};
 
 //#endif

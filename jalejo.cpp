@@ -2,6 +2,8 @@
 #include <GL/glx.h>
 //#include "land.h"
 //#include "lander.cpp"
+#include "jalejo.h"
+using namespace std;
 
 void test_function(){
 
@@ -15,3 +17,5 @@ void test_function(){
     glEnd();
 
 }
+
+Lz lz;
