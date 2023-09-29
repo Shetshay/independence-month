@@ -1,4 +1,5 @@
-//justin alejo
+//Author: Justin Alejo
+//created on september 27, 2023
 #include <GL/glx.h>
 //#include "land.h"
 //#include "lander.cpp"
