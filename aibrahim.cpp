@@ -24,8 +24,8 @@ void spawn_newLander(){
     if (lz2.pos[1] <= 0.0f) { // if lander y is less 
                               // a certain amount we make a new spawn of lander
 
-        g.newXcoord2 = ((rand() % (g.ub - g.lb + 1)) + g.lb); //RANDOM X COORD GENERATOR
-        g.newXcoord = g.nxtlanderX;
+        g.nxtlanderX = ((rand() % (g.ub - g.lb + 1)) + g.lb); //RANDOM X COORD GENERATOR
+        g.newXcoord2 = g.nxtlanderX;
 
         //g.nxtlanderY = lz2.pos[1]; //this isnt working, not sure why
         lz2.pos[1] = 600.0f;
