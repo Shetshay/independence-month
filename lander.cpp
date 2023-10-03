@@ -28,8 +28,11 @@ using namespace std;
 #include "classesLander.h"
 
 Global g;
-Lz lz;
+Lz1 lz1;
 Lz2 lz2;
+Lz3 lz3;
+Lz4 lz4;
+Lz5 lz5;
 Lander lander;
 
 //floating point random numbers
@@ -380,8 +383,11 @@ void physics()
     lander.vel[1] -= GRAVITY;
     //lz.pos[0] += 0.6f;
 
-    lz.pos[1] -= 0.3f; //lander 1 decrease
-    lz2.pos[1] -= 0.3f; //lander 2 decrease
+    lz1.pos[1] -= 0.3f; //lander 1 decrease
+    lz2.pos[1] -= 0.4f; //lander 2 decrease
+    lz3.pos[1] -= 0.3f; //lander 3 decrease
+    lz4.pos[1] -= 0.3f; //lander 4 decrease
+    lz5.pos[1] -= 0.5f; //lander 5 decrease //will add code around here
 
     //lz.pos[1] -= 0.3f; //Control landing pad visual X coord
     //lander.pos[1] += 0.6f; // Control lander pad ghost X coord
@@ -516,12 +522,12 @@ void render()
 
     glPushMatrix();
     glColor3ub(250, 250, 20);                                       
-    glTranslatef(lz2.pos[0]=g.nxtlanderX, lz2.pos[1], 0.0f); //Lander spawning
+    glTranslatef(lz1.pos[0]=g.nxtlanderX1, lz1.pos[1], 0.0f); //Lander spawning
     glBegin(GL_QUADS);
-    glVertex2f(-lz.width, -lz.height);
-    glVertex2f(-lz.width,  lz.height);
-    glVertex2f( lz.width,  lz.height);
-    glVertex2f( lz.width, -lz.height);
+    glVertex2f(-lz1.width, -lz1.height);
+    glVertex2f(-lz1.width,  lz1.height);
+    glVertex2f( lz1.width,  lz1.height);
+    glVertex2f( lz1.width, -lz1.height);
     glEnd();
     // }
     //	glColor3ub(20, 20, 20);
@@ -543,12 +549,37 @@ if (g.color_reset == 1) {
     }
     glPushMatrix();
     glColor3ub(250, 250, 20);                             
-    glTranslatef(lz.pos[0]=g.nxtlanderX2, lz.pos[1], 0.0f); //Lander spawning
+    glTranslatef(lz2.pos[0]=g.nxtlanderX2, lz2.pos[1], 0.0f); //Lander spawning
     glBegin(GL_QUADS);
-    glVertex2f(-lz.width, -lz.height);
-    glVertex2f(-lz.width,  lz.height);
-    glVertex2f( lz.width,  lz.height);
-    glVertex2f( lz.width, -lz.height);
+    glVertex2f(-lz1.width, -lz1.height);
+    glVertex2f(-lz1.width,  lz1.height);
+    glVertex2f( lz1.width,  lz1.height);
+    glVertex2f( lz1.width, -lz1.height);
+    glEnd();
+    // }
+    //	glColor3ub(20, 20, 20);
+    //	glBegin(GL_LINE_LOOP);
+    //		glVertex2f(-lz.width, -lz.height);
+    //		glVertex2f(-lz.width,  lz.height);
+    //		glVertex2f( lz.width,  lz.height);
+    //		glVertex2f( lz.width, -lz.height);
+    //		glVertex2f(-lz.width, -lz.height);
+    //	glEnd();
+    glPopMatrix();
+
+
+    //THIRD PLATFORM
+if (g.color_reset == 1) {
+    glColor3ub(0, 0, 0);
+    }
+    glPushMatrix();
+    glColor3ub(250, 250, 20);                             
+    glTranslatef(lz3.pos[0]=g.nxtlanderX3, lz3.pos[1], 0.0f); //Lander spawning
+    glBegin(GL_QUADS);
+    glVertex2f(-lz1.width, -lz1.height);
+    glVertex2f(-lz1.width,  lz1.height);
+    glVertex2f( lz1.width,  lz1.height);
+    glVertex2f( lz1.width, -lz1.height);
     glEnd();
     // }
     //	glColor3ub(20, 20, 20);
@@ -563,10 +594,54 @@ if (g.color_reset == 1) {
 
 
 
+    //FOURTH PLATFORM
+if (g.color_reset == 1) {
+    glColor3ub(0, 0, 0);
+    }
+    glPushMatrix();
+    glColor3ub(250, 250, 20);                             
+    glTranslatef(lz4.pos[0]=g.nxtlanderX4, lz4.pos[1], 0.0f); //Lander spawning
+    glBegin(GL_QUADS);
+    glVertex2f(-lz1.width, -lz1.height);
+    glVertex2f(-lz1.width,  lz1.height);
+    glVertex2f( lz1.width,  lz1.height);
+    glVertex2f( lz1.width, -lz1.height);
+    glEnd();
+    // }
+    //	glColor3ub(20, 20, 20);
+    //	glBegin(GL_LINE_LOOP);
+    //		glVertex2f(-lz.width, -lz.height);
+    //		glVertex2f(-lz.width,  lz.height);
+    //		glVertex2f( lz.width,  lz.height);
+    //		glVertex2f( lz.width, -lz.height);
+    //		glVertex2f(-lz.width, -lz.height);
+    //	glEnd();
+    glPopMatrix();
 
 
-
-
+    //FIFTH PLATFORM
+if (g.color_reset == 1) {
+    glColor3ub(0, 0, 0);
+    }
+    glPushMatrix();
+    glColor3ub(250, 250, 20);                             
+    glTranslatef(lz5.pos[0]=g.nxtlanderX5, lz5.pos[1], 0.0f); //Lander spawning
+    glBegin(GL_QUADS);
+    glVertex2f(-lz1.width, -lz1.height);
+    glVertex2f(-lz1.width,  lz1.height);
+    glVertex2f( lz1.width,  lz1.height);
+    glVertex2f( lz1.width, -lz1.height);
+    glEnd();
+    // }
+    //	glColor3ub(20, 20, 20);
+    //	glBegin(GL_LINE_LOOP);
+    //		glVertex2f(-lz.width, -lz.height);
+    //		glVertex2f(-lz.width,  lz.height);
+    //		glVertex2f( lz.width,  lz.height);
+    //		glVertex2f( lz.width, -lz.height);
+    //		glVertex2f(-lz.width, -lz.height);
+    //	glEnd();
+    glPopMatrix();
 
 
 

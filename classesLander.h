@@ -1,8 +1,6 @@
 #ifndef _CLASSESLANDER_H
 #define _CLASSESLANDER_H
 
-
-//
 class Global {
     public:
         int lives = 3;
@@ -15,14 +13,24 @@ class Global {
         int shiptrackX[2];
         double accptl_angle;
         double temp_velocity;
-        int nxtlanderX = 200.0f;
-        int nxtlanderX2 = 117.0f;
- 
-        int nxtlanderY = 600.0f;
-        int nxtlander2Y = 600.0f;
 
-        int newXcoord;
+        int nxtlanderX1 = 200.0f;
+        int nxtlanderX2 = 117.0f;
+        int nxtlanderX3 = 140.0f;
+        int nxtlanderX4 = 160.0f;
+        int nxtlanderX5 = 180.0f;
+ 
+        int nxtlanderY1 = 600.0f;
+        int nxtlander2Y = 600.0f;
+        int nxtlander3Y = 600.0f;
+        int nxtlander4Y = 600.0f;
+        int nxtlander5Y = 600.0f;
+
+        int newXcoord1;
         int newXcoord2;
+        int newXcoord3;
+        int newXcoord4;
+        int newXcoord5;
 
 
         int lb = 50.0f;
@@ -40,13 +48,13 @@ class Global {
 
  extern Global g;
 
-class Lz {
+class Lz1 {
     //landing zone
     public:
         float pos[2];
         float width;
         float height;
-        Lz() { // Landing zone
+        Lz1() { // Landing zone
             pos[0] = 200.0f; //X axis of platform
             pos[1] = 350.0f; //Y axis of platform
             width =  50.0f;
@@ -54,7 +62,7 @@ class Lz {
         }
 }; 
 
-extern Lz lz;
+extern Lz1 lz1;
 
 class Lz2 {
     //landing zone
@@ -71,6 +79,54 @@ class Lz2 {
 }; 
 
 extern Lz2 lz2;
+
+class Lz3 {
+    //landing zone
+    public:
+        float pos[2];
+        float width;
+        float height;
+        Lz3() { // Landing zone
+            pos[0] = 117.0f; //X axis of platform
+            pos[1] = 1100.0f; //Y axis of platform
+            width =  50.0f;
+            height =  10.0f;
+        }
+}; 
+
+extern Lz3 lz3;
+
+class Lz4 {
+    //landing zone
+    public:
+        float pos[2];
+        float width;
+        float height;
+        Lz4() { // Landing zone
+            pos[0] = 117.0f; //X axis of platform
+            pos[1] = 1200.0f; //Y axis of platform
+            width =  50.0f;
+            height =  10.0f;
+        }
+}; 
+
+extern Lz4 lz4;
+
+class Lz5 {
+    //landing zone
+    public:
+        float pos[2];
+        float width;
+        float height;
+        Lz5() { // Landing zone
+            pos[0] = 117.0f; //X axis of platform
+            pos[1] = 1300.0f; //Y axis of platform
+            width =  50.0f;
+            height =  10.0f;
+        }
+}; 
+
+extern Lz5 lz5;
 
 
 class Lander {
