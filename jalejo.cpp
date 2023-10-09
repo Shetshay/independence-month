@@ -1,22 +1,27 @@
 //Author: Justin Alejo
 //created on september 27, 2023
 #include <GL/glx.h>
-//#include "land.h"
-//#include "lander.cpp"
+#include <cstdlib>
+#include <ctime>
+#include <X11/Xlib.h>
+#include <X11/keysym.h>
+#include <iostream>
 #include "jalejo.h"
 using namespace std;
 
-/*void test_function(){
 
-    glPushMatrix();
-    glBegin(GL_QUADS);
-    glColor3ub(250, 200, 90); glVertex2i(0,0);
-    glColor3ub(100,  80, 200); glVertex2i(0, 500);
-    glColor3ub(100, 80, 200); glVertex2i(0, 500);
-    glColor3ub(250, 200, 90); glVertex2i(0,0);
-    glPopMatrix();
-    glEnd();
+const int NUM_STARS = 100;
 
-}*/
+Star stars[100];
 
-//Lz lz;
+void render_stars(){
+
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glBegin(GL_POINTS);
+	for(int i = 0; i < NUM_STARS; i++){
+
+		glVertex2f(stars[i].x, stars[i].y);
+
+	}
+	glEnd();
+}

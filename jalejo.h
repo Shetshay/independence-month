@@ -6,17 +6,22 @@
 #include <iostream>
 using namespace std;
 
-/*class Lz {
-	public:
-	float pos[2];
-	float width;
-	float height;
-	Lz(){
-	pos[0] = 120.0f;
-	pos[1] = 100.0f;
-	width = 200.0f;
-	height = 100.0f;
+extern void render_stars();
+
+struct Star{
+
+	float x, y;
+	Star() {
+	x = 0.0f;
+	y = 0.0f;
 	}
-};*/
+	Star(float ex, float why){
+	x = ex;
+	y = why;
+	}
+
+};
+
+
 
 #endif
