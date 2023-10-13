@@ -415,14 +415,24 @@ void physics()
 	lander.vel[1] += ythrust;
 	lander.thrust *= 0.95f;
 	if (g.keys[XK_t] || g.keys[XK_Up]) {
-		//Thrust for the rocket
-		//This is also the up key!!!!!!!
+		//Thrust for the rocket, and movement of stars
 		lander.thrust = 0.02;
+		for (int i = 0; i < 100; i++) {
+			stars[i].y -= 2.0f;
+			if (stars[i].y < 0)
+				stars[i].y = g.yres;
+		}
 	}
 	if (g.keys[XK_Left])
 		lander.angle += 0.9;
 	if (g.keys[XK_Right])
 		lander.angle -= 0.9;
+
+	for (int j = 0; j < 100; j++) {
+		stars[j].y -= 1.0f;
+		if (stars[j].y < 0)
+			stars[j].y =  g.yres;
+	}
 	//check for landing failure...
 	//cout << lz.pos[1]+10.0f << " X of Platform"  << endl;
 	//cout << lander.pos[1] << "X of Lander" << endl;
@@ -504,6 +514,8 @@ void physics()
 
 	//g.nxtlanderY = lz2.pos[1]; //this isnt working, not sure why
 	lz2.pos[1] = 600.0f;
+
+	//CLEAN UP THIS CODE!!!
 
 }
 */
