@@ -132,6 +132,7 @@ extern Lz5 lz5;
 class Lander {
     //the rocket
     public:
+	float radius;
         float pos[2];
         float vel[2];
         float verts[3][2];
@@ -161,6 +162,8 @@ class Lander {
             angle = 0.0;
             thrust = 0.0f;
             g.failed_landing = 0;
+	    //-Justin Adding raduis for collision detection
+	    radius = 10.0f;
         }
 }; 
 

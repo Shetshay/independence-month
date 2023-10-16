@@ -27,6 +27,7 @@ using namespace std;
 #include "aibrahim.h"
 #include "classesLander.h"
 #include "jalejo.h"
+#include <vector>
 
 Global g;
 Lz1 lz1;
@@ -35,9 +36,28 @@ Lz3 lz3;
 Lz4 lz4;
 Lz5 lz5;
 Lander lander;
-//---Justin's extern declarations---//
+//---Justin's extern and function declarations---//
 extern struct Star stars[100];
 const int NUM_STARS = 100;
+extern vector<Asteroid> asteroids;
+void moveAsteroids();
+bool checkCollision(const Lander& spaceship, const std::vector<Asteroid>& asteroids) {
+	for (const Asteroid& asteroid : asteroids) {
+		float distance = sqrt(pow(spaceship.pos[0] - asteroid.x, 2) + pow(spaceship.pos[1] - asteroid.y, 2));
+		if (distance < (spaceship.radius + asteroid.radius))
+			return true;
+	}
+	return false;
+}
+void moveAsteroids() {
+	for(Asteroid& asteroid : asteroids) {
+		asteroid.move();
+	}
+	if(checkCollision(lander, asteroids)) {
+		cout << "Spaceship collided with an asteroid!" << endl;
+		g.failed_landing = 1;
+	}
+}
 //----------------------------------//
 
 //floating point random numbers
@@ -184,6 +204,17 @@ int main()
 	init_opengl();
 	printf("Press T or Up-arrow for thrust.\n");
 	printf("Press Left or Right arrows for rocket thrust vector.\n");
+	//Justin--initializing asteroids---------------------//
+	srand(time(NULL));
+	for (int i = 0; i < 5; ++i) {
+
+		float startX = rand() % g.xres;
+		float startY = rand() % g.yres;
+		float startRadius = rand() % 20 + 10;
+		float startSpeed = rand() % 4 + 1;
+		asteroids.push_back(Asteroid(startX, startY, startRadius, startSpeed));
+	}
+	//---------------------------------------------------//
 	//Main loop
 	int done = 0;
 	while (!done) {
@@ -538,7 +569,8 @@ void render()
 	glPopMatrix();*/
 
 
-
+	renderAsteroids();
+	moveAsteroids();
 	render_stars();
 
 	//Draw LZ

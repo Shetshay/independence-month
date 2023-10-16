@@ -7,6 +7,7 @@
 using namespace std;
 
 extern void render_stars();
+extern void renderAsteroids();
 
 struct Star{
 
@@ -18,6 +19,36 @@ struct Star{
 	Star(float ex, float why){
 	x = ex;
 	y = why;
+	}
+
+};
+
+class Asteroid{
+
+	public:
+	float x, y;
+	float radius;
+	float speed;
+	Asteroid(float startX, float startY, float startRadius, float startSpeed) {
+
+		x = startX;
+		y = startY;
+		radius = startRadius;
+		speed = startSpeed;
+	}
+
+	void move() {
+
+		y -= speed;
+		if (y < 0){
+		reset();
+		}
+	}
+
+	void reset() {
+
+		x = rand() % 400;
+		y = 600 + radius;
 	}
 
 };
