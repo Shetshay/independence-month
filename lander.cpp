@@ -420,8 +420,8 @@ void init_opengl(void)
 void physics()
 {
 	//Lander physics
-	//if (g.failed_landing)
-	// return;
+	if (g.failed_landing)
+	 return;
 	lander.pos[0] += lander.vel[0];
 	lander.pos[1] += lander.vel[1];
 	lander.vel[1] -= GRAVITY;
@@ -707,14 +707,14 @@ glPopMatrix();
 //Draw Lander
 glPushMatrix();
 glColor3ub(250, 250, 250);
-if (g.failed_landing == 1) {
+if (g.failed_landing) {
 	glColor3ub(250, 0, 0); //Red color USLEEP WHILE LOOP TO INDICATE LIFE LOST
 			       //if (g.landed == 1){
 			       //	glColor3ub(0, 250, 0); //Green color
 }
-if (g.landed == 0) {
+/*if (g.landed == 0) {
 	glColor3ub(250,250,250); 
-}
+}*/
 glTranslatef(lander.pos[0], lander.pos[1], 0.0f);
 glRotated(lander.angle, 0.0, 0.0, 1.0);
 glBegin(GL_TRIANGLES);
