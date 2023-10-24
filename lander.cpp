@@ -25,8 +25,9 @@ using namespace std;
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "aibrahim.h"
-#include "classesLander.h"//classes deleted and put in classesLander.h
+#include "classesLander.h"
 #include "jalejo.h"
+#include "jpocasangre.h"
 #include <vector>
 #include "jacosta.h"
 #include "fonts.h"
@@ -38,6 +39,7 @@ Lz3 lz3;
 Lz4 lz4;
 Lz5 lz5;
 Lander lander;
+FailureIndicator failureIndicator;
 X11_wrapper x11;
 //---Justin's extern and function declarations---//
 extern struct Star stars[100];
@@ -476,6 +478,23 @@ if (g.failed_landing) {
 
 }
 glPopMatrix();
+
+if (g.failed_landing) {
+    glColor3ub(250, 0, 0); 
+    failureIndicator.drawExplosion(lander.pos[0], lander.pos[1]);
+}
+
+if (g.failed_landing && !failureIndicator.isExploding) {
+    failureIndicator.isExploding = true;
+    failureIndicator.explosionRadii = {5.0f, 10.0f, 15.0f}; // Initial radii for circles
+}
+
+if (failureIndicator.isExploding) {
+    for (float &radius : failureIndicator.explosionRadii) {
+        radius += 1.0f; 
+}
+
+}
 }
 
 
