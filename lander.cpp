@@ -43,24 +43,8 @@ X11_wrapper x11;
 extern struct Star stars[100];
 const int NUM_STARS = 100;
 extern vector<Asteroid> asteroids;
-void moveAsteroids();
-bool checkCollision(const Lander& spaceship, const std::vector<Asteroid>& asteroids) {
-	for (const Asteroid& asteroid : asteroids) {
-		float distance = sqrt(pow(spaceship.pos[0] - asteroid.x, 2) + pow(spaceship.pos[1] - asteroid.y, 2));
-		if (distance < (spaceship.radius + asteroid.radius))
-			return true;
-	}
-	return false;
-}
-void moveAsteroids() {
-	for(Asteroid& asteroid : asteroids) {
-		asteroid.move();
-	}
-	if(checkCollision(lander, asteroids)) {
-		cout << "Spaceship collided with an asteroid!" << endl;
-		g.failed_landing = 1;
-	}
-}
+extern void moveAsteroids();
+//extern bool checkCollision(const Lander& spaceship, const std::vector<Asteroid>& asteroids);
 //----------------------------------//
 
 //floating point random numbers
@@ -92,7 +76,7 @@ int main()
 	for (int i = 0; i < 5; ++i) {
 
 		float startX = rand() % g.xres;
-		float startY = rand() % g.yres;
+		float startY = g.yres;//rand() % g.yres;
 		float startRadius = rand() % 20 + 10;
 		float startSpeed = rand() % 4 + 1;
 		asteroids.push_back(Asteroid(startX, startY, startRadius, startSpeed));
@@ -114,7 +98,7 @@ int main()
 		physics();
 		render();
 		x11.swapBuffers();
-		usleep(400);
+		usleep(5000);
 		}else{// if inMenu true display and turn inMenu false
 		handleMenu();
 		inMenu = !inMenu;

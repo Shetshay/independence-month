@@ -4,10 +4,13 @@
 #define _JALEJO_H
 
 #include <iostream>
+#include <vector>
 using namespace std;
 
 extern void render_stars();
 extern void renderAsteroids();
+extern void moveAsteroids();
+extern bool checkCollision();
 
 struct Star{
 

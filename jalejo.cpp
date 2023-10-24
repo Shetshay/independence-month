@@ -8,6 +8,7 @@
 #include <X11/keysym.h>
 #include <iostream>
 #include "jalejo.h"
+#include "classesLander.h"
 #include <vector>
 using namespace std;
 
@@ -17,9 +18,29 @@ const int NUM_STARS = 100;
 Star stars[100];
 vector<Asteroid> asteroids;
 
+bool checkCollision(const Lander& spaceship, const std::vector<Asteroid>& asteroids) 
+{
+	for (const Asteroid& asteroid : asteroids) {
+		float distance = sqrt(pow(spaceship.pos[0] - asteroid.x, 2) + pow(spaceship.pos[1] - asteroid.y, 2));
+		if (distance < (spaceship.radius + asteroid.radius))
+			return true;
+	}
+	return false;
+}
 
-void render_stars(){
+void moveAsteroids() 
+{
+	for (Asteroid& asteroid : asteroids) {
+		asteroid.move();
+	}
+	if (checkCollision(lander, asteroids)) {
+		cout << "Spaceship collided with an asteroid!" << endl;
+		g.failed_landing = 1;
+	}
+}
 
+void render_stars()
+{
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glBegin(GL_POINTS);
 	for(int i = 0; i < NUM_STARS; i++){

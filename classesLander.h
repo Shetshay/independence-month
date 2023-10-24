@@ -316,12 +316,12 @@ int check_keys(XEvent *e)
 		g.keys[key] = 0;
 	if (e->type == KeyPress) {
 		switch (key) {
-			//case XK_r:
+			case XK_r:
 				//Key R was pressed
 				//g.color_reset = 1;
 
-				//lander.init();
-				//break;
+				lander.init();
+				break;
 			case XK_Escape:
 				//Escape key was pressed
 				return 1;
