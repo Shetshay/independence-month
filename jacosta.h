@@ -4,6 +4,7 @@
 #define _JACOSTA_H
 
 extern void handleMenu(void);
-
+extern void endMenu(void);
+extern int countPhysics(bool);
 
 #endif

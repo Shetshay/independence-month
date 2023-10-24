@@ -32,6 +32,8 @@ using namespace std;
 #include "jacosta.h"
 #include "fonts.h"
 #include "log.h"
+#include <chrono>
+#include <thread>
 Global g;
 Lz1 lz1;
 Lz2 lz2;
@@ -247,26 +249,37 @@ int main()
 	//---------------------------------------------------//
 	//Main loop
 
-	int done = 0;
-	while (!done) {
-		//Process external events.
-		while (x11.getXPending()) {
-			XEvent e = x11.getXNextEvent();
-			x11.check_resize(&e);
-			x11.check_mouse(&e);
-			done = x11.check_keys(&e);
-		}
-		// logic for game menu
-		if(!inMenu){
-		physics();
-		render();
-		x11.swapBuffers();
-		usleep(5000);
-		}else{// if inMenu true display and turn inMenu false
-		handleMenu();
-		inMenu = !inMenu;
-	}
-}
+	bool restartCondition = true; // bool for restarting when false it ends
+	do {	//do while loop to keep the game going
+    bool done = false;
+    while (!done) {
+		
+        //Process external events.
+        while (x11.getXPending()) {
+            XEvent e = x11.getXNextEvent();
+            x11.check_resize(&e);
+            x11.check_mouse(&e);
+            done = x11.check_keys(&e);
+        }
+        // logic for game menu
+        if (!inMenu) {
+            physics();
+            render();
+            x11.swapBuffers();
+           if (g.failed_landing == 1) {
+               g.failed_landing = 0;  
+				this_thread::sleep_for(chrono::seconds(1));
+                endMenu();
+				lander.init();
+            }
+        } else {  
+			//if inMenu true display and turn inMenu false
+            handleMenu();
+            inMenu = false;
+        }
+    }
+} while (restartCondition);
+
 	cleanup_fonts();
 	logClose();
 	return 0;
@@ -345,12 +358,24 @@ void physics()
 handle_landerInter();
 
 spawn_newLander();
+//countPhysics(false); function to count physics
+//will wait for others to add theirs
 }
 void render()
 {
 
 	glClear(GL_COLOR_BUFFER_BIT);
-	
+
+/*	to print out how many times physics is called
+	commented out until we have everyones stats
+	and box rendered together
+	Rect r;
+	r.bot = 124;
+	r.left = 28;
+	r.center = 0;
+
+	ggprint13(&r, 20, 0x0055ff55, "physics called: %i", countPhysics(true));
+	*/
 
 	renderAsteroids();
 	moveAsteroids();
