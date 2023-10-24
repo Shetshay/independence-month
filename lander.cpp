@@ -53,6 +53,167 @@ extern void moveAsteroids();
 //gravity pulling the rocket straight down
 const float GRAVITY = 0.007;
 
+// x11 functions 
+Display* X11_wrapper::getDisplay() const {
+    return dpy;
+}
+
+Window X11_wrapper::getWindow() const {
+    return win;
+}
+
+
+X11_wrapper::~X11_wrapper()
+{
+	XDestroyWindow(dpy, win);
+	XCloseDisplay(dpy);
+}
+
+X11_wrapper::X11_wrapper()
+{
+	GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+	int w = g.xres, h = g.yres;
+	dpy = XOpenDisplay(NULL);
+	if (dpy == NULL) {
+		cout << "\n\tcannot connect to X server\n" << endl;
+		exit(EXIT_FAILURE);
+	}
+	Window root = DefaultRootWindow(dpy);
+	XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
+	if (vi == NULL) {
+		cout << "\n\tno appropriate visual found\n" << endl;
+		exit(EXIT_FAILURE);
+	} 
+	Colormap cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
+	XSetWindowAttributes swa;
+	swa.colormap = cmap;
+	swa.event_mask =
+		ExposureMask | KeyPressMask | KeyReleaseMask |
+		ButtonPress | ButtonReleaseMask |
+		PointerMotionMask |
+		StructureNotifyMask | SubstructureNotifyMask;
+	win = XCreateWindow(dpy, root, 0, 0, w, h, 0, vi->depth,
+		InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
+	set_title();
+	glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
+	glXMakeCurrent(dpy, win, glc);
+}
+
+void X11_wrapper::set_title()
+{
+	//Set the window title bar.
+	XMapWindow(dpy, win);
+	XStoreName(dpy, win, "3350 Aerospace Lander Challenge");
+}
+
+bool X11_wrapper::getXPending()
+{
+	//See if there are pending events.
+	return XPending(dpy);
+}
+
+XEvent X11_wrapper::getXNextEvent()
+{
+	//Get a pending event.
+	XEvent e;
+	XNextEvent(dpy, &e);
+	return e;
+}
+
+void X11_wrapper::swapBuffers()
+{
+	glXSwapBuffers(dpy, win);
+}
+
+void X11_wrapper::reshape_window(int width, int height)
+{
+	//window has been resized.
+	g.xres = width;
+	g.yres = height;
+	//
+	glViewport(0, 0, (GLint)width, (GLint)height);
+	glMatrixMode(GL_PROJECTION); glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+	glOrtho(0, g.xres, 0, g.yres, -1, 1);
+}
+
+void X11_wrapper::check_resize(XEvent *e)
+{
+	//The ConfigureNotify is sent by the
+	//server if the window is resized.
+	if (e->type != ConfigureNotify)
+		return;
+	XConfigureEvent xce = e->xconfigure;
+	if (xce.width != g.xres || xce.height != g.yres) {
+		//Window size did change.
+		reshape_window(xce.width, xce.height);
+	}
+}
+//-----------------------------------------------------------------------------
+
+void X11_wrapper::check_mouse(XEvent *e)
+{
+	static int savex = 0;
+	static int savey = 0;
+
+	//Weed out non-mouse events
+	if (e->type != ButtonRelease &&
+		e->type != ButtonPress &&
+		e->type != MotionNotify) {
+		//This is not a mouse event that we care about.
+		return;
+	}
+	//
+	if (e->type == ButtonRelease) {
+		return;
+	}
+	if (e->type == ButtonPress) {
+		if (e->xbutton.button==1) {
+			//Left button was pressed.
+			//int y = g.yres - e->xbutton.y;
+			return;
+		}
+		if (e->xbutton.button==3) {
+			//Right button was pressed.
+			return;
+		}
+	}
+	if (e->type == MotionNotify) {
+		//The mouse moved!
+		if (savex != e->xbutton.x || savey != e->xbutton.y) {
+			savex = e->xbutton.x;
+			savey = e->xbutton.y;
+			//Code placed here will execute whenever the mouse moves.
+
+
+		}
+	}
+}
+
+int X11_wrapper::check_keys(XEvent *e)
+{
+	if (e->type != KeyPress && e->type != KeyRelease)
+		return 0;
+	int key = XLookupKeysym(&e->xkey, 0);
+	if (e->type == KeyPress)
+		g.keys[key] = 1;
+	if (e->type == KeyRelease)
+		g.keys[key] = 0;
+	if (e->type == KeyPress) {
+		switch (key) {
+			case XK_r:
+				//Key R was pressed
+				lander.init();
+				break;
+			case XK_Escape:
+				//Escape key was pressed
+				return 1;
+		}
+	}
+	return 0;
+}
+// end of x11 function 
+
 //Function prototypes
 void init_opengl(void);
 void physics(void);
@@ -108,6 +269,8 @@ int main()
 	logClose();
 	return 0;
 }
+
+
 
 void init_opengl(void)
 {
