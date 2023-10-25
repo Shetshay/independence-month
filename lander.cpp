@@ -219,6 +219,9 @@ int X11_wrapper::check_keys(XEvent *e)
 			case XK_Escape:
 				//Escape key was pressed
 				return 1;
+			case XK_s:
+				g.showBox = !g.showBox;  // Toggle box visibility
+            	break;
 		}
 	}
 	return 0;
@@ -366,8 +369,7 @@ void physics()
 handle_landerInter();
 
 spawn_newLander();
-//countPhysics(false); function to count physics
-//will wait for others to add theirs
+countPhysics(false); //function to count physics
 }
 void render()
 {
@@ -377,15 +379,34 @@ void render()
 	/*to print out how many times physics is called
 	commented out until we have everyones stats
 	and box rendered together*/
-	/*Rect r;
+if(g.showBox){
+	//draw a gray box 
+	glColor3ub(100,100,100);
+	glPushMatrix();
+	glTranslatef(20.0, 20.0, 0.0);
+	int w = 230;
+	int h = 130;
+
+	glBegin(GL_QUADS);
+		glVertex2f(0, 0);
+		glVertex2f(0, h);
+		glVertex2f(w, h);
+		glVertex2f(w, 0);
+	glEnd();
+	glPopMatrix();
+	Rect r;
 	r.bot = 124;
 	r.left = 28;
-	r.center = 0;*/
+	r.center = 0;
+
+
+	ggprint13(&r, 20, 0x0055ff55, "physics called: %i", countPhysics(true));
+	ggprint13(&r, 20, 0x0055ff55, "Seconds since mouse moved: %i", mouse_move_timer(false));
+}
 
 	//int timer = mouse_move_timer(false); Justin's timer for lab
 
 	// Jacobs ggprint for lab
-	//ggprint13(&r, 20, 0x0055ff55, "physics called: %i", countPhysics(true));
 	// Justins ggprint for lab
 	//ggprint13(&r, 20, 0x0055ff55, "Seconds since mouse moved: %i", timer);
 

@@ -17,6 +17,7 @@ class Global {
         int shiptrackX[2];
         double accptl_angle;
         double temp_velocity;
+        bool showBox = false;
 
         int nxtlanderX1 = 200.0f;
         int nxtlanderX2 = 117.0f;
