@@ -107,7 +107,7 @@ void X11_wrapper::set_title()
 {
 	//Set the window title bar.
 	XMapWindow(dpy, win);
-	XStoreName(dpy, win, "3350 Aerospace Lander Challenge");
+	XStoreName(dpy, win, "XO sPaCE LifE ++</3");
 }
 
 bool X11_wrapper::getXPending()
