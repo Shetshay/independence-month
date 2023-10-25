@@ -11,19 +11,19 @@ extern void render_stars();
 extern void renderAsteroids();
 extern void moveAsteroids();
 extern bool checkCollision();
+extern int mouse_time();
 
 struct Star{
 
 	float x, y;
 	Star() {
-	x = 0.0f;
-	y = 0.0f;
+		x = 0.0f;
+		y = 0.0f;
 	}
 	Star(float ex, float why){
-	x = ex;
-	y = why;
+		x = ex;
+		y = why;
 	}
-
 };
 
 class Asteroid{
@@ -33,7 +33,6 @@ class Asteroid{
 	float radius;
 	float speed;
 	Asteroid(float startX, float startY, float startRadius, float startSpeed) {
-
 		x = startX;
 		y = startY;
 		radius = startRadius;
@@ -41,7 +40,6 @@ class Asteroid{
 	}
 
 	void move() {
-
 		y -= speed;
 		if (y < 0){
 		reset();
@@ -49,7 +47,6 @@ class Asteroid{
 	}
 
 	void reset() {
-
 		x = rand() % 400;
 		y = 600 + radius;
 	}

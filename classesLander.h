@@ -147,7 +147,7 @@ class Lander {
         }
         void init() {
             pos[0] = 200.0f;
-            pos[1] = g.yres - 60.0f;
+            pos[1] = g.yres - 250.0f;
 
 //#define TESTING
 //#ifdef TESTING

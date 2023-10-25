@@ -18,6 +18,24 @@ const int NUM_STARS = 100;
 Star stars[100];
 vector<Asteroid> asteroids;
 
+int mouse_move_timer(const bool get) 
+{
+	static int firsttime = 1;
+	static int start_time;
+	if (firsttime) {
+		start_time = time(NULL);
+		firsttime = 0;
+	}
+	
+	if (get) {
+		firsttime = 1;
+		return start_time - start_time;
+	}
+	return time(NULL)-start_time;
+}
+
+
+
 bool checkCollision(const Lander& spaceship, const std::vector<Asteroid>& asteroids) 
 {
 	for (const Asteroid& asteroid : asteroids) {

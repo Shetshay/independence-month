@@ -48,14 +48,14 @@ extern struct Star stars[100];
 const int NUM_STARS = 100;
 extern vector<Asteroid> asteroids;
 extern void moveAsteroids();
-//extern bool checkCollision(const Lander& spaceship, const std::vector<Asteroid>& asteroids);
+extern int mouse_move_timer(const bool get);
 //----------------------------------//
 
 //floating point random numbers
 #define rnd() (float)rand() / (float)RAND_MAX
 
 //gravity pulling the rocket straight down
-const float GRAVITY = 0.007;
+const float GRAVITY = 0.055;
 
 // x11 functions 
 Display* X11_wrapper::getDisplay() const {
@@ -160,6 +160,9 @@ void X11_wrapper::check_mouse(XEvent *e)
 	static int savex = 0;
 	static int savey = 0;
 
+	// int timer = total_running_time(false);
+	// cout << timer << endl;
+	
 	//Weed out non-mouse events
 	if (e->type != ButtonRelease &&
 		e->type != ButtonPress &&
@@ -182,13 +185,17 @@ void X11_wrapper::check_mouse(XEvent *e)
 			return;
 		}
 	}
+
 	if (e->type == MotionNotify) {
 		//The mouse moved!
 		if (savex != e->xbutton.x || savey != e->xbutton.y) {
 			savex = e->xbutton.x;
 			savey = e->xbutton.y;
 			//Code placed here will execute whenever the mouse moves.
-
+			
+			//Justin's function for lab;
+			mouse_move_timer(true);
+			
 
 		}
 	}
@@ -265,6 +272,7 @@ int main()
         if (!inMenu) {
             physics();
             render();
+			usleep(25000);
             x11.swapBuffers();
            if (g.failed_landing == 1) {
                g.failed_landing = 0;  
@@ -300,7 +308,7 @@ void init_opengl(void)
 	glClearColor(0.1, 0.1, 0.1, 1.0);
 	glEnable(GL_TEXTURE_2D);
     initialize_fonts();
-	//----Adding Star Code-------//
+	//----Initialize Stars-------//
 	glBegin(GL_POINTS);
 	srand(time(NULL));
 	for(int i = 0; i < NUM_STARS; i++) {
@@ -337,7 +345,7 @@ void physics()
 	lander.thrust *= 0.95f;
 	if (g.keys[XK_t] || g.keys[XK_Up]) {
 		//Thrust for the rocket, and movement of stars
-		lander.thrust = 0.02;
+		lander.thrust = 0.1;
 		for (int i = 0; i < 100; i++) {
 			stars[i].y -= 2.0f;
 			if (stars[i].y < 0)
@@ -345,9 +353,9 @@ void physics()
 		}
 	}
 	if (g.keys[XK_Left])
-		lander.angle += 0.9;
+		lander.angle += 1.5;
 	if (g.keys[XK_Right])
-		lander.angle -= 0.9;
+		lander.angle -= 1.5;
 
 	for (int j = 0; j < 100; j++) {
 		stars[j].y -= 1.0f;
@@ -366,16 +374,21 @@ void render()
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
-/*	to print out how many times physics is called
+	/*to print out how many times physics is called
 	commented out until we have everyones stats
-	and box rendered together
-	Rect r;
+	and box rendered together*/
+	/*Rect r;
 	r.bot = 124;
 	r.left = 28;
-	r.center = 0;
+	r.center = 0;*/
 
-	ggprint13(&r, 20, 0x0055ff55, "physics called: %i", countPhysics(true));
-	*/
+	//int timer = mouse_move_timer(false); Justin's timer for lab
+
+	// Jacobs ggprint for lab
+	//ggprint13(&r, 20, 0x0055ff55, "physics called: %i", countPhysics(true));
+	// Justins ggprint for lab
+	//ggprint13(&r, 20, 0x0055ff55, "Seconds since mouse moved: %i", timer);
+
 
 	renderAsteroids();
 	moveAsteroids();
@@ -492,9 +505,9 @@ if (lander.thrust > 0.0) {
 	for (int i=0; i<25; i++) {
 		glColor3ub(0, 0, 255);
 		glVertex2f(rnd()*10.0-5.0, 0.0);
-		glColor3ub(250, 250, 0);
+		glColor3ub(100, 0, 100);
 		glVertex2f(0.0+rnd()*14.0-7.0,
-				lander.thrust * (-4000.0 - rnd() * 2000.0));
+				lander.thrust * (-500.0 - rnd() * 500.0));
 	}
 	glEnd();
 }
