@@ -399,9 +399,9 @@ if(g.showBox){
 	r.left = 28;
 	r.center = 0;
 
-
-	ggprint13(&r, 20, 0x0055ff55, "physics called: %i", countPhysics(true));
-	ggprint13(&r, 20, 0x0055ff55, "Seconds since mouse moved: %i", mouse_move_timer(false));
+	ggprint13(&r, 20, 0x0055ff55, "Statistics... ");
+	ggprint13(&r, 20, 0x00ffff00, "physics called: %i", countPhysics(true));
+	ggprint13(&r, 20, 0x00ffff00, "sec since mouse move: %i", mouse_move_timer(false));
 }
 
 	//int timer = mouse_move_timer(false); Justin's timer for lab
