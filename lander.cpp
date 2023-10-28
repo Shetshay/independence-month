@@ -34,6 +34,7 @@ using namespace std;
 #include "log.h"
 #include <chrono>
 #include <thread>
+/*
 Global g;
 Lz1 lz1;
 Lz2 lz2;
@@ -41,8 +42,9 @@ Lz3 lz3;
 Lz4 lz4;
 Lz5 lz5;
 Lander lander;
-FailureIndicator failureIndicator;
 X11_wrapper x11;
+*/
+FailureIndicator failureIndicator;
 //---Justin's extern and function declarations---//
 extern struct Star stars[100];
 const int NUM_STARS = 100;
@@ -57,7 +59,99 @@ extern int mouse_move_timer(const bool get);
 //gravity pulling the rocket straight down
 const float GRAVITY = 0.055;
 
-// x11 functions 
+// class and x11 functions 
+
+Global::Global() {
+    lives = 3;
+    xres = 400;
+    yres = 600;
+    failed_landing = 0;
+    landed = 0;
+    color_reset = 0;
+    accptl_angle = 90;
+    temp_velocity = 0.0;
+    showBox = false;
+    nxtlanderX1 = 200.0f; nxtlanderX2 = 117.0f; nxtlanderX3 = 140.0f; nxtlanderX4 = 160.0f; nxtlanderX5 = 180.0f;
+    nxtlanderY1 = 600.0f; nxtlander2Y = 600.0f; nxtlander3Y = 600.0f; nxtlander4Y = 600.0f; nxtlander5Y = 600.0f;
+    lb = 50.0f;
+    ub = 350.0f;
+}
+
+Global g;
+
+// Definitions for Lz1
+Lz1::Lz1() {
+    pos[0] = 200.0f;
+    pos[1] = 350.0f;
+    width = 50.0f;
+    height = 10.0f;
+}
+
+Lz1 lz1;
+
+// Definitions for Lz2
+Lz2::Lz2() {
+    pos[0] = 117.0f;
+    pos[1] = 1000.0f;
+    width = 50.0f;
+    height = 10.0f;
+}
+
+Lz2 lz2;
+
+// Definitions for Lz3
+Lz3::Lz3() {
+    pos[0] = 117.0f;
+    pos[1] = 1100.0f;
+    width = 50.0f;
+    height = 10.0f;
+}
+
+Lz3 lz3;
+
+// Definitions for Lz4
+Lz4::Lz4() {
+    pos[0] = 117.0f;
+    pos[1] = 1200.0f;
+    width = 50.0f;
+    height = 10.0f;
+}
+
+Lz4 lz4;
+
+// Definitions for Lz5
+Lz5::Lz5() {
+    pos[0] = 117.0f;
+    pos[1] = 1300.0f;
+    width = 50.0f;
+    height = 10.0f;
+}
+
+Lz5 lz5;
+
+// Definitions for Lander
+Lander::Lander() {
+    init();
+}
+
+void Lander::init() {
+    pos[0] = 200.0f;
+    pos[1] = g.yres - 250.0f;
+    vel[0] = vel[1] = 0.0f;
+    verts[0][0] = -10.0f; verts[0][1] = 0.0f;
+    verts[1][0] = 0.0f; verts[1][1] = 30.0f;
+    verts[2][0] = 10.0f; verts[2][1] = 0.0f;
+    angle = 0.0;
+    thrust = 0.0f;
+    g.failed_landing = 0;
+    radius = 10.0f;
+}
+
+Lander lander;
+
+
+
+
 Display* X11_wrapper::getDisplay() const {
     return dpy;
 }
@@ -226,6 +320,7 @@ int X11_wrapper::check_keys(XEvent *e)
 	}
 	return 0;
 }
+X11_wrapper x11;
 // end of x11 function 
 
 //Function prototypes
@@ -379,29 +474,30 @@ void render()
 	/*to print out how many times physics is called
 	commented out until we have everyones stats
 	and box rendered together*/
-if(g.showBox){
-	//draw a gray box 
-	glColor3ub(100,100,100);
-	glPushMatrix();
-	glTranslatef(20.0, 20.0, 0.0);
-	int w = 230;
-	int h = 130;
+    if(g.showBox){
+	    //draw a gray box 
+	    glColor3ub(100,100,100);
+	    glPushMatrix();
+	    glTranslatef(20.0, 20.0, 0.0);
+	    int w = 230;
+	    int h = 130;
 
-	glBegin(GL_QUADS);
-		glVertex2f(0, 0);
-		glVertex2f(0, h);
-		glVertex2f(w, h);
-		glVertex2f(w, 0);
-	glEnd();
-	glPopMatrix();
-	Rect r;
-	r.bot = 124;
-	r.left = 28;
-	r.center = 0;
+	    glBegin(GL_QUADS);
+		    glVertex2f(0, 0);
+		    glVertex2f(0, h);
+		    glVertex2f(w, h);
+		    glVertex2f(w, 0);
+	    glEnd();
+	    glPopMatrix();
+	    Rect r;
+	    r.bot = 124;
+	    r.left = 28;
+	    r.center = 0;
 
-	ggprint13(&r, 20, 0x0055ff55, "Statistics... ");
-	ggprint13(&r, 20, 0x00ffff00, "physics called: %i", countPhysics(true));
-	ggprint13(&r, 20, 0x00ffff00, "sec since mouse move: %i", mouse_move_timer(false));
+	    ggprint13(&r, 20, 0x0055ff55, "Statistics... ");
+	    ggprint13(&r, 20, 0x00ffff00, "physics called: %i", countPhysics(true));
+	    ggprint13(&r, 20, 0x00ffff00, "sec since mouse move: %i", mouse_move_timer(false));
+	    ggprint13(&r, 20, 0x00ffff00, "total run time: %i", total_running_time(true));
 }
 
 	//int timer = mouse_move_timer(false); Justin's timer for lab

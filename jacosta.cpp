@@ -15,6 +15,15 @@ using namespace std;
 #include "fonts.h"
 #include "classesLander.h"
 
+extern Global g;
+extern Lz1 lz1;
+extern Lz2 lz2;
+extern Lz3 lz3;
+extern Lz4 lz4;
+extern Lz5 lz5;
+extern Lander lander;
+extern X11_wrapper x11;
+
 
 void handleMenu() {
     int menuChoice = 0;
@@ -30,22 +39,22 @@ void handleMenu() {
         r.left = 10;
 
         // Display menu options
-        ggprint8b(&r, 16, 0x00ffffff, "Main Menu");
+        ggprint8b(&r, 16, 0x009966FF, "Main Menu");
         r.bot -= 40;
         if (menuChoice == 0)
-            ggprint8b(&r, 16, 0x00ff0000, "> Start Game");
+            ggprint8b(&r, 16, 0x009900FF, "> Start Game");
         else
             ggprint8b(&r, 16, 0x00ffffff, "Start Game");
 
         r.bot -= 20;
         if (menuChoice == 1)
-            ggprint8b(&r, 16, 0x00ff0000, "> Options");
+            ggprint8b(&r, 16, 0x009900FF, "> Options");
         else
             ggprint8b(&r, 16, 0x00ffffff, "Options");
 
         r.bot -= 20;
         if (menuChoice == 2)
-            ggprint8b(&r, 16, 0x00ff0000, "> Quit");
+            ggprint8b(&r, 16, 0x009900FF, "> Quit");
         else
             ggprint8b(&r, 16, 0x00ffffff, "Quit");
 
@@ -94,28 +103,27 @@ void endMenu() {
         r.left = 10;
 
         // Display menu options
-        ggprint8b(&r, 16, 0x00ffffff, "GAME OVER");
+        ggprint8b(&r, 16, 0x009966FF, "GAME OVER");
         r.bot -= 40;
         if (menuChoice == 0)
-            ggprint8b(&r, 16, 0x00ff0000, "> Retry");
+            ggprint8b(&r, 16, 0x009900FF, "> Retry");
         else
             ggprint8b(&r, 16, 0x00ffffff, "Retry");
 
         r.bot -= 20;
         if (menuChoice == 1)
-            ggprint8b(&r, 16, 0x00ff0000, "> Scores");
+            ggprint8b(&r, 16, 0x009900FF, "> Scores");
         else
             ggprint8b(&r, 16, 0x00ffffff, "Scores");
 
         r.bot -= 20;
         if (menuChoice == 2)
-            ggprint8b(&r, 16, 0x00ff0000, "> Quit");
+            ggprint8b(&r, 16, 0x009900FF, "> Quit");
         else
             ggprint8b(&r, 16, 0x00ffffff, "Quit");
         
         glPopMatrix();
         x11.swapBuffers();
-        //usleep(400);
         
         XEvent e;
         while (XCheckWindowEvent(x11.getDisplay(), x11.getWindow(), KeyPressMask, &e)) {
@@ -150,5 +158,18 @@ int countPhysics(bool get){
         test++;
     }
     return test;
+}
+
+int total_running_time(const bool get){
+    static int firsttime = 1;
+    static int start_time;
+    if(firsttime) {
+        start_time = time(NULL);
+        firsttime = 0;
+    }
+    if(get) {
+        return time(NULL) - start_time;
+    }
+    return 0;
 }
 

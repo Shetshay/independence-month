@@ -6,5 +6,6 @@
 extern void handleMenu(void);
 extern void endMenu(void);
 extern int countPhysics(bool);
+extern int total_running_time(bool);
 
 #endif

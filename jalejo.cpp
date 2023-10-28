@@ -11,6 +11,9 @@
 #include "classesLander.h"
 #include <vector>
 using namespace std;
+//extern declarations
+
+
 
 #define rnd() (float)rand() / (float)RAND_MAX
 
