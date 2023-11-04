@@ -46,10 +46,23 @@ X11_wrapper x11;
 */
 FailureIndicator failureIndicator;
 //---Justin's extern and function declarations---//
-extern struct Star stars[100];
-const int NUM_STARS = 100;
-extern vector<Asteroid> asteroids;
-extern void moveAsteroids();
+Lz lz;
+Music music;
+UFO myUFO;
+Global g;
+Lander lander;
+Lander lander2;
+vector<Asteroid> asteroids;
+vector<X11steroid> X11steroids;
+Bashteroid bashteroid;
+Laser ufoLaser;
+AlienHead alien;
+Star stars[100];
+Star stagstars[100];
+Star slowstars[100];
+bool checkCollision(const Lander& spaceship, const std::vector<Asteroid>& asteroids);
+bool checkCollisionX11steroid(const Lander& spaceship, const std::vector<X11steroid>& X11steroids);
+bool checkCollisionBash(const Lander& spaceship, const Bashteroid bashteroid);
 extern int mouse_move_timer(const bool get);
 //----------------------------------//
 
@@ -61,7 +74,7 @@ const float GRAVITY = 0.055;
 
 // class and x11 functions 
 
-Global::Global() {
+/*Global::Global() {
     lives = 3;
     xres = 400;
     yres = 600;
@@ -75,59 +88,11 @@ Global::Global() {
     nxtlanderY1 = 600.0f; nxtlander2Y = 600.0f; nxtlander3Y = 600.0f; nxtlander4Y = 600.0f; nxtlander5Y = 600.0f;
     lb = 50.0f;
     ub = 350.0f;
-}
+}*/
 
-Global g;
+//Global g;
 
-// Definitions for Lz1
-Lz1::Lz1() {
-    pos[0] = 200.0f;
-    pos[1] = 350.0f;
-    width = 50.0f;
-    height = 10.0f;
-}
 
-Lz1 lz1;
-
-// Definitions for Lz2
-Lz2::Lz2() {
-    pos[0] = 117.0f;
-    pos[1] = 1000.0f;
-    width = 50.0f;
-    height = 10.0f;
-}
-
-Lz2 lz2;
-
-// Definitions for Lz3
-Lz3::Lz3() {
-    pos[0] = 117.0f;
-    pos[1] = 1100.0f;
-    width = 50.0f;
-    height = 10.0f;
-}
-
-Lz3 lz3;
-
-// Definitions for Lz4
-Lz4::Lz4() {
-    pos[0] = 117.0f;
-    pos[1] = 1200.0f;
-    width = 50.0f;
-    height = 10.0f;
-}
-
-Lz4 lz4;
-
-// Definitions for Lz5
-Lz5::Lz5() {
-    pos[0] = 117.0f;
-    pos[1] = 1300.0f;
-    width = 50.0f;
-    height = 10.0f;
-}
-
-Lz5 lz5;
 
 // Definitions for Lander
 Lander::Lander() {
@@ -136,18 +101,26 @@ Lander::Lander() {
 
 void Lander::init() {
     pos[0] = 200.0f;
-    pos[1] = g.yres - 250.0f;
+    pos[1] = g.yres - 200.0f;
     vel[0] = vel[1] = 0.0f;
-    verts[0][0] = -10.0f; verts[0][1] = 0.0f;
-    verts[1][0] = 0.0f; verts[1][1] = 30.0f;
-    verts[2][0] = 10.0f; verts[2][1] = 0.0f;
+    //3 vertices of triangle-shaped rocket lander
+    verts[0][0] = -10.0f;
+    verts[0][1] =   0.0f;
+    verts[1][0] =   0.0f;
+    verts[1][1] =  30.0f;
+    verts[2][0] =  10.0f;
+    verts[2][1] =   0.0f;
+
+    windowVerts[0][0] = -5.0f; windowVerts[0][1] = 10.0f;
+    windowVerts[1][0] = 0.0f; windowVerts[1][1] = 20.0f;
+    windowVerts[2][0] = 5.0f; windowVerts[2][1] = 10.0f;
     angle = 0.0;
     thrust = 0.0f;
     g.failed_landing = 0;
     radius = 10.0f;
 }
 
-Lander lander;
+
 
 
 
@@ -407,13 +380,7 @@ void init_opengl(void)
 	glEnable(GL_TEXTURE_2D);
     initialize_fonts();
 	//----Initialize Stars-------//
-	glBegin(GL_POINTS);
-	srand(time(NULL));
-	for(int i = 0; i < NUM_STARS; i++) {
-		float x = static_cast<float>(rand() % g.xres);
-		float y = static_cast<float>(rand() % g.yres);
-		stars[i] = Star(x,y);
-	}
+	init_stars();
 }
 
 void physics()
@@ -425,12 +392,6 @@ void physics()
 	lander.pos[1] += lander.vel[1];
 	lander.vel[1] -= GRAVITY;
 	//lz.pos[0] += 0.6f;
-
-	lz1.pos[1] -= 0.3f; //lander 1 decrease
-	lz2.pos[1] -= 0.4f; //lander 2 decrease
-	lz3.pos[1] -= 0.3f; //lander 3 decrease
-	lz4.pos[1] -= 0.3f; //lander 4 decrease
-	lz5.pos[1] -= 0.5f; //lander 5 decrease //will add code around here
 
 	//apply thrust
 	//convert angle to radians...
@@ -444,27 +405,24 @@ void physics()
 	if (g.keys[XK_t] || g.keys[XK_Up]) {
 		//Thrust for the rocket, and movement of stars
 		lander.thrust = 0.1;
-		for (int i = 0; i < 100; i++) {
-			stars[i].y -= 2.0f;
-			if (stars[i].y < 0)
-				stars[i].y = g.yres;
-		}
+
 	}
 	if (g.keys[XK_Left])
 		lander.angle += 1.5;
 	if (g.keys[XK_Right])
 		lander.angle -= 1.5;
 
-	for (int j = 0; j < 100; j++) {
-		stars[j].y -= 1.0f;
-		if (stars[j].y < 0)
-			stars[j].y =  g.yres;
-	}
 
-handle_landerInter();
 
-spawn_newLander();
+//handle_landerInter();
+
 countPhysics(false); //function to count physics
+//Justins physics functions------------------
+moveLz();
+ufoLaser.move();
+moveBashteroid();
+asteroidPhysics();
+//--------------------------------------------
 }
 void render()
 {
@@ -506,92 +464,26 @@ void render()
 	// Justins ggprint for lab
 	//ggprint13(&r, 20, 0x0055ff55, "Seconds since mouse moved: %i", timer);
 
-
+	//justins render functions
 	renderAsteroids();
-	moveAsteroids();
+	renderBashteroid();
+	//moveAsteroids();
 	render_stars();
+	render_stagstars();
+	render_slowstars();
 
 	//Draw LZ
-	if (g.color_reset == 1)
-		glColor3ub(0, 0, 0);
-
 	glPushMatrix();
-	glColor3ub(250, 250, 20);                                       
-	glTranslatef(lz1.pos[0]=g.nxtlanderX1, lz1.pos[1], 0.0f); //Lander spawning
-	glBegin(GL_QUADS);
-	glVertex2f(-lz1.width, -lz1.height);
-	glVertex2f(-lz1.width,  lz1.height);
-	glVertex2f( lz1.width,  lz1.height);
-	glVertex2f( lz1.width, -lz1.height);
-	glEnd();
+    //glColor3ub(250, 250, 20);
+    glColor3ub(173, 216, 230);
+    glTranslatef(lz.pos[0], lz.pos[1], 0.0f);
+    glBegin(GL_QUADS);
+    glVertex2f(-lz.width, -lz.height);
+    glVertex2f(-lz.width,  lz.height);
+    glVertex2f( lz.width,  lz.height);
+    glVertex2f( lz.width, -lz.height);
+    glEnd();
 	glPopMatrix();
-
-
-
-
-	//SECOND PLATFORM
-	if (g.color_reset == 1) {
-		glColor3ub(0, 0, 0);
-	}
-glPushMatrix();
-glColor3ub(250, 250, 20);                             
-glTranslatef(lz2.pos[0]=g.nxtlanderX2, lz2.pos[1], 0.0f); //Lander spawning
-glBegin(GL_QUADS);
-glVertex2f(-lz1.width, -lz1.height);
-glVertex2f(-lz1.width,  lz1.height);
-glVertex2f( lz1.width,  lz1.height);
-glVertex2f( lz1.width, -lz1.height);
-glEnd();
-glPopMatrix();
-
-
-//THIRD PLATFORM
-if (g.color_reset == 1) {
-	glColor3ub(0, 0, 0);
-}
-glPushMatrix();
-glColor3ub(250, 250, 20);                             
-glTranslatef(lz3.pos[0]=g.nxtlanderX3, lz3.pos[1], 0.0f); //Lander spawning
-glBegin(GL_QUADS);
-glVertex2f(-lz1.width, -lz1.height);
-glVertex2f(-lz1.width,  lz1.height);
-glVertex2f( lz1.width,  lz1.height);
-glVertex2f( lz1.width, -lz1.height);
-glEnd();
-glPopMatrix();
-
-
-
-//FOURTH PLATFORM
-if (g.color_reset == 1) {
-	glColor3ub(0, 0, 0);
-}
-glPushMatrix();
-glColor3ub(250, 250, 20);                             
-glTranslatef(lz4.pos[0]=g.nxtlanderX4, lz4.pos[1], 0.0f); //Lander spawning
-glBegin(GL_QUADS);
-glVertex2f(-lz1.width, -lz1.height);
-glVertex2f(-lz1.width,  lz1.height);
-glVertex2f( lz1.width,  lz1.height);
-glVertex2f( lz1.width, -lz1.height);
-glEnd();
-glPopMatrix();
-
-
-//FIFTH PLATFORM
-if (g.color_reset == 1) {
-	glColor3ub(0, 0, 0);
-}
-glPushMatrix();
-glColor3ub(250, 250, 20);                             
-glTranslatef(lz5.pos[0]=g.nxtlanderX5, lz5.pos[1], 0.0f); //Lander spawning
-glBegin(GL_QUADS);
-glVertex2f(-lz1.width, -lz1.height);
-glVertex2f(-lz1.width,  lz1.height);
-glVertex2f( lz1.width,  lz1.height);
-glVertex2f( lz1.width, -lz1.height);
-glEnd();
-glPopMatrix();
 
 
 

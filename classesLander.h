@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-class Global {
+/*class Global {
 public:
     int lives;
     int xres, yres;
@@ -22,74 +22,73 @@ public:
     int lb, ub;
     
     Global();
-};
+};*/
 
+//extern Global g;
+class Global {
+    public:
+        int xres, yres, zres;
+        unsigned int keys[65536];
+        int failed_landing;
+        float color;
+        int purp;
+        int inversepurp;
+        bool isDecreasing;
+        bool inRange;
+        bool starsmoveback;
+        bool previousCollisionState;
+        float collisionTime;
+        bool resizeFlag;
+        int targetXres;
+        int targetYres;
+        bool showBox;
+    
+        Global() {
+            xres = 400;
+            yres = 600;
+            failed_landing = 0;
+            color = 1.0f;
+            purp = 100;
+            inversepurp = 0;
+            isDecreasing = true;
+            inRange = true;
+            starsmoveback = false;
+            previousCollisionState = false;
+            collisionTime = 0;
+            resizeFlag = false;
+            showBox = false;
+        }
+};
 extern Global g;
 
-class Lz1 {
-public:
-    float pos[2];
-    float width;
-    float height;
-    Lz1();
+class Lander 
+{
+    //the rocket
+    public:
+        float radius;
+        float pos[2];
+        float vel[2];
+        float verts[3][2];
+        float windowVerts[3][2];
+        float thrust;
+        double angle;
+        float prevPos[2];
+        Lander();
+        void init();
 };
-
-extern Lz1 lz1;
-
-class Lz2 {
-public:
-    float pos[2];
-    float width;
-    float height;
-    Lz2();
-};
-
-extern Lz2 lz2;
-
-class Lz3 {
-public:
-    float pos[2];
-    float width;
-    float height;
-    Lz3();
-};
-
-extern Lz3 lz3;
-
-class Lz4 {
-public:
-    float pos[2];
-    float width;
-    float height;
-    Lz4();
-};
-
-extern Lz4 lz4;
-
-class Lz5 {
-public:
-    float pos[2];
-    float width;
-    float height;
-    Lz5();
-};
-
-extern Lz5 lz5;
-
-class Lander {
-public:
-    float radius;
-    float pos[2];
-    float vel[2];
-    float verts[3][2];
-    float thrust;
-    double angle;
-
-    Lander();
-    void init();
-};
-
 extern Lander lander;
+extern Lander lander2;
+
+class Lz {
+    public:
+    float pos[2];
+    float width;
+    float height;
+    Lz();
+    void move(); 
+    void moveback();
+};
+extern Lz lz;
 
 class X11_wrapper {
 public:

@@ -4,7 +4,7 @@
 //
 //cpp file for independence day
 
-#include <GL/glx.h>
+/*#include <GL/glx.h>
 #include <cstdlib>
 #include "classesLander.h"
 
@@ -195,4 +195,4 @@ void handle_landerInter(){
         }
         //cout << "THIS IS THE VELOCITY: " << g.temp_velocity << endl; 
     }
-}
+}*/

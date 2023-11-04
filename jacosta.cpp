@@ -15,14 +15,14 @@ using namespace std;
 #include "fonts.h"
 #include "classesLander.h"
 
-extern Global g;
+/*extern Global g;
 extern Lz1 lz1;
 extern Lz2 lz2;
 extern Lz3 lz3;
 extern Lz4 lz4;
 extern Lz5 lz5;
 extern Lander lander;
-extern X11_wrapper x11;
+extern X11_wrapper x11;*/
 
 
 void handleMenu() {
