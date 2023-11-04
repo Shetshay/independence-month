@@ -289,10 +289,44 @@ int X11_wrapper::check_keys(XEvent *e)
 			case XK_s:
 				g.showBox = !g.showBox;  // Toggle box visibility
             	break;
+			case XK_Return: // 'Enter' key to select menu option
+                if (g.inMenu){
+				if (g.menuChoice == 0){
+                    // Start the game
+					g.inMenu = false;
+                } else if (g.menuChoice == 1) {
+                    // Open Options menu
+                } else if (g.menuChoice == 2) {
+                    // Quit the game
+                    exit(0);
+                }
+				}else if (g.inEndMenu) {
+                    if (g.menuChoice == 0) {
+                        // Retry
+                        g.inEndMenu = false; 
+                        lander.init(); // Reinitialize game state or similar logic
+                    } else if (g.menuChoice == 1) {
+                        // Go back to Main Menu
+                        g.inEndMenu = false;
+                        g.inMenu = true;
+                    } else if (g.menuChoice == 2) {
+                        // Quit the game
+                        exit(0);
+                    }
+                }
+                break;
+                
+            case XK_Up: // Up arrow key
+                g.menuChoice = (g.menuChoice + 2) % 3;
+                break;
+            case XK_Down: // Down arrow key
+                g.menuChoice = (g.menuChoice + 1) % 3;
+                break;
 		}
 	}
 	return 0;
 }
+
 X11_wrapper x11;
 // end of x11 function 
 
@@ -308,7 +342,7 @@ void render(void);
 //=====================================
 int main()
 {	
-	bool inMenu = true;//bool for menu handling
+	//bool for menu handling
 
 	logOpen();
 	init_opengl();
@@ -340,22 +374,23 @@ int main()
             done = x11.check_keys(&e);
         }
         // logic for game menu
-        if (!inMenu) {
+        if (!g.inMenu && !g.inEndMenu) {
             physics();
             render();
 			usleep(25000);
             x11.swapBuffers();
            if (g.failed_landing == 1) {
-               g.failed_landing = 0;  
+				g.menuChoice = 0;
+               	g.failed_landing = 0;  				
 				this_thread::sleep_for(chrono::seconds(1));
-                endMenu();
-				lander.init();
+				g.inEndMenu = true;
             }
-        } else {  
+        } else if(g.inMenu){  
 			//if inMenu true display and turn inMenu false
             handleMenu();
-            inMenu = false;
-        }
+        }else if(g.inEndMenu){
+			endMenu();
+		}
     }
 } while (restartCondition);
 
@@ -429,9 +464,36 @@ void render()
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	/*to print out how many times physics is called
-	commented out until we have everyones stats
-	and box rendered together*/
+	//print out score(will need to fix)
+	Rect r;
+    r.center = 0;
+	r.bot = g.yres - 50;
+    r.left = 10;
+
+	int highscore = countPhysics(true) / 50;
+
+
+	// will implement when checkCollisionBash = True highscore goes back not fully working 
+	// right now
+	if(checkCollisionBash(lander, bashteroid)){
+		highscore = highscore - 10;
+		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS.. %i", highscore);
+	}else{
+		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS.. %i", highscore);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+	/*stats box from gordons lab*/
     if(g.showBox){
 	    //draw a gray box 
 	    glColor3ub(100,100,100);

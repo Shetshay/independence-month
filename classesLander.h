@@ -42,6 +42,9 @@ class Global {
         int targetXres;
         int targetYres;
         bool showBox;
+        int menuChoice;
+        bool inMenu;
+        bool inEndMenu;
     
         Global() {
             xres = 400;
@@ -57,6 +60,9 @@ class Global {
             collisionTime = 0;
             resizeFlag = false;
             showBox = false;
+            menuChoice = 0;
+            inMenu = true;
+            inEndMenu = false;
         }
 };
 extern Global g;
