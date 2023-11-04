@@ -466,12 +466,12 @@ void render()
 
 	//justins render functions
 	renderAsteroids();
-	renderBashteroid();
+	//renderBashteroid();
 	//moveAsteroids();
 	render_stars();
 	render_stagstars();
 	render_slowstars();
-
+	renderBashteroid();
 	//Draw LZ
 	glPushMatrix();
     //glColor3ub(250, 250, 20);
