@@ -5,14 +5,7 @@
 //purpose: 1. learn OpenGL
 //         2. write an aerospace related program
 //         3. prepare to apply for a job at SpaceX
-//
-//This is a game in which we try to land the rocket booster back on
-//the launch pad. You must add code to check for a good landing, and
-//also show the rocket landed and secure on the pad.
-//
-//If the rocket doesn't land safely, then you can show some kind of
-//explosion or whatever.
-//
+
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -443,13 +436,15 @@ void physics()
 
 //handle_landerInter();
 
-countPhysics(false); //function to count physics
+	countPhysics(false); //function to count physics
 //Justins physics functions------------------
-moveLz();
-ufoLaser.move();
-moveBashteroid();
-asteroidPhysics();
+	moveLz();
+	ufoLaser.move();
+	moveBashteroid();
+	asteroidPhysics();
 //--------------------------------------------
+	lander_boundaries();
+
 }
 
 void render()
@@ -517,21 +512,8 @@ void render()
 	render_slowstars();
 	renderBashteroid();
 	
-	//Draw LZ
-	glPushMatrix();
-    glColor3ub(173, 216, 230);
-    glTranslatef(lz.pos[0], lz.pos[1], 0.0f);
-    glBegin(GL_QUADS);
-    glVertex2f(-lz.width, -lz.height);
-    glVertex2f(-lz.width,  lz.height);
-    glVertex2f( lz.width,  lz.height);
-    glVertex2f( lz.width, -lz.height);
-    glEnd();
-	glPopMatrix();
 
-
-
-
+	render_iceblock();
 
 //Draw Lander
 glPushMatrix();
