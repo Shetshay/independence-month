@@ -446,6 +446,18 @@ glVertex2f(0.0 + rnd() * 14.0 - 7.0, (50.0 + rnd() * 50.0));
     
 }
 
+void init_asteroids() 
+{
+    srand(time(NULL));
+	    for (int i = 0; i < 5; ++i) {
+		float startX = rand() % g.xres;
+		float startY = g.yres;//rand() % g.yres;
+		float startRadius = rand() % 20 + 10;
+		float startSpeed = rand() % 4 + 1;
+		asteroids.push_back(Asteroid(startX, startY, startRadius, startSpeed));
+    	}
+}
+
 void renderAsteroids() {
 
     glColor3f(1.0f, 1.0f, 1.0f);
@@ -700,4 +712,3 @@ void shootlaser()
         }
     }
 }
-

@@ -333,17 +333,9 @@ int main()
 	init_opengl();
 	printf("Press T or Up-arrow for thrust.\n");
 	printf("Press Left or Right arrows for rocket thrust vector.\n");
-	//Justin--initializing asteroids---------------------//
-	srand(time(NULL));
-	for (int i = 0; i < 5; ++i) {
+	//Justin--initializing asteroids--
+	init_asteroids();
 
-		float startX = rand() % g.xres;
-		float startY = g.yres;//rand() % g.yres;
-		float startRadius = rand() % 20 + 10;
-		float startSpeed = rand() % 4 + 1;
-		asteroids.push_back(Asteroid(startX, startY, startRadius, startSpeed));
-	}
-	//---------------------------------------------------//
 	//Main loop
 
 	bool restartCondition = true; // bool for restarting when false it ends
@@ -425,7 +417,6 @@ void physics()
 	if (g.keys[XK_t] || g.keys[XK_Up]) {
 		//Thrust for the rocket, and movement of stars
 		lander.thrust = 0.1;
-
 	}
 	if (g.keys[XK_Left])
 		lander.angle += 1.5;
@@ -465,10 +456,10 @@ void render()
 
 	// will implement when checkCollisionBash = True highscore goes back not fully working 
 	// right now
-	if(checkCollisionBash(lander, bashteroid)){
+	if(checkCollisionBash(lander, bashteroid)) {
 		highscore = highscore - 10;
 		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS.. %i", highscore);
-	}else{
+	} else {
 		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS.. %i", highscore);
 	}
 
@@ -515,26 +506,22 @@ void render()
 
 	render_iceblock();
 
-//Draw Lander
-glPushMatrix();
-glColor3ub(250, 250, 250);
-if (g.failed_landing) {
-	glColor3ub(250, 0, 0); //Red color USLEEP WHILE LOOP TO INDICATE LIFE LOST
-			       //if (g.landed == 1){
-			       //	glColor3ub(0, 250, 0); //Green color
-}
-/*if (g.landed == 0) {
-	glColor3ub(250,250,250); 
-}*/
-glTranslatef(lander.pos[0], lander.pos[1], 0.0f);
-glRotated(lander.angle, 0.0, 0.0, 1.0);
-glBegin(GL_TRIANGLES);
-for (int i=0; i<3; i++) {
-	glVertex2f(lander.verts[i][0], lander.verts[i][1]);
-}
-glEnd();
-//Lander thrust
-if (lander.thrust > 0.0) {
+	//Draw Lander
+	glPushMatrix();
+	glColor3ub(250, 250, 250);
+	if (g.failed_landing) {
+		glColor3ub(250, 0, 0); //Red color USLEEP WHILE LOOP TO INDICATE LIFE LOST
+	}
+
+	glTranslatef(lander.pos[0], lander.pos[1], 0.0f);
+	glRotated(lander.angle, 0.0, 0.0, 1.0);
+	glBegin(GL_TRIANGLES);
+	for (int i=0; i<3; i++) {
+		glVertex2f(lander.verts[i][0], lander.verts[i][1]);
+	}
+	glEnd();
+	//Lander thrust
+	if (lander.thrust > 0.0) {
 	//draw the thrust vector
 	glBegin(GL_LINES);
 	for (int i=0; i<25; i++) {
@@ -544,30 +531,30 @@ if (lander.thrust > 0.0) {
 		glVertex2f(0.0+rnd()*14.0-7.0,
 				lander.thrust * (-500.0 - rnd() * 500.0));
 	}
-	glEnd();
-}
-if (g.failed_landing) {
+		glEnd();
+	}
+
+	if (g.failed_landing) {
 	//show crash graphics here...
+	}
+	
+	glPopMatrix();
 
-}
-glPopMatrix();
+	if (g.failed_landing) {
+		glColor3ub(250, 0, 0); 
+    	failureIndicator.drawExplosion(lander.pos[0], lander.pos[1]);
+	}
 
-if (g.failed_landing) {
-    glColor3ub(250, 0, 0); 
-    failureIndicator.drawExplosion(lander.pos[0], lander.pos[1]);
-}
+	if (g.failed_landing && !failureIndicator.isExploding) {
+    	failureIndicator.isExploding = true;
+    	failureIndicator.explosionRadii = {5.0f, 10.0f, 15.0f}; // Initial radii for circles
+	}
 
-if (g.failed_landing && !failureIndicator.isExploding) {
-    failureIndicator.isExploding = true;
-    failureIndicator.explosionRadii = {5.0f, 10.0f, 15.0f}; // Initial radii for circles
-}
-
-if (failureIndicator.isExploding) {
-    for (float &radius : failureIndicator.explosionRadii) {
-        radius += 1.0f; 
-}
-
-}
+	if (failureIndicator.isExploding) {
+    	for (float &radius : failureIndicator.explosionRadii) {
+    	radius += 1.0f; 
+	}
+	}
 }
 
 
