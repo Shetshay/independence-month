@@ -25,6 +25,7 @@ using namespace std;
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "aibrahim.h"
+#include "gjimenez3.h"
 #include "classesLander.h"
 #include "jalejo.h"
 #include "jpocasangre.h"
@@ -34,16 +35,7 @@ using namespace std;
 #include "log.h"
 #include <chrono>
 #include <thread>
-/*
-Global g;
-Lz1 lz1;
-Lz2 lz2;
-Lz3 lz3;
-Lz4 lz4;
-Lz5 lz5;
-Lander lander;
-X11_wrapper x11;
-*/
+
 FailureIndicator failureIndicator;
 //---Justin's extern and function declarations---//
 Lz lz;
@@ -459,10 +451,13 @@ moveBashteroid();
 asteroidPhysics();
 //--------------------------------------------
 }
+
 void render()
 {
 
 	glClear(GL_COLOR_BUFFER_BIT);
+	
+	render_space_color();
 
 	//print out score(will need to fix)
 	Rect r;
@@ -481,17 +476,6 @@ void render()
 	}else{
 		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS.. %i", highscore);
 	}
-
-
-
-
-
-
-
-
-
-
-
 
 	/*stats box from gordons lab*/
     if(g.showBox){
@@ -528,15 +512,13 @@ void render()
 
 	//justins render functions
 	renderAsteroids();
-	//renderBashteroid();
-	//moveAsteroids();
 	render_stars();
 	render_stagstars();
 	render_slowstars();
 	renderBashteroid();
+	
 	//Draw LZ
 	glPushMatrix();
-    //glColor3ub(250, 250, 20);
     glColor3ub(173, 216, 230);
     glTranslatef(lz.pos[0], lz.pos[1], 0.0f);
     glBegin(GL_QUADS);
