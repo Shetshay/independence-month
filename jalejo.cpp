@@ -380,6 +380,7 @@ void render_slowstars(){
     glEnd();
 }
 
+/*
 bool checkCollisionBash(const Lander& spaceship, const Bashteroid bashteroid) {
    
         float distance = sqrt(pow(spaceship.pos[0] - bashteroid.x, 2) + pow(spaceship.pos[1] - bashteroid.y, 2));
@@ -389,6 +390,24 @@ bool checkCollisionBash(const Lander& spaceship, const Bashteroid bashteroid) {
     
     return false;
 }
+*/
+
+bool checkCollisionBash(const Lander& spaceship1, const Lander& spaceship2, const Bashteroid bashteroid) {
+    // Array of two landers
+    const Lander* spaceships[2] = {&spaceship1, &spaceship2};
+
+    for (int i = 0; i < 2; i++) {
+        float distance = sqrt(pow(spaceships[i]->pos[0] - bashteroid.x, 2) + 
+                              pow(spaceships[i]->pos[1] - bashteroid.y, 2));
+
+        if (distance < (spaceships[i]->radius + bashteroid.radius)) {
+            return true;  // A collision is found with the Bashteroid.
+        }
+    }
+    return false;  // No collisions were found.
+}
+
+
 
 void renderBashteroid() {
     glColor3f(1.0f, 0.5f, 1.0f);
@@ -560,11 +579,13 @@ void renderX11steroid() {
         eventOccured = false;
     }
 }*/
-
+/*
 bool checkCollision(const Lander& spaceship, const std::vector<Asteroid>& asteroids) {
 
     for(const Asteroid& asteroid : asteroids) {
         float distance = sqrt(pow(spaceship.pos[0] - asteroid.x, 2) + pow(spaceship.pos[1] - asteroid.y, 2));
+
+        
 
         if (distance < (spaceship.radius + asteroid.radius))
             return true;
@@ -573,18 +594,40 @@ bool checkCollision(const Lander& spaceship, const std::vector<Asteroid>& astero
     return false;
 
 }
+*/
 
-bool checkCollisionX11steroid(const Lander& spaceship, const std::vector<X11steroid>& X11steroids) {
+bool checkCollision(const Lander& spaceship1, const Lander& spaceship2, const std::vector<Asteroid>& asteroids) {
+    // Array of two landers
+    const Lander* spaceships[2] = {&spaceship1, &spaceship2};
 
-    for(const X11steroid& X11steroid : X11steroids) {
-        float distance = sqrt(pow(spaceship.pos[0] - X11steroid.x, 2) + pow(spaceship.pos[1] - X11steroid.y, 2));
+    for (int i = 0; i < 2; i++) {
+        for (const Asteroid& asteroid : asteroids) {
+            float distance = sqrt(pow(spaceships[i]->pos[0] - asteroid.x, 2) + 
+                                  pow(spaceships[i]->pos[1] - asteroid.y, 2));
 
-        if (distance < (spaceship.radius + X11steroid.radius))
-            return true;
+            if (distance < (spaceships[i]->radius + asteroid.radius)) {
+                return true; 
+            }
+        }
     }
+    return false; 
+}
 
-    return false;
+bool checkCollisionX11steroid(const Lander& spaceship1, const Lander& spaceship2, const std::vector<Asteroid>& asteroids) {
+    // Array of two landers
+    const Lander* spaceships[2] = {&spaceship1, &spaceship2};
 
+    for (int i = 0; i < 2; i++) {
+        for (const Asteroid& asteroid : asteroids) {
+            float distance = sqrt(pow(spaceships[i]->pos[0] - asteroid.x, 2) + 
+                                  pow(spaceships[i]->pos[1] - asteroid.y, 2));
+
+            if (distance < (spaceships[i]->radius + asteroid.radius)) {
+                return true; 
+            }
+        }
+    }
+    return false; 
 }
 
 /*void X11steroidPhysics() 
@@ -615,7 +658,7 @@ bool checkCollisionX11steroid(const Lander& spaceship, const std::vector<X11ster
 
 void asteroidPhysics() 
 {
-    if (checkCollision(lander, asteroids)) {
+    if (checkCollision(lander, lander2, asteroids)) {
         //cout << "Spaceship collided with an asteroid!" << endl;
         g.failed_landing = 1;
     }
@@ -675,7 +718,7 @@ void move_stars() {
 
 void moveBashteroid() 
 {
-    bool currentCollisionState = checkCollisionBash(lander, bashteroid);
+    bool currentCollisionState = checkCollisionBash(lander, lander2, bashteroid);
 
     if (currentCollisionState && !g.previousCollisionState) {
         g.starsmoveback = !g.starsmoveback;

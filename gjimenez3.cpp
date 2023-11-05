@@ -53,6 +53,18 @@ void lander_boundaries()
     
     if (lander.pos[1] < 0)
         g.failed_landing = 1;
+
+    if (lander2.pos[0] < 0)
+        lander2.pos[0] = g.xres;
+
+    if (lander2.pos[0] > g.xres) 
+        lander2.pos[0] = 0;
+
+    if (lander2.pos[1] > g.yres - 30) 
+        lander2.pos[1] = g.yres - 30;
+    
+    if (lander2.pos[1] < 0)
+        g.failed_landing = 1;
 }
 
 void render_iceblock () 

@@ -45,6 +45,7 @@ class Global {
         int menuChoice;
         bool inMenu;
         bool inEndMenu;
+        bool twoPlayer;
     
         Global() {
             xres = 400;
@@ -63,6 +64,7 @@ class Global {
             menuChoice = 0;
             inMenu = true;
             inEndMenu = false;
+            twoPlayer = false;
         }
 };
 extern Global g;
@@ -81,6 +83,7 @@ class Lander
         float prevPos[2];
         Lander();
         void init();
+        void init2();
 };
 extern Lander lander;
 extern Lander lander2;

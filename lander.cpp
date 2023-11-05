@@ -45,9 +45,9 @@ AlienHead alien;
 Star stars[100];
 Star stagstars[100];
 Star slowstars[100];
-bool checkCollision(const Lander& spaceship, const std::vector<Asteroid>& asteroids);
-bool checkCollisionX11steroid(const Lander& spaceship, const std::vector<X11steroid>& X11steroids);
-bool checkCollisionBash(const Lander& spaceship, const Bashteroid bashteroid);
+bool checkCollision(const Lander& spaceship, const Lander& spaceship2, const std::vector<Asteroid>& asteroids);
+bool checkCollisionX11steroid(const Lander& spaceship, const Lander& spaceship2, const std::vector<Asteroid>& asteroids);
+bool checkCollisionBash(const Lander& spaceship, const Lander& spaceship2, const Bashteroid bashteroid);
 extern int mouse_move_timer(const bool get);
 //----------------------------------//
 
@@ -81,8 +81,9 @@ const float GRAVITY = 0.055;
 
 // Definitions for Lander
 Lander::Lander() {
-    init();
+	init();
 }
+
 
 void Lander::init() {
     pos[0] = 200.0f;
@@ -104,6 +105,29 @@ void Lander::init() {
     g.failed_landing = 0;
     radius = 10.0f;
 }
+
+void Lander::init2() {
+    pos[0] = 150.0f;
+    pos[1] = g.yres - 200.0f;
+    vel[0] = vel[1] = 0.0f;
+    //3 vertices of triangle-shaped rocket lander
+    verts[0][0] = -10.0f;
+    verts[0][1] =   0.0f;
+    verts[1][0] =   0.0f;
+    verts[1][1] =  30.0f;
+    verts[2][0] =  10.0f;
+    verts[2][1] =   0.0f;
+
+    windowVerts[0][0] = -5.0f; windowVerts[0][1] = 10.0f;
+    windowVerts[1][0] = 0.0f; windowVerts[1][1] = 20.0f;
+    windowVerts[2][0] = 5.0f; windowVerts[2][1] = 10.0f;
+    angle = 0.0;
+    thrust = 0.0f;
+    g.failed_landing = 0;
+    radius = 10.0f;
+}
+
+
 
 
 
@@ -280,7 +304,9 @@ int X11_wrapper::check_keys(XEvent *e)
                     // Start the game
 					g.inMenu = false;
                 } else if (g.menuChoice == 1) {
-                    // Open Options menu
+                    // Activates two Player
+					g.twoPlayer = true;
+					g.inMenu = false;
                 } else if (g.menuChoice == 2) {
                     // Quit the game
                     exit(0);
@@ -289,9 +315,10 @@ int X11_wrapper::check_keys(XEvent *e)
                     if (g.menuChoice == 0) {
                         // Retry
                         g.inEndMenu = false; 
-                        lander.init(); // Reinitialize game state or similar logic
+                        lander.init();
+						lander2.init2(); // Reinitialize game state or similar logic
                     } else if (g.menuChoice == 1) {
-                        // Go back to Main Menu
+                        // Go back to Main Menu or check scores(need to still work on)
                         g.inEndMenu = false;
                         g.inMenu = true;
                     } else if (g.menuChoice == 2) {
@@ -328,6 +355,8 @@ void render(void);
 int main()
 {	
 	//bool for menu handling
+
+	lander2.init2();
 
 	logOpen();
 	init_opengl();
@@ -403,6 +432,8 @@ void physics()
 	lander.pos[0] += lander.vel[0];
 	lander.pos[1] += lander.vel[1];
 	lander.vel[1] -= GRAVITY;
+
+
 	//lz.pos[0] += 0.6f;
 
 	//apply thrust
@@ -423,6 +454,33 @@ void physics()
 	if (g.keys[XK_Right])
 		lander.angle -= 1.5;
 
+// two player mode bool
+	if(g.twoPlayer){
+		lander2.pos[0] += lander2.vel[0];
+		lander2.pos[1] += lander2.vel[1];
+		lander2.vel[1] -= GRAVITY;
+
+
+		//lz.pos[0] += 0.6f;
+
+		//apply thrust
+		//convert angle to radians...
+		float ang = ((lander2.angle+90.0) / 360.0) * (3.14159 * 2.0);
+		//make a thrust vector...
+		float xthrust = cos(ang) * lander2.thrust;
+		float ythrust = sin(ang) * lander2.thrust;
+		lander2.vel[0] += xthrust;
+		lander2.vel[1] += ythrust;
+		lander2.thrust *= 0.95f;
+		if (g.keys[XK_w]) {
+			//Thrust for the rocket, and movement of stars
+			lander2.thrust = 0.1;
+		}
+		if (g.keys[XK_a])
+			lander2.angle += 1.5;
+		if (g.keys[XK_d])
+			lander2.angle -= 1.5;
+	}
 
 
 //handle_landerInter();
@@ -442,6 +500,7 @@ void render()
 {
 
 	glClear(GL_COLOR_BUFFER_BIT);
+
 	
 	render_space_color();
 
@@ -456,7 +515,7 @@ void render()
 
 	// will implement when checkCollisionBash = True highscore goes back not fully working 
 	// right now
-	if(checkCollisionBash(lander, bashteroid)) {
+	if(checkCollisionBash(lander, lander2, bashteroid)) {
 		highscore = highscore - 10;
 		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS.. %i", highscore);
 	} else {
@@ -533,12 +592,42 @@ void render()
 	}
 		glEnd();
 	}
+	glPopMatrix();
+
+	if(g.twoPlayer){
+		glPushMatrix();
+		glColor3ub(250, 250, 250);
+		if (g.failed_landing) {
+			glColor3ub(250, 0, 0); //Red color USLEEP WHILE LOOP TO INDICATE LIFE LOST
+		}
+
+		glTranslatef(lander2.pos[0], lander2.pos[1], 0.0f);
+		glRotated(lander2.angle, 0.0, 0.0, 1.0);
+		glBegin(GL_TRIANGLES);
+		for (int i=0; i<3; i++) {
+			glVertex2f(lander2.verts[i][0], lander2.verts[i][1]);
+		}
+		glEnd();
+		//Lander thrust
+		if (lander2.thrust > 0.0) {
+		//draw the thrust vector
+		glBegin(GL_LINES);
+		for (int i=0; i<25; i++) {
+			glColor3ub(0, 0, 255);
+			glVertex2f(rnd()*10.0-5.0, 0.0);
+			glColor3ub(100, 0, 100);
+			glVertex2f(0.0+rnd()*14.0-7.0,
+				lander2.thrust * (-500.0 - rnd() * 500.0));
+		}
+			glEnd();
+		}
+		glPopMatrix();
+	}
 
 	if (g.failed_landing) {
 	//show crash graphics here...
 	}
 	
-	glPopMatrix();
 
 	if (g.failed_landing) {
 		glColor3ub(250, 0, 0); 

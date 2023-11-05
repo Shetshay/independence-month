@@ -30,15 +30,15 @@ void handleMenu() {
         ggprint8b(&r, 16, 0x009966FF, "Main Menu");
         r.bot -= 40;
         if (g.menuChoice == 0)
-            ggprint8b(&r, 16, 0x009900FF, "> Start Game");
+            ggprint8b(&r, 16, 0x009900FF, "> Single Player");
         else
-            ggprint8b(&r, 16, 0x00ffffff, "Start Game");
+            ggprint8b(&r, 16, 0x00ffffff, "Single Player");
 
         r.bot -= 20;
         if (g.menuChoice == 1)
-            ggprint8b(&r, 16, 0x009900FF, "> Options");
+            ggprint8b(&r, 16, 0x009900FF, "> Two Player");
         else
-            ggprint8b(&r, 16, 0x00ffffff, "Options");
+            ggprint8b(&r, 16, 0x00ffffff, "Two Player");
 
         r.bot -= 20;
         if (g.menuChoice == 2)
