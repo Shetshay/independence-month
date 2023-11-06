@@ -201,7 +201,8 @@ UFO::UFO()
 //----------------------------------------
 
 //--------Laser executables---------------
-Laser::Laser() {
+Laser::Laser() 
+{
     pos[0] = 0.0f;
     pos[1] = 0.0f;
     length = 20.0f;
@@ -209,19 +210,22 @@ Laser::Laser() {
     active = false;
 }
 
-void Laser::fire(float startX, float startY) {
+void Laser::fire(float startX, float startY) 
+{
     pos[0] = startX;
     pos[1] = startY;
     active = true;
 }
 
-void Laser::move() {
+void Laser::move() 
+{
     if (active) {
         pos[1] += speed; // Move the laser downward
     }
 }
 
-void Laser::render() {
+void Laser::render() 
+{
     if (active) {
 
         float laserWidth = 5.0f; // Width of the laser rectangle
@@ -271,7 +275,8 @@ void Lz::moveback()
 //----------------------------------------
 
 //----------AlienHead executable----------
-void AlienHead::drawCircle(float cx, float cy, float r, float color[3]) {
+/*void AlienHead::drawCircle(float cx, float cy, float r, float color[3]) 
+{
     glColor3f(color[0], color[1], color[2]);
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(cx, cy);  // Center
@@ -284,7 +289,8 @@ void AlienHead::drawCircle(float cx, float cy, float r, float color[3]) {
     glEnd();
 }
 
-void AlienHead::drawOval(float cx, float cy, float rx, float ry, float angle, float color[3]) {
+void AlienHead::drawOval(float cx, float cy, float rx, float ry, float angle, float color[3]) 
+{
     glColor3f(color[0], color[1], color[2]);
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(cx, cy);  // Center
@@ -301,7 +307,8 @@ void AlienHead::drawOval(float cx, float cy, float rx, float ry, float angle, fl
     glEnd();
 }
 
-void AlienHead::alienrender(float cx, float cy) {
+void AlienHead::alienrender(float cx, float cy) 
+{
     float headColor[3] = {0.2f, 0.9f, 0.2f};  // Yellowish color for the alien head
     float eyeColor[3] = {1.0f, 0.0f, 0.0f};   // Red color for the eyes
 
@@ -315,6 +322,7 @@ void AlienHead::alienrender(float cx, float cy) {
     drawOval(cx + 8.0f, cy + 2.0f, 3.0f, 5.0f, -0.3f, eyeColor);
 }
 //----------------------------------------
+*/
 void init_stars() 
 { 
     srand(time(NULL));
@@ -349,7 +357,8 @@ void change_value()
     lz.pos[0] = floatval;
 }
 
-void render_stars(){
+void render_stars()
+{
 
     glColor3f(1.0f, 1.0f, 1.0f);
     glBegin(GL_POINTS);
@@ -360,7 +369,8 @@ void render_stars(){
     glEnd();
 }
 
-void render_stagstars(){
+void render_stagstars()
+{
     glColor3f(1.0f, 1.0f, 1.0f);
     glBegin(GL_POINTS);
     for(int i = 0; i < NUM_STARS; i++){
@@ -370,7 +380,8 @@ void render_stagstars(){
     glEnd();
 }
 
-void render_slowstars(){
+void render_slowstars()
+{
     glColor3f(1.0f, 1.0f, 1.0f);
     glBegin(GL_POINTS);
     for(int i = 0; i < 100; i++){
@@ -392,7 +403,8 @@ bool checkCollisionBash(const Lander& spaceship, const Bashteroid bashteroid) {
 }
 */
 
-bool checkCollisionBash(const Lander& spaceship1, const Lander& spaceship2, const Bashteroid bashteroid) {
+bool checkCollisionBash(const Lander& spaceship1, const Lander& spaceship2, const Bashteroid bashteroid)
+{
     // Array of two landers
     const Lander* spaceships[2] = {&spaceship1, &spaceship2};
 
@@ -407,7 +419,8 @@ bool checkCollisionBash(const Lander& spaceship1, const Lander& spaceship2, cons
     return false;  // No collisions were found.
 }
 
-void renderBashteroid() {
+void renderBashteroid() 
+{
     glPushMatrix();
     glTranslatef(bashteroid.x, bashteroid.y, 0.0f);
     glLineWidth(5.0f);
@@ -458,8 +471,8 @@ void init_asteroids()
     	}
 }
 
-void renderAsteroids() {
-
+void renderAsteroids() 
+{
     glColor3f(1.0f, 1.0f, 1.0f);
     for(const Asteroid& asteroid : asteroids) {
 
@@ -497,36 +510,30 @@ void renderAsteroids() {
     }
 }
 
-void renderX11steroid() {
-
+void renderX11steroid() 
+{
     glColor3f(1.0f, 1.0f, 1.0f);
     for(const X11steroid& X11steroid : X11steroids) {
-
         glPushMatrix();
         glTranslatef(X11steroid.x, X11steroid.y, 0.0f);
         glLineWidth(2.0f);
         glBegin(GL_LINES);
             for(int i = 0; i < 35; i++) {
-
                 glColor3ub(0,0,0);
-                glVertex2f((rnd() * X11steroid.radius * 2) - X11steroid.radius, 0.0);
+                glVertex2f((rnd() * X11steroid.radius * 2)
+                - X11steroid.radius, 0.0);
                 glColor3ub(50, 50, 50);
                 glVertex2f(0.0 + rnd() * 14.0-7.0, (50.0 + rnd() * 50.0));
             }
-            glEnd();
-
-            glBegin(GL_TRIANGLE_FAN);
+        glEnd();
+        glBegin(GL_TRIANGLE_FAN);
             for(int i= 0; i < 360; i +=15) {
-
                 float angle = i * 3.14159265f / 180.0f;
                 float x = X11steroid.radius * cos(angle);
                 float y = X11steroid.radius * sin(angle);
                 glVertex2f(x,y);
                 float t = static_cast<float>(i) / 360.0f;
-                
-                
                 float grayShade = 0.3f * (1.0f + sin(t * 3.14159265f));
-
                 glColor3f(grayShade, grayShade, grayShade);
                 glVertex2f(x, y);
             }
@@ -535,7 +542,8 @@ void renderX11steroid() {
     }
 }
 
-/*void music_effects() {
+/*void music_effects() 
+{
 
     if(g.starsmoveback && !music.eventOccurred) {
         if(music.musicbgMusicPlaying) {
@@ -577,7 +585,8 @@ bool checkCollision(const Lander& spaceship, const std::vector<Asteroid>& astero
 }
 */
 
-bool checkCollision(const Lander& spaceship1, const Lander& spaceship2, const std::vector<Asteroid>& asteroids) {
+bool checkCollision(const Lander& spaceship1, const Lander& spaceship2, const std::vector<Asteroid>& asteroids) 
+{
     // Array of two landers
     const Lander* spaceships[2] = {&spaceship1, &spaceship2};
 
@@ -594,7 +603,9 @@ bool checkCollision(const Lander& spaceship1, const Lander& spaceship2, const st
     return false; 
 }
 
-bool checkCollisionX11steroid(const Lander& spaceship1, const Lander& spaceship2, const std::vector<Asteroid>& asteroids) {
+bool checkCollisionX11steroid(const Lander& spaceship1, 
+const Lander& spaceship2, const std::vector<Asteroid>& asteroids) 
+{
     // Array of two landers
     const Lander* spaceships[2] = {&spaceship1, &spaceship2};
 
@@ -654,7 +665,8 @@ void asteroidPhysics()
     }
 }
 
-void move_stars() {
+void move_stars() 
+{
     if (g.starsmoveback) {
         for(int j = 0; j < 100; j++) {
             stars[j].y += 1.0f;
@@ -668,14 +680,8 @@ void move_stars() {
                 slowstars[j].y = 0;
             if(stagstars[j].y > g.yres)
                 stagstars[j].y = 0;
-            /*if(stars[j].x > g.xres)
-                stars[j].x = 0;
-            if(slowstars[j].x < 0)
-            slowstars[j].x = g.xres;*/
         }
-
-    } 
-    else {
+    } else {
         
         for(int j = 0; j < 100; j++) {
             stars[j].y -= 1.0f;
@@ -692,7 +698,7 @@ void move_stars() {
             stagstars[j].y -= 0.25f;
             if(stagstars[j].y < 0)
             stagstars[j].y = g.yres;
-    }
+        }
     }
 }
 
@@ -726,7 +732,7 @@ void moveLz()
     }
 }
 
-void shootlaser() 
+/*void shootlaser() 
 {
     if(g.starsmoveback) {
         //Do nothing
@@ -735,4 +741,4 @@ void shootlaser()
         ufoLaser.fire(myUFO.pos[0], myUFO.pos[1] - myUFO.radiusBottom);
         }
     }
-}
+}*/
