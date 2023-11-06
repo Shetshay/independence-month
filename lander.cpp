@@ -30,6 +30,8 @@ using namespace std;
 #include <thread>
 
 FailureIndicator failureIndicator;
+FailureIndicator2 secondaryIndicator;
+Record record;
 //---Justin's extern and function declarations---//
 Lz lz;
 Music music;
@@ -126,12 +128,6 @@ void Lander::init2() {
     g.failed_landing = 0;
     radius = 10.0f;
 }
-
-
-
-
-
-
 
 
 Display* X11_wrapper::getDisplay() const {
@@ -271,7 +267,9 @@ void X11_wrapper::check_mouse(XEvent *e)
 			
 			//Justin's function for lab;
 			mouse_move_timer(true);
-			
+			record.setEnd(savex, savey);
+            cout << "Mouse traveled: " << record.getDistance() << " pixels." << endl;
+            record.setStart(savex, savey);
 
 		}
 	}
@@ -565,12 +563,16 @@ void render()
 
 	render_iceblock();
 
-	//Draw Lander
-	glPushMatrix();
-	glColor3ub(250, 250, 250);
-	if (g.failed_landing) {
-		glColor3ub(250, 0, 0); //Red color USLEEP WHILE LOOP TO INDICATE LIFE LOST
-	}
+glEnable(GL_BLEND);
+// makes the shrimp transparent
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+// Draw Lander
+glPushMatrix();
+glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // Set initial color to white with full opacity
+if (g.failed_landing) {
+    // Color red
+    glColor4f(1.0f, 0.0f, 0.0f, 0.0f);
+}
 
 	glTranslatef(lander.pos[0], lander.pos[1], 0.0f);
 	glRotated(lander.angle, 0.0, 0.0, 1.0);
@@ -629,21 +631,30 @@ void render()
 	}
 	
 
-	if (g.failed_landing) {
-		glColor3ub(250, 0, 0); 
-    	failureIndicator.drawExplosion(lander.pos[0], lander.pos[1]);
-	}
+if (g.failed_landing) {
+glColor3ub(250, 0, 0); 
+failureIndicator.drawExplosion(lander.pos[0], lander.pos[1]);
+//secondaryIndicator.createFragments(lander.pos[0], lander.pos[1], 50);
+secondaryIndicator.drawFragments();  
+}
 
-	if (g.failed_landing && !failureIndicator.isExploding) {
-    	failureIndicator.isExploding = true;
-    	failureIndicator.explosionRadii = {5.0f, 10.0f, 15.0f}; // Initial radii for circles
-	}
+if (g.failed_landing && !failureIndicator.isExploding) {
+    failureIndicator.isExploding = true;
+	    failureIndicator.explosionRadii = {5.0f, 10.0f, 15.0f}; 
+    secondaryIndicator.createFragments(lander.pos[0], lander.pos[1], 200);
+}
 
-	if (failureIndicator.isExploding) {
-    	for (float &radius : failureIndicator.explosionRadii) {
-    	radius += 1.0f; 
-	}
-	}
+if (failureIndicator.isExploding) {
+	failureIndicator.isExploding = true;
+    secondaryIndicator.updateFragments();
+}
+
+if (failureIndicator.isExploding) {
+    secondaryIndicator.drawFragments(); 
+	for (float &radius : failureIndicator.explosionRadii) {
+        radius += 150.0f; 
+}
+}
 }
 
 

@@ -8,13 +8,7 @@
 #ifndef JPOCASANGRE_H
 #define JPOCASANGRE_H
 #include <vector>
-
-// class FailureIndicator {
-// public:
-//     void drawCircle(float x, float y, float radius);
-//     float explosionRadius = 0.0f;
-//     bool isExploding = false;
-// };
+#include <cmath>
 
 class FailureIndicator {
 public:
@@ -23,10 +17,38 @@ public:
     bool isExploding = false;
 };
 
-class Record {
+class FailureIndicator2 {
 public:
-    int distance(int x, int y);
+    struct TriangleFragment {
+        float vertices[3][2]; 
+        float velocity[2];    
+        float angle;          
+        float angularVelocity; 
+        bool active;          
+        TriangleFragment() : angle(0.0f), angularVelocity(0.0f), active(false) {
+        }
+    };
+    const float maxSpeed = 45.0f; 
+    const float maxAngularSpeed = 360.0f; 
+    const float fragmentSize = 10.0f; 
+    std::vector<TriangleFragment> fragments; 
+    float explosionCenterX, explosionCenterY; 
+    FailureIndicator2();
+    void createFragments(float x, float y, int numFragments);
+    void updateFragments(); 
+    void drawFragments();   
 };
 
-//int total_running_time(const bool get)
-#endif
+class Record {
+public:
+    double startX = 0, startY = 0;
+    double endX = 0, endY = 0;
+    double cumulativeDistance = 0;
+    double total = 0;
+
+    void setStart(double x, double y);
+    void setEnd(double x, double y);
+    double getDistance();
+};
+
+#endif 
