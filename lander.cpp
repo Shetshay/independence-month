@@ -556,12 +556,12 @@ void render()
 	//ggprint13(&r, 20, 0x0055ff55, "Seconds since mouse moved: %i", timer);
 
 	//justins render functions
-	renderAsteroids();
+	/*renderAsteroids();
 	render_stars();
 	render_stagstars();
 	render_slowstars();
-	renderBashteroid();
-	
+	renderBashteroid();*/
+	//commenting out code in case people want to steal our intellectual property
 
 	render_iceblock();
 
