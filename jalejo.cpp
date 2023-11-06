@@ -407,63 +407,44 @@ bool checkCollisionBash(const Lander& spaceship1, const Lander& spaceship2, cons
     return false;  // No collisions were found.
 }
 
-
-
 void renderBashteroid() {
-    glColor3f(1.0f, 0.5f, 1.0f);
-    
+    glPushMatrix();
+    glTranslatef(bashteroid.x, bashteroid.y, 0.0f);
+    glLineWidth(5.0f);
 
-        glPushMatrix();
-        glTranslatef(bashteroid.x, bashteroid.y, 0.0f);
-        glLineWidth(5.0f);
-        glBegin(GL_LINES);
-        for (int i = 0; i < 35; i++) {
-        /*glColor3f(0.7f,0.0f,0.7f);
+    // Lines with gradient from purple to blue
+    glBegin(GL_LINES);
+    for (int i = 0; i < 35; i++) {
+        // Purple color
+        glColor3ub(128, 0, 128);  // RGB for purple
         glVertex2f((rnd() * bashteroid.radius * 2) - bashteroid.radius, 0.0);
-        glColor3f(1.0f, 0.5f, 1.0f);
-        glVertex2f(0.0 + rnd() * 14.0-7.0, (50.0 + rnd() * 50.0));*/
-        // Define the start (purple) and end (blue) colors for the gradient
-float startColor[3] = {0.5f, 0.0f, 0.5f}; // Purple
-float endColor[3] = {0.0f, 0.0f, 1.0f};   // Blue
+        // Blue color
+        glColor3ub(0, 0, 255);    // RGB for blue
+        glVertex2f(0.0 + rnd() * 14.0 - 7.0, (50.0 + rnd() * 50.0));
+    }
+    glEnd();
 
-// Interpolate between the start and end colors based on the y position of the vertex
-float a = (rnd() * bashteroid.radius * 2 - bashteroid.radius) / (2.0f * bashteroid.radius); 
-glColor3f((1 - a) * startColor[0] + a * endColor[0], 
-          (1 - a) * startColor[1] + a * endColor[1], 
-          (1 - a) * startColor[2] + a * endColor[2]);
-glVertex2f((rnd() * bashteroid.radius * 2) - bashteroid.radius, 0.0);
-
-float b = (50.0 + rnd() * 50.0) / 100.0;
-glColor3f((1 - b) * startColor[0] + b * endColor[0], 
-          (1 - b) * startColor[1] + b * endColor[1], 
-          (1 - b) * startColor[2] + b * endColor[2]);
-glVertex2f(0.0 + rnd() * 14.0 - 7.0, (50.0 + rnd() * 50.0));
-
-//glEnd();
-        }
-        glEnd();
-
-            glBegin(GL_TRIANGLE_FAN);
-            for(int i= 0; i < 360; i +=15) {
-
-                float angle = i * 3.14159265f / 180.0f;
-                float x = bashteroid.radius * cos(angle);
-                float y = bashteroid.radius * sin(angle);
-                glVertex2f(x,y);
-                float t = static_cast<float>(i) / 360.0f;
-                
-                
-                float red = (1.0f - t) * 0.5f;
-                float green = 0.0f;
-                float blue = t + 0.5f * (1.0f - t);
-
-                glColor3f(red, green, blue);
-                glVertex2f(x, y);
-            }
-            glEnd();
-            glPopMatrix();
+    // Triangle fan with gradient from purple to blue
+    glBegin(GL_TRIANGLE_FAN);
+    for (int i = 0; i < 360; i += 15) {
+        float angle = i * 3.14159265f / 180.0f;
+        float x = bashteroid.radius * cos(angle);
+        float y = bashteroid.radius * sin(angle);
     
+        float t = static_cast<float>(i) / 360.0f;
+       
+        float red = (1.0f - t) * 128.0f;  // Red channel starts at 128 for purple and goes to 0 for blue
+        float green = 0.0f;                // Green channel stays at 0 for both purple and blue
+        float blue = t * 255.0f + (1.0f - t) * 128.0f; // Blue channel starts at 128 for purple and goes to 255 for blue
+
+        glColor3f(red / 255.0f, green, blue / 255.0f); // Normalize the RGB values by dividing by 255
+        glVertex2f(x, y);
+    }
+    glEnd();
+    
+    glPopMatrix();
 }
+
 
 void init_asteroids() 
 {
