@@ -293,6 +293,9 @@ int X11_wrapper::check_keys(XEvent *e)
 			case XK_Escape:
 				//Escape key was pressed
 				return 1;
+			case XK_p:
+				g.paused = !g.paused;
+				break;
 			case XK_s:
 				g.showBox = !g.showBox;  // Toggle box visibility
             	break;
@@ -394,7 +397,9 @@ int main()
             handleMenu();
         }else if(g.inEndMenu){
 			endMenu();
-		}
+		}else if(g.paused == true){
+			renderPauseScreen();
+    	}
     }
 } while (restartCondition);
 

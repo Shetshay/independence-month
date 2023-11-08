@@ -1,7 +1,9 @@
 //Gustavo Jimenez
-//working on adding bullets to lander frame
+//made 09.29.2023
 
 #include <GL/glx.h>
+#include <stdio.h>
+#include <unistd.h>
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
@@ -10,8 +12,112 @@
 #include <iostream>
 #include "gjimenez3.h"
 #include "classesLander.h"
+#include "log.h"
+#include "fonts.h"
 #include <vector>
 using namespace std;
+
+/*vector<Asteroid> asteroids;
+
+bool checkCollision(const Lander& lander, const std::vector<Asteroid>& asteroids) {
+    // Get the boundaries of the lander
+    float landerLeft = lander.pos[0] - lander.width / 2;
+    float landerRight = lander.pos[0] + lander.width / 2;
+    float landerTop = lander.pos[1] + lander.height / 2;
+    float landerBottom = lander.pos[1] - lander.height / 2;
+
+    // Check for collision with each asteroid
+    for (const Asteroid& asteroid : asteroids) {
+        // Get the boundaries of the asteroid
+        float asteroidLeft = asteroid.posX - asteroid.radius;
+        float asteroidRight = asteroid.posX + asteroid.radius;
+        float asteroidTop = asteroid.posY + asteroid.radius;
+        float asteroidBottom = asteroid.posY - asteroid.radius;
+
+        // Check for collision by comparing boundaries
+        if (landerRight >= asteroidLeft &&
+            landerLeft <= asteroidRight &&
+            landerTop >= asteroidBottom &&
+            landerBottom <= asteroidTop) {
+            // Collision detected
+            return true;
+        }
+    }
+
+    // No collision detected
+    return false;
+}*/
+/*
+void handleContinueInput(XEvent& e, bool& showContinueScreen, bool& collision, bool& inMenu) {
+    if (e.type == KeyPress) {
+        if (showContinueScreen) {
+            if (e.xkey.keycode == XKeysymToKeycode(x11.getDisplay, XK_y)) {
+                // User pressed "c" key to continue the game
+                showContinueScreen = false; // Hide the "Continue?" screen
+                collision = false; // Reset the collision flag
+                lander.pos[0] += lander.vel[0];
+				lander.pos[1] += lander.vel[1];
+				lander.vel[1] -= GRAVITY;
+            } else if (e.xkey.keycode == XKeysymToKeycode(x11.getDisplay, XK_n)) {
+                // User pressed "m" key to return to the main menu
+                showContinueScreen = false; // Hide the "Continue?" screen
+                inMenu = true; // Return to the main menu
+                // Handle returning to the main menu here
+            }
+        }
+    }
+}
+
+void renderContinueScreen(int countdown) {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glPushMatrix();
+    // Set the color and text size
+    glColor3ub(255, 255, 255);
+    Rect r;
+    r.bot = 400;
+    r.left = 200;
+    r.center = 0;
+
+    // Display countdown
+    ggprint8b(&r, 16, 0, "CONTINUE?: %d seconds", countdown);
+
+    // Display instructions
+    r.bot = 300;
+    ggprint8b(&r, 16, 0, "Press 'Y' to continue, 'N' to return to the main menu");
+    glPopMatrix();
+    x11.swapBuffers();
+}*/
+
+void renderPauseScreen() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glPushMatrix();
+    glColor3ub(255, 255, 255);
+    Rect r;
+    r.bot = 300;
+    r.left = 200;
+    r.center = 0;
+    //show paused
+    ggprint8b(&r, 16, 0x009900FF, "Game Paused");
+    glPopMatrix();
+    x11.swapBuffers();
+}
+
+int keyPressTime(const bool get){
+	
+	static int keyPress= 1;
+	static int startTime;
+	if (keyPress){
+		startTime= time(NULL);
+		keyPress= 0;
+	}
+	if(get){
+	    time_t currentTime = time(NULL);
+        return difftime(currentTime, startTime);
+    }
+    return 0.0;
+	
+}
+
 
 void render_space_color()
 {

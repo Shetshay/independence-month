@@ -46,6 +46,7 @@ class Global {
         bool inMenu;
         bool inEndMenu;
         bool twoPlayer;
+        bool paused;
     
         Global() {
             xres = 400;
@@ -65,6 +66,7 @@ class Global {
             inMenu = true;
             inEndMenu = false;
             twoPlayer = false;
+            paused = false;
         }
 };
 extern Global g;
