@@ -381,7 +381,7 @@ int main()
             done = x11.check_keys(&e);
         }
         // logic for game menu
-        if (!g.inMenu && !g.inEndMenu) {
+        if (!g.inMenu && !g.inEndMenu && !g.paused) {
             physics();
             render();
 			usleep(25000);
