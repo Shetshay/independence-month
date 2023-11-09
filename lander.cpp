@@ -26,6 +26,7 @@ using namespace std;
 #include "jacosta.h"
 #include "fonts.h"
 #include "log.h"
+//#include "highscore.h"
 #include <chrono>
 #include <thread>
 
@@ -51,7 +52,12 @@ bool checkCollision(const Lander& spaceship, const Lander& spaceship2, const std
 bool checkCollisionX11steroid(const Lander& spaceship, const Lander& spaceship2, const std::vector<Asteroid>& asteroids);
 bool checkCollisionBash(const Lander& spaceship, const Lander& spaceship2, const Bashteroid bashteroid);
 extern int mouse_move_timer(const bool get);
+
 //----------------------------------//
+
+//Andrew's extern---------
+void askForName(std::string& playerName);
+//------------------------
 
 //floating point random numbers
 #define rnd() (float)rand() / (float)RAND_MAX
@@ -268,7 +274,7 @@ void X11_wrapper::check_mouse(XEvent *e)
 			//Justin's function for lab;
 			mouse_move_timer(true);
 			record.setEnd(savex, savey);
-            cout << "Mouse traveled: " << record.getDistance() << " pixels." << endl;
+            //cout << "Mouse traveled: " << record.getDistance() << " pixels." << endl;
             record.setStart(savex, savey);
 
 		}
@@ -303,6 +309,8 @@ int X11_wrapper::check_keys(XEvent *e)
                 if (g.inMenu){
 				if (g.menuChoice == 0){
                     // Start the game
+					askForName(g.playerName);
+					g.setPlayerName(g.playerName);
 					g.inMenu = false;
                 } else if (g.menuChoice == 1) {
                     // Activates two Player
@@ -319,6 +327,7 @@ int X11_wrapper::check_keys(XEvent *e)
                         lander.init();
 						lander2.init2(); // Reinitialize game state or similar logic
                     } else if (g.menuChoice == 1) {
+						displayHighScores();
                         // Go back to Main Menu or check scores(need to still work on)
                         g.inEndMenu = false;
                         g.inMenu = true;
@@ -390,6 +399,8 @@ int main()
 				g.menuChoice = 0;
                	g.failed_landing = 0;  				
 				this_thread::sleep_for(chrono::seconds(1));
+				sendHighScore(g.playerName, g.tempHighscore);
+				//cout << g.tempHighscore << endl;
 				g.inEndMenu = true;
             }
         } else if(g.inMenu){  
@@ -515,14 +526,21 @@ void render()
 
 	int highscore = countPhysics(true) / 50;
 
+	//void renderName();
+
 
 	// will implement when checkCollisionBash = True highscore goes back not fully working 
 	// right now
 	if(checkCollisionBash(lander, lander2, bashteroid)) {
 		highscore = highscore - 10;
-		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS.. %i", highscore);
+		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS: %i", highscore);
+		r.bot = 550;
+    	ggprint13(&r, 20, 0x0055ff55, "Player: %s", g.playerName.c_str());
+		g.tempHighscore = highscore;
 	} else {
-		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS.. %i", highscore);
+		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS: %i", highscore);
+   		ggprint13(&r, 20, 0x0055ff55, "Player: %s", g.playerName.c_str());
+		g.tempHighscore = highscore;
 	}
 
 	/*stats box from gordons lab*/

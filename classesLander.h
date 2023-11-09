@@ -47,7 +47,14 @@ class Global {
         bool inEndMenu;
         bool twoPlayer;
         bool paused;
-    
+        int tempHighscore;
+
+        std::string playerName;
+
+        
+        void setPlayerName(const std::string& name) {
+            playerName = name;
+            }
         Global() {
             xres = 400;
             yres = 600;
@@ -67,6 +74,8 @@ class Global {
             inEndMenu = false;
             twoPlayer = false;
             paused = false;
+            tempHighscore = 0;
+            
         }
 };
 extern Global g;

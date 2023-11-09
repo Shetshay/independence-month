@@ -104,7 +104,7 @@ void FailureIndicator2::drawFragments() {
             } else if (X == 6) {
                 glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
             }
-            cout << "Random Color Value: " << X << endl;
+            //cout << "Random Color Value: " << X << endl;
 
             // color of the remains of the shrimp
             // glColor4f(3.0f, 1.0f, 3.0f, 1.5f); 
