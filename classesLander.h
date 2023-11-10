@@ -49,6 +49,7 @@ class Global {
         bool paused;
         int tempHighscore;
         bool done;
+        bool inscoreMenu;
 
 
         std::string playerName;
@@ -78,6 +79,7 @@ class Global {
             paused = false;
             done = false;
             tempHighscore = 0;
+            inscoreMenu = false;
             
         }
 };

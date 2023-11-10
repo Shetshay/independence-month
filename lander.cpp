@@ -305,6 +305,9 @@ int X11_wrapper::check_keys(XEvent *e)
 			case XK_s:
 				g.showBox = !g.showBox;  // Toggle box visibility
             	break;
+			case XK_q:
+				g.inscoreMenu = !g.inscoreMenu;
+				break;
 			case XK_Return: // 'Enter' key to select menu option
                 if (g.inMenu){
 				if (g.menuChoice == 0){
@@ -327,20 +330,9 @@ int X11_wrapper::check_keys(XEvent *e)
                         lander.init();
 						lander2.init2(); // Reinitialize game state or similar logic
                     } else if (g.menuChoice == 1) {
-						displayHighScores();
                         // Go back to Main Menu or check scores(need to still work on)
-                        g.inEndMenu = false;
-                        g.inMenu = true;
-						XEvent e;
-        bool done = false;
-        while (!done) {
-            XNextEvent(x11.getDisplay(), &e);
-            if (e.type == KeyPress && XLookupKeysym(&e.xkey, 0) == XK_q) {
-                done = true;
-            }
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
-        }
-
+                        //g.inEndMenu = false;
+						g.inscoreMenu = true;
 
                     } else if (g.menuChoice == 2) {
                         // Quit the game
@@ -418,7 +410,11 @@ int main()
 			//if inMenu true display and turn inMenu false
             handleMenu();
         }else if(g.inEndMenu){
-			endMenu();
+			if(g.inscoreMenu){
+				displayHighScores();
+			}else{
+				endMenu();
+			}
 		}else if(g.paused == true){
 			renderPauseScreen();
     	}
