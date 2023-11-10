@@ -48,6 +48,8 @@ class Global {
         bool twoPlayer;
         bool paused;
         int tempHighscore;
+        bool done;
+
 
         std::string playerName;
 
@@ -74,6 +76,7 @@ class Global {
             inEndMenu = false;
             twoPlayer = false;
             paused = false;
+            done = false;
             tempHighscore = 0;
             
         }

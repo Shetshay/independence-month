@@ -20,6 +20,7 @@ using namespace std;
 #include <vector>
 #include <curl/curl.h>
 #include <string>
+#include <sstream>
 
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* output) {
     size_t total_size = size * nmemb;
@@ -96,8 +97,32 @@ std::string readHighScores() {
 }
 
 void displayHighScores() {
+    // Retrieve high scores from the server
     std::string highScores = readHighScores();
-    std::cout << "High Scores:\n" << highScores << std::endl;
+
+    // Render high scores on the screen
+    glClear(GL_COLOR_BUFFER_BIT);
+    glPushMatrix();
+    glColor3ub(255, 255, 255);
+    Rect r;
+    r.bot = 520;
+    r.left = 10;
+    r.center = 0;
+    ggprint8b(&r, 16, 0x009900FF, "High Scores:");
+
+    // Split the high scores string into lines
+    std::istringstream scoresStream(highScores);
+    std::string line;
+    int yPos = 490;  // Initial Y position for the scores
+
+    while (std::getline(scoresStream, line)) {
+        ggprint8b(&r, 16, 0x009900FF, line.c_str());
+        r.bot -= 20;  // Move to the next line
+        yPos -= 20;
+    }
+
+    glPopMatrix();
+    x11.swapBuffers();
 }
 
 void renderName() {
@@ -199,10 +224,6 @@ std::string readHighScore() {
 }
 
 */
-
-
-
-
 
 /*
 void spawn_newLander(){

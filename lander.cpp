@@ -331,6 +331,17 @@ int X11_wrapper::check_keys(XEvent *e)
                         // Go back to Main Menu or check scores(need to still work on)
                         g.inEndMenu = false;
                         g.inMenu = true;
+						XEvent e;
+        bool done = false;
+        while (!done) {
+            XNextEvent(x11.getDisplay(), &e);
+            if (e.type == KeyPress && XLookupKeysym(&e.xkey, 0) == XK_q) {
+                done = true;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        }
+
+
                     } else if (g.menuChoice == 2) {
                         // Quit the game
                         exit(0);
