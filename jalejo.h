@@ -165,7 +165,7 @@ class Bashteroid {
         void reset();
         void reversereset();
 };
-extern Bashteroid bashteroid;
+extern vector<Bashteroid> bashteroids;
 
 class Music {
     public:

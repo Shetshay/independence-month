@@ -42,15 +42,15 @@ Lander lander;
 Lander lander2;
 vector<Asteroid> asteroids;
 vector<X11steroid> X11steroids;
-Bashteroid bashteroid;
+vector<Bashteroid> bashteroids;
 Laser ufoLaser;
 AlienHead alien;
 Star stars[100];
 Star stagstars[100];
 Star slowstars[100];
 bool checkCollision(const Lander& spaceship, const Lander& spaceship2, const std::vector<Asteroid>& asteroids);
-bool checkCollisionX11steroid(const Lander& spaceship, const Lander& spaceship2, const std::vector<Asteroid>& asteroids);
-bool checkCollisionBash(const Lander& spaceship, const Lander& spaceship2, const Bashteroid bashteroid);
+bool checkCollisionX11steroid(const Lander& spaceship, const Lander& spaceship2, const std::vector<X11steroid>& X11steroids);
+bool checkCollisionBash(const Lander& spaceship, const Lander& spaceship2, const std::vector<Bashteroid>& bashteroids);
 extern int mouse_move_timer(const bool get);
 
 //----------------------------------//
@@ -326,9 +326,13 @@ int X11_wrapper::check_keys(XEvent *e)
 				}else if (g.inEndMenu) {
                     if (g.menuChoice == 0) {
                         // Retry
-                        g.inEndMenu = false; 
-                        lander.init();
-						lander2.init2(); // Reinitialize game state or similar logic
+                        g.inEndMenu = false;
+						if(g.twoPlayer) {
+                        	lander.init();
+							lander2.init2();
+						} else {
+							lander.init();
+						}
                     } else if (g.menuChoice == 1) {
                         // Go back to Main Menu or check scores(need to still work on)
                         //g.inEndMenu = false;
@@ -512,6 +516,7 @@ void physics()
 	ufoLaser.move();
 	moveBashteroid();
 	asteroidPhysics();
+	X11steroidPhysics();
 //--------------------------------------------
 	lander_boundaries();
 
@@ -538,7 +543,7 @@ void render()
 
 	// will implement when checkCollisionBash = True highscore goes back not fully working 
 	// right now
-	if(checkCollisionBash(lander, lander2, bashteroid)) {
+	if(checkCollisionBash(lander, lander2, bashteroids)) {
 		highscore = highscore - 10;
 		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS: %i", highscore);
 		r.bot = 550;
@@ -588,21 +593,22 @@ void render()
 	render_stars();
 	render_stagstars();
 	render_slowstars();
-	renderBashteroid();*/
+	renderBashteroid();
+	renderX11steroid();*/
 	//commenting out code in case people want to steal our intellectual property
 
 	render_iceblock();
 
-glEnable(GL_BLEND);
-// makes the shrimp transparent
-glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-// Draw Lander
-glPushMatrix();
-glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // Set initial color to white with full opacity
-if (g.failed_landing) {
-    // Color red
-    glColor4f(1.0f, 0.0f, 0.0f, 0.0f);
-}
+	glEnable(GL_BLEND);
+	// makes the shrimp transparent
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	// 	Draw Lander
+	glPushMatrix();
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // Set initial color to white with full opacity
+	if (g.failed_landing) {
+    	// Color red
+    	glColor4f(1.0f, 0.0f, 0.0f, 0.0f);
+	}
 
 	glTranslatef(lander.pos[0], lander.pos[1], 0.0f);
 	glRotated(lander.angle, 0.0, 0.0, 1.0);
@@ -661,31 +667,32 @@ if (g.failed_landing) {
 	}
 	
 
-if (g.failed_landing) {
-glColor3ub(250, 0, 0); 
-failureIndicator.drawExplosion(lander.pos[0], lander.pos[1]);
-//secondaryIndicator.createFragments(lander.pos[0], lander.pos[1], 50);
-secondaryIndicator.drawFragments();  
-}
+	if (g.failed_landing) {
+		glColor3ub(250, 0, 0); 
+		failureIndicator.drawExplosion(lander.pos[0], lander.pos[1]);
+		//secondaryIndicator.createFragments(lander.pos[0], lander.pos[1], 50);
+		secondaryIndicator.drawFragments();  
+	}
 
-if (g.failed_landing && !failureIndicator.isExploding) {
-    failureIndicator.isExploding = true;
+	if (g.failed_landing && !failureIndicator.isExploding) {
+    	failureIndicator.isExploding = true;
 	    failureIndicator.explosionRadii = {5.0f, 10.0f, 15.0f}; 
-    secondaryIndicator.createFragments(lander.pos[0], lander.pos[1], 200);
+    	secondaryIndicator.createFragments(lander.pos[0], lander.pos[1], 200);
+	}
+
+	if (failureIndicator.isExploding) {
+		failureIndicator.isExploding = true;
+    	secondaryIndicator.updateFragments();
+	}
+
+	if (failureIndicator.isExploding) {
+    	secondaryIndicator.drawFragments(); 
+		for (float &radius : failureIndicator.explosionRadii) {
+        	radius += 150.0f; 
+		}
+	}
 }
 
-if (failureIndicator.isExploding) {
-	failureIndicator.isExploding = true;
-    secondaryIndicator.updateFragments();
-}
-
-if (failureIndicator.isExploding) {
-    secondaryIndicator.drawFragments(); 
-	for (float &radius : failureIndicator.explosionRadii) {
-        radius += 150.0f; 
-}
-}
-}
 
 
 

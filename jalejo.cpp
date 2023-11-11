@@ -391,84 +391,104 @@ void render_slowstars()
     glEnd();
 }
 
-/*
-bool checkCollisionBash(const Lander& spaceship, const Bashteroid bashteroid) {
-   
-        float distance = sqrt(pow(spaceship.pos[0] - bashteroid.x, 2) + pow(spaceship.pos[1] - bashteroid.y, 2));
 
-        if (distance < (spaceship.radius + bashteroid.radius))
-            return true;
-    
-    return false;
-}
-*/
-
-bool checkCollisionBash(const Lander& spaceship1, const Lander& spaceship2, const Bashteroid bashteroid)
+bool checkCollisionBash(const Lander& spaceship1, const Lander& spaceship2, const std::vector<Bashteroid>& bashteroids)
 {
     // Array of two landers
-    const Lander* spaceships[2] = {&spaceship1, &spaceship2};
+    if(g.twoPlayer) {
+        const Lander* spaceships[2] = {&spaceship1, &spaceship2};
 
-    for (int i = 0; i < 2; i++) {
-        float distance = sqrt(pow(spaceships[i]->pos[0] - bashteroid.x, 2) + 
-                              pow(spaceships[i]->pos[1] - bashteroid.y, 2));
+        for (int i = 0; i < 2; i++) {
+            for(const Bashteroid& bashteroid : bashteroids) {
+                float distance = sqrt(pow(spaceships[i]->pos[0] - bashteroid.x, 2) + 
+                                    pow(spaceships[i]->pos[1] - bashteroid.y, 2));
 
-        if (distance < (spaceships[i]->radius + bashteroid.radius)) {
-            return true;  // A collision is found with the Bashteroid.
+                if (distance < (spaceships[i]->radius + bashteroid.radius)) {
+                    return true;  // A collision is found with the Bashteroid.
+                }
+            }
+        }
+        return false; // No collisions found
+    } else {
+        for (const Bashteroid& bashteroid : bashteroids) { 
+            float distance = sqrt(pow(spaceship1.pos[0] - bashteroid.x, 2) 
+                                    + pow(spaceship1.pos[1] - bashteroid.y, 2));
+            if (distance < (spaceship1.radius + bashteroid.radius)) {
+                return true;
+            }
         }
     }
-    return false;  // No collisions were found.
+    return false;
 }
+
 
 void renderBashteroid() 
 {
-    glPushMatrix();
-    glTranslatef(bashteroid.x, bashteroid.y, 0.0f);
-    glLineWidth(5.0f);
+    for(const Bashteroid& bashteroid : bashteroids) {
+        glPushMatrix();
+        glTranslatef(bashteroid.x, bashteroid.y, 0.0f);
+        glLineWidth(5.0f);
 
-    // Lines with gradient from purple to blue
-    glBegin(GL_LINES);
-    for (int i = 0; i < 35; i++) {
-        // Purple color
-        glColor3ub(128, 0, 128);  // RGB for purple
-        glVertex2f((rnd() * bashteroid.radius * 2) - bashteroid.radius, 0.0);
-        // Blue color
-        glColor3ub(0, 0, 255);    // RGB for blue
-        glVertex2f(0.0 + rnd() * 14.0 - 7.0, (50.0 + rnd() * 50.0));
-    }
-    glEnd();
+        // Lines with gradient from purple to blue
+        glBegin(GL_LINES);
+        for (int i = 0; i < 35; i++) {
+            // Purple color
+            glColor3ub(128, 0, 128);  // RGB for purple
+            glVertex2f((rnd() * bashteroid.radius * 2) - bashteroid.radius, 0.0);
+            // Blue color
+            glColor3ub(0, 0, 255);    // RGB for blue
+            glVertex2f(0.0 + rnd() * 14.0 - 7.0, (50.0 + rnd() * 50.0));
+        }
+        glEnd();
 
-    // Triangle fan with gradient from purple to blue
-    glBegin(GL_TRIANGLE_FAN);
-    for (int i = 0; i < 360; i += 15) {
-        float angle = i * 3.14159265f / 180.0f;
-        float x = bashteroid.radius * cos(angle);
-        float y = bashteroid.radius * sin(angle);
+        // Triangle fan with gradient from purple to blue
+        glBegin(GL_TRIANGLE_FAN);
+        for (int i = 0; i < 360; i += 15) {
+            float angle = i * 3.14159265f / 180.0f;
+            float x = bashteroid.radius * cos(angle);
+            float y = bashteroid.radius * sin(angle);
     
-        float t = static_cast<float>(i) / 360.0f;
+            float t = static_cast<float>(i) / 360.0f;
        
-        float red = (1.0f - t) * 128.0f;  // Red channel starts at 128 for purple and goes to 0 for blue
-        float green = 0.0f;                // Green channel stays at 0 for both purple and blue
-        float blue = t * 255.0f + (1.0f - t) * 128.0f; // Blue channel starts at 128 for purple and goes to 255 for blue
+            float red = (1.0f - t) * 128.0f;  // Red channel starts at 128 for purple and goes to 0 for blue
+            float green = 0.0f;                // Green channel stays at 0 for both purple and blue
+            float blue = t * 255.0f + (1.0f - t) * 128.0f; // Blue channel starts at 128 for purple and goes to 255 for blue
 
-        glColor3f(red / 255.0f, green, blue / 255.0f); // Normalize the RGB values by dividing by 255
-        glVertex2f(x, y);
-    }
-    glEnd();
+            glColor3f(red / 255.0f, green, blue / 255.0f); // Normalize the RGB values by dividing by 255
+            glVertex2f(x, y);
+        }
+        glEnd();
     
-    glPopMatrix();
+        glPopMatrix();
+        }
 }
 
 
 void init_asteroids() 
 {
+    // the repeated code is to make each initialization of the asteroids more random.
     srand(time(NULL));
-	    for (int i = 0; i < 5; ++i) {
-		float startX = rand() % g.xres;
-		float startY = g.yres;//rand() % g.yres;
-		float startRadius = rand() % 20 + 10;
-		float startSpeed = rand() % 4 + 1;
-		asteroids.push_back(Asteroid(startX, startY, startRadius, startSpeed));
-    	}
+	    for (int i = 0; i < 2; ++i) {
+		    float startX = rand() % g.xres;
+		    float startY = g.yres;//rand() % g.yres;
+		    float startRadius = rand() % 20 + 10;
+		    float startSpeed = rand() % 4 + 1;
+		    asteroids.push_back(Asteroid(startX, startY, startRadius, startSpeed));
+        }
+        for (int i = 0; i < 2; ++i) {
+            float startX = rand() % g.yres;
+            float startY = g.yres;
+            float startRadius = rand() % 20 + 10;
+            float startSpeed = rand() % 4 + 1;
+            bashteroids.push_back(Bashteroid(startX, startY, startRadius, startSpeed));
+        }
+        for (int i = 0; i < 2; ++i) {
+            float startX = rand() % g.yres;
+            float startY = g.yres;
+            float startRadius = rand() % 20 + 10;
+            float startSpeed = rand() % 4 + 1;
+            X11steroids.push_back(X11steroid(startX, startY, startRadius, startSpeed));
+        }
 }
 
 void renderAsteroids() 
@@ -585,62 +605,91 @@ bool checkCollision(const Lander& spaceship, const std::vector<Asteroid>& astero
 }
 */
 
-bool checkCollision(const Lander& spaceship1, const Lander& spaceship2, const std::vector<Asteroid>& asteroids) 
+bool checkCollision(const Lander& spaceship1, const Lander& spaceship2, 
+const std::vector<Asteroid>& asteroids) 
 {
+    if (g.twoPlayer) {
     // Array of two landers
     const Lander* spaceships[2] = {&spaceship1, &spaceship2};
 
-    for (int i = 0; i < 2; i++) {
-        for (const Asteroid& asteroid : asteroids) {
-            float distance = sqrt(pow(spaceships[i]->pos[0] - asteroid.x, 2) + 
-                                  pow(spaceships[i]->pos[1] - asteroid.y, 2));
+        for (int i = 0; i < 2; i++) {
+            for (const Asteroid& asteroid : asteroids) {
+                float distance = sqrt(pow(spaceships[i]->pos[0] - asteroid.x, 2) + 
+                                    pow(spaceships[i]->pos[1] - asteroid.y, 2));
 
-            if (distance < (spaceships[i]->radius + asteroid.radius)) {
-                return true; 
+                if (distance < (spaceships[i]->radius + asteroid.radius)) {
+                    return true; 
+                }
+            }
+        }
+        return false;
+    } else {
+        for(const Asteroid& asteroid : asteroids) {
+            float distance = sqrt(pow(spaceship1.pos[0] - asteroid.x, 2) + pow(spaceship1.pos[1] - asteroid.y, 2));
+            if (distance < (spaceship1.radius + asteroid.radius)) {
+                return true;
             }
         }
     }
-    return false; 
+    return false;
 }
 
 bool checkCollisionX11steroid(const Lander& spaceship1, 
-const Lander& spaceship2, const std::vector<Asteroid>& asteroids) 
+const Lander& spaceship2, const std::vector<X11steroid>& X11steroids) 
 {
+    if (g.twoPlayer) {
     // Array of two landers
     const Lander* spaceships[2] = {&spaceship1, &spaceship2};
 
-    for (int i = 0; i < 2; i++) {
-        for (const Asteroid& asteroid : asteroids) {
-            float distance = sqrt(pow(spaceships[i]->pos[0] - asteroid.x, 2) + 
-                                  pow(spaceships[i]->pos[1] - asteroid.y, 2));
+        for (int i = 0; i < 2; i++) {
+            for (const X11steroid& X11steroid : X11steroids) {
+                float distance = sqrt(pow(spaceships[i]->pos[0] - X11steroid.x, 2) + 
+                                    pow(spaceships[i]->pos[1] - X11steroid.y, 2));
 
-            if (distance < (spaceships[i]->radius + asteroid.radius)) {
-                return true; 
+                if (distance < (spaceships[i]->radius + X11steroid.radius)) {
+                    return true; 
+                }
+            }
+        }
+        return false;
+    } else {
+        for(const X11steroid& X11steroid : X11steroids) {
+            float distance = sqrt(pow(spaceship1.pos[0] - X11steroid.x, 2) 
+            + pow(spaceship1.pos[1] - X11steroid.y, 2));
+            if (distance < (spaceship1.radius + X11steroid.radius)) {
+                return true;
             }
         }
     }
-    return false; 
+    return false;
 }
-
-/*void X11steroidPhysics() 
+const int COOLDOWN_FRAMES = 60;
+int collisionCooldown = 0;
+void X11steroidPhysics() 
 {
-    if (checkCollisionX11steroid(lander, X11steroids)) {
-        //cout << "Spaceship collided with an asteroid!" << endl;
-        //g.failed_landing = 1;
-        g.xres -= 1;
-        g.yres -= 1;
-        x11.reshape_window(g.xres, g.yres);
-    }
-    if(g.starsmoveback) {
-        for (X11steroid& X11steroid : X11steroids) {
-            X11steroid.moveback();
-        }
-    } else {
-        for (X11steroid& X11steroid : X11steroids) {
-            X11steroid.move();
-        }
-    }
-}*/
+    if (collisionCooldown > 0) {
+		collisionCooldown--;
+	} else if (checkCollisionX11steroid(lander, lander2, X11steroids)) {
+		g.xres -= 25;
+		g.yres -= 25;
+		x11.reshape_window(g.xres, g.yres);
+		collisionCooldown = COOLDOWN_FRAMES;
+            if(g.xres < 110) {
+                g.xres = 100;
+                g.yres = 300;
+            }
+	}
+
+	if (g.starsmoveback) {
+		for (X11steroid& X11steroid : X11steroids) {
+			X11steroid.moveback();
+		}
+	} else {
+		for (X11steroid& X11steroid : X11steroids) {
+			X11steroid.move();
+		}
+	}
+}
 
 /*void Resize() 
 {
@@ -705,7 +754,7 @@ void move_stars()
 
 void moveBashteroid() 
 {
-    bool currentCollisionState = checkCollisionBash(lander, lander2, bashteroid);
+    bool currentCollisionState = checkCollisionBash(lander, lander2, bashteroids);
 
     if (currentCollisionState && !g.previousCollisionState) {
         g.starsmoveback = !g.starsmoveback;
@@ -714,9 +763,13 @@ void moveBashteroid()
     g.previousCollisionState = currentCollisionState;
     
     if (g.starsmoveback) {
-        bashteroid.moveback();
+        for (Bashteroid& bashteroid : bashteroids) {
+            bashteroid.moveback();
+        }
     } else {
-        bashteroid.move();
+        for (Bashteroid& bashteroid : bashteroids) {
+            bashteroid.move();
+        }
     }
 
     move_stars();
