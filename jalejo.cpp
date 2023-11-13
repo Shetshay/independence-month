@@ -244,36 +244,6 @@ void Laser::render()
 }
 //----------------------------------------
 
-
-//-----------Landing Zone executables-----
-Lz::Lz()
-{
-    pos[0] = 120.0f;
-    pos[1] = 100.0f;
-    width = 20.0f;
-    height = 20.0f;
-}
-
-void Lz::move() 
-{
-    pos[1] -= 3;
-    if (pos[1] < -10) {
-    pos[1] = g.yres;
-    change_value();
-    }
-}
-
-void Lz::moveback() 
-{
-    pos[1] += 3;
-    if (pos[1] > g.yres) {
-    pos[1] = 0;
-    change_value();
-    }
-}
-
-//----------------------------------------
-
 //----------AlienHead executable----------
 /*void AlienHead::drawCircle(float cx, float cy, float r, float color[3]) 
 {
@@ -321,76 +291,7 @@ void AlienHead::alienrender(float cx, float cy)
     // Draw the right eye as a tilted oval
     drawOval(cx + 8.0f, cy + 2.0f, 3.0f, 5.0f, -0.3f, eyeColor);
 }
-//----------------------------------------
-*/
-void init_stars() 
-{ 
-    srand(time(NULL));
-    for (int i = 0; i < NUM_STARS; i++) {
-        float x = static_cast<float>(rand() % g.xres);
-        float y = static_cast<float>(rand() % g.yres);
-        stars[i] = Star(x, y);
-    }
-    for (int i = 0; i < 100; i++) {
-        float x = static_cast<float>(rand() % g.xres);
-        float y = static_cast<float>(rand() % g.yres);
-        stagstars[i] = Star(x,y);
-    }
-    for (int i = 0; i < 100; i++) {
-        float x = static_cast<float>(rand() % g.xres);
-        float y = static_cast<float>(rand() % g.yres);
-        slowstars[i] = Star(x,y);
-    }
-}
-
-int randnum()
-{
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
-    int randnum = std::rand() % 401;
-    return randnum;
-}
-
-void change_value() 
-{
-    int val = randnum();
-    float floatval = static_cast<float>(val);
-    lz.pos[0] = floatval;
-}
-
-void render_stars()
-{
-
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glBegin(GL_POINTS);
-    for(int i = 0; i < NUM_STARS; i++){
-
-        glVertex2f(stars[i].x, stars[i].y);
-    }
-    glEnd();
-}
-
-void render_stagstars()
-{
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glBegin(GL_POINTS);
-    for(int i = 0; i < NUM_STARS; i++){
-
-        glVertex2f(stagstars[i].x, stagstars[i].y);
-    }
-    glEnd();
-}
-
-void render_slowstars()
-{
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glBegin(GL_POINTS);
-    for(int i = 0; i < 100; i++){
-
-        glVertex2f(slowstars[i].x, slowstars[i].y);
-    }
-    glEnd();
-}
-
+//----------------------------------------*/
 
 bool checkCollisionBash(const Lander& spaceship1, const Lander& spaceship2, const std::vector<Bashteroid>& bashteroids)
 {
@@ -420,7 +321,6 @@ bool checkCollisionBash(const Lander& spaceship1, const Lander& spaceship2, cons
     }
     return false;
 }
-
 
 void renderBashteroid() 
 {
@@ -588,22 +488,8 @@ void renderX11steroid()
         eventOccured = false;
     }
 }*/
-/*
-bool checkCollision(const Lander& spaceship, const std::vector<Asteroid>& asteroids) {
 
-    for(const Asteroid& asteroid : asteroids) {
-        float distance = sqrt(pow(spaceship.pos[0] - asteroid.x, 2) + pow(spaceship.pos[1] - asteroid.y, 2));
 
-        
-
-        if (distance < (spaceship.radius + asteroid.radius))
-            return true;
-    }
-
-    return false;
-
-}
-*/
 
 bool checkCollision(const Lander& spaceship1, const Lander& spaceship2, 
 const std::vector<Asteroid>& asteroids) 
@@ -691,12 +577,6 @@ void X11steroidPhysics()
 	}
 }
 
-/*void Resize() 
-{
-    x11.reshape_window(350, 550);
-}*/
-
-
 void asteroidPhysics() 
 {
     if (checkCollision(lander, lander2, asteroids)) {
@@ -713,44 +593,6 @@ void asteroidPhysics()
         }
     }
 }
-
-void move_stars() 
-{
-    if (g.starsmoveback) {
-        for(int j = 0; j < 100; j++) {
-            stars[j].y += 1.0f;
-            //stars[j].x += 1.0f;
-            slowstars[j].y += 0.5f;
-            //slowstars[j].x -= 0.5f;
-            stagstars[j].y += 0.25f;
-            if(stars[j].y > g.yres)
-                stars[j].y = 0;
-            if(slowstars[j].y > g.yres)
-                slowstars[j].y = 0;
-            if(stagstars[j].y > g.yres)
-                stagstars[j].y = 0;
-        }
-    } else {
-        
-        for(int j = 0; j < 100; j++) {
-            stars[j].y -= 1.0f;
-            if(stars[j].y < 0)
-            stars[j].y = g.yres;
-        }
-        
-        for(int j = 0; j < 100; j++) {
-            slowstars[j].y -= 0.5f;
-            if(slowstars[j].y < 0)
-            slowstars[j].y = g.yres;
-        }
-        for(int j = 0; j < 100; j++) {
-            stagstars[j].y -= 0.25f;
-            if(stagstars[j].y < 0)
-            stagstars[j].y = g.yres;
-        }
-    }
-}
-
 
 void moveBashteroid() 
 {
@@ -770,18 +612,6 @@ void moveBashteroid()
         for (Bashteroid& bashteroid : bashteroids) {
             bashteroid.move();
         }
-    }
-
-    move_stars();
-
-}
-
-void moveLz() 
-{
-    if(g.starsmoveback) {
-        lz.moveback();
-    } else {
-        lz.move();
     }
 }
 

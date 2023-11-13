@@ -139,4 +139,20 @@ private:
 
 extern X11_wrapper x11;
 
+struct Star{
+    float x, y;
+    Star(){
+        x = 0.0f;
+        y = 0.0f;
+    }
+    Star(float ex, float why){
+        x = ex;
+        y = why;
+    }
+};
+
+extern Star stars[100];
+extern Star stagstars[100];
+extern Star slowstars[100];
+
 #endif

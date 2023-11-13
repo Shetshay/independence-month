@@ -108,7 +108,7 @@ extern AlienHead alien;
 };
 extern Lz lz;*/
 
-struct Star{
+/*struct Star{
     float x, y;
     Star(){
         x = 0.0f;
@@ -122,7 +122,7 @@ struct Star{
 
 extern Star stars[100];
 extern Star stagstars[100];
-extern Star slowstars[100];
+extern Star slowstars[100];*/
 
 
 class Asteroid{
@@ -200,16 +200,16 @@ extern Music music;
 //extern X11_wrapper x11;
 
 extern void shootlaser();
-extern void moveLz();
-extern void change_value();
-extern void move_stars();
+//extern void moveLz();
+//extern void change_value();
+//extern void move_stars();
 extern void moveBashteroid();
 extern void asteroidPhysics();
 extern void X11steroidPhysics();
-extern void render_stars();
-extern void render_stagstars();
-extern void render_slowstars();
-extern void init_stars();
+//extern void render_stars();
+//extern void render_stagstars();
+//extern void render_slowstars();
+//extern void init_stars();
 extern void renderAsteroids();
 extern void renderBashteroid();
 extern void renderX11steroid();

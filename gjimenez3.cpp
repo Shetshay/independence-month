@@ -190,3 +190,53 @@ void render_iceblock ()
     glEnd();
 	glPopMatrix();
 }
+
+void moveLz() 
+{
+    if(g.starsmoveback) {
+        lz.moveback();
+    } else {
+        lz.move();
+    }
+}
+
+int randnum()
+{
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+    int randnum = std::rand() % 401;
+    return randnum;
+}
+
+void change_value() 
+{
+    int val = randnum();
+    float floatval = static_cast<float>(val);
+    lz.pos[0] = floatval;
+}
+
+//-----------Landing Zone executables-----
+Lz::Lz()
+{
+    pos[0] = 120.0f;
+    pos[1] = 100.0f;
+    width = 20.0f;
+    height = 20.0f;
+}
+
+void Lz::move() 
+{
+    pos[1] -= 3;
+    if (pos[1] < -10) {
+    pos[1] = g.yres;
+    change_value();
+    }
+}
+
+void Lz::moveback() 
+{
+    pos[1] += 3;
+    if (pos[1] > g.yres) {
+    pos[1] = 0;
+    change_value();
+    }
+}

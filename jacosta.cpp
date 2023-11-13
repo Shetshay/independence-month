@@ -15,7 +15,7 @@ using namespace std;
 #include "fonts.h"
 #include "classesLander.h"
 
-
+const int NUM_STARS = 100;
 
 void handleMenu() {
         glClear(GL_COLOR_BUFFER_BIT);
@@ -103,4 +103,88 @@ int total_running_time(const bool get){
     }
     return 0;
 }
+
+void init_stars() 
+{ 
+    srand(time(NULL));
+    for (int i = 0; i < NUM_STARS; i++) {
+        float x = static_cast<float>(rand() % g.xres);
+        float y = static_cast<float>(rand() % g.yres);
+        stars[i] = Star(x, y);
+    }
+    for (int i = 0; i < NUM_STARS; i++) {
+        float x = static_cast<float>(rand() % g.xres);
+        float y = static_cast<float>(rand() % g.yres);
+        stagstars[i] = Star(x,y);
+    }
+    for (int i = 0; i < NUM_STARS; i++) {
+        float x = static_cast<float>(rand() % g.xres);
+        float y = static_cast<float>(rand() % g.yres);
+        slowstars[i] = Star(x,y);
+    }
+}
+
+void move_stars() 
+{
+    if (g.starsmoveback) {
+        for(int j = 0; j < 100; j++) {
+            stars[j].y += 1.0f;
+            slowstars[j].y += 0.5f;
+            stagstars[j].y += 0.25f;
+            if(stars[j].y > g.yres)
+                stars[j].y = 0;
+            if(slowstars[j].y > g.yres)
+                slowstars[j].y = 0;
+            if(stagstars[j].y > g.yres)
+                stagstars[j].y = 0;
+        }
+    } else {
+        for (int j = 0; j < 100; j++) {
+            stars[j].y -= 1.0f;
+            slowstars[j].y -= 0.5f;
+            stagstars[j].y -= 0.25f;
+            if (stars[j].y < 0)
+                stars[j].y = g.yres;
+            if (slowstars[j].y < 0) 
+                slowstars[j].y = g.yres;
+            if (stagstars[j].y < 0)
+                stagstars[j].y = g.yres;
+            }
+	    }
+}
+
+void render_stars()
+{
+
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glBegin(GL_POINTS);
+    for(int i = 0; i < NUM_STARS; i++){
+
+        glVertex2f(stars[i].x, stars[i].y);
+    }
+    glEnd();
+}
+
+void render_stagstars()
+{
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glBegin(GL_POINTS);
+    for(int i = 0; i < NUM_STARS; i++){
+
+        glVertex2f(stagstars[i].x, stagstars[i].y);
+    }
+    glEnd();
+}
+
+void render_slowstars()
+{
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glBegin(GL_POINTS);
+    for(int i = 0; i < 100; i++){
+
+        glVertex2f(slowstars[i].x, slowstars[i].y);
+    }
+    glEnd();
+}
+
 
