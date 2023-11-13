@@ -381,7 +381,7 @@ int main()
 	printf("Press Left or Right arrows for rocket thrust vector.\n");
 	//Justin--initializing asteroids--
 	init_asteroids();
-
+	init_stars();
 	//Main loop
 
 	bool restartCondition = true; // bool for restarting when false it ends
@@ -446,7 +446,7 @@ void init_opengl(void)
 	glEnable(GL_TEXTURE_2D);
     initialize_fonts();
 	//----Initialize Stars-------//
-	init_stars();
+	//init_stars();
 }
 
 void physics()
@@ -507,9 +507,6 @@ void physics()
 			lander2.angle -= 1.5;
 	}
 
-
-//handle_landerInter();
-
 	countPhysics(false); //function to count physics
 //Justins physics functions------------------
 	moveLz();
@@ -519,6 +516,7 @@ void physics()
 	X11steroidPhysics();
 //--------------------------------------------
 	lander_boundaries();
+	move_stars();
 
 }
 
@@ -589,12 +587,12 @@ void render()
 	//ggprint13(&r, 20, 0x0055ff55, "Seconds since mouse moved: %i", timer);
 
 	//justins render functions
-	/*renderAsteroids();
+	renderAsteroids();
 	render_stars();
 	render_stagstars();
 	render_slowstars();
 	renderBashteroid();
-	renderX11steroid();*/
+	renderX11steroid();
 	//commenting out code in case people want to steal our intellectual property
 
 	render_iceblock();
