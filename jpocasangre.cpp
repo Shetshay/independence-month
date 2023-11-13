@@ -34,6 +34,10 @@ void FailureIndicator::drawExplosion(float x, float y)
 FailureIndicator2::FailureIndicator2() {
 }
 
+void FailureIndicator2::reset() {
+    fragments.clear();
+}
+
 void FailureIndicator2::updateFragments() {
     for (auto& fragment : fragments) {
         if (fragment.active) {

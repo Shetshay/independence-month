@@ -187,4 +187,20 @@ void render_slowstars()
     glEnd();
 }
 
+bool timer() {
+    static time_t start_time = 0;
+    if (start_time == 0) {
+        start_time = time(NULL);
+    }
+    
+    int elapsed = time(NULL) - start_time;
+    cout << elapsed << endl;
+
+    if (elapsed >= 3) {
+        cout << elapsed << endl;
+        start_time = 0;  // Reset the timer
+        return true;  // 3 seconds have passed
+    }
+    return false;
+}
 

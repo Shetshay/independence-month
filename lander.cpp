@@ -377,7 +377,7 @@ int main()
 {	
 	//bool for menu handling
 
-	lander2.init2();
+	//lander2.init2();
 
 	logOpen();
 	init_opengl();
@@ -385,7 +385,7 @@ int main()
 	printf("Press Left or Right arrows for rocket thrust vector.\n");
 	//Justin--initializing asteroids--
 	init_asteroids();
-	init_stars();
+
 	//Main loop
 
 	bool restartCondition = true; // bool for restarting when false it ends
@@ -401,31 +401,48 @@ int main()
             done = x11.check_keys(&e);
         }
         // logic for game menu
-        if (!g.inMenu && !g.inEndMenu && !g.paused) {
+        if (!g.inMenu && !g.inEndMenu) {
             physics();
             render();
-			usleep(25000);
             x11.swapBuffers();
            if (g.failed_landing == 1) {
 				g.menuChoice = 0;
-               	g.failed_landing = 0;  				
-				this_thread::sleep_for(chrono::seconds(1));
-				sendHighScore(g.playerName, g.tempHighscore);
-				//cout << g.tempHighscore << endl;
-				g.inEndMenu = true;
-            }
+
+				glColor3ub(250, 0, 0); 
+				failureIndicator.drawExplosion(lander.pos[0], lander.pos[1]);
+				secondaryIndicator.drawFragments();  
+
+
+				if (!failureIndicator.isExploding) {
+    			failureIndicator.isExploding = true;
+	    		failureIndicator.explosionRadii = {5.0f, 10.0f, 15.0f}; 
+    			secondaryIndicator.createFragments(lander.pos[0], lander.pos[1], 200);
+				}
+
+				if (failureIndicator.isExploding) {
+					failureIndicator.isExploding = true;
+					secondaryIndicator.updateFragments();
+				}
+
+				if (failureIndicator.isExploding) {
+					secondaryIndicator.drawFragments();
+					for (float &radius : failureIndicator.explosionRadii) {
+						radius += 150.0f; 
+				}
+				}
+				while(timer()){
+					g.inEndMenu = true;
+					g.failed_landing = 0;
+					secondaryIndicator.reset();
+					failureIndicator.isExploding = false;
+				}  	
+		   }
         } else if(g.inMenu){  
 			//if inMenu true display and turn inMenu false
             handleMenu();
         }else if(g.inEndMenu){
-			if(g.inscoreMenu){
-				displayHighScores();
-			}else{
-				endMenu();
-			}
-		}else if(g.paused == true){
-			renderPauseScreen();
-    	}
+			endMenu();	
+		}
     }
 } while (restartCondition);
 
@@ -433,7 +450,6 @@ int main()
 	logClose();
 	return 0;
 }
-
 
 
 void init_opengl(void)

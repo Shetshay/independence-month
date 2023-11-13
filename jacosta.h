@@ -12,5 +12,6 @@ extern void init_stars();
 extern void render_stars();
 extern void render_slowstars();
 extern void render_stagstars();
+extern bool timer();
 
 #endif

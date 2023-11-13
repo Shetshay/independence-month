@@ -36,7 +36,8 @@ public:
     FailureIndicator2();
     void createFragments(float x, float y, int numFragments);
     void updateFragments(); 
-    void drawFragments();   
+    void drawFragments();  
+    void reset();  
 };
 
 class Record {
