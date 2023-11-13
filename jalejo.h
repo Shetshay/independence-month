@@ -214,5 +214,6 @@ extern void renderAsteroids();
 extern void renderBashteroid();
 extern void renderX11steroid();
 extern void init_asteroids();
+extern void reset_asteroids();
 
 #endif

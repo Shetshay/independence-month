@@ -293,14 +293,15 @@ void AlienHead::alienrender(float cx, float cy)
 }
 //----------------------------------------*/
 
-bool checkCollisionBash(const Lander& spaceship1, const Lander& spaceship2, const std::vector<Bashteroid>& bashteroids)
+bool checkCollisionBash(const Lander& spaceship1, const Lander& spaceship2,
+const std::vector<Bashteroid>& bashteroids)
 {
     // Array of two landers
-    if(g.twoPlayer) {
+    if (g.twoPlayer) {
         const Lander* spaceships[2] = {&spaceship1, &spaceship2};
 
         for (int i = 0; i < 2; i++) {
-            for(const Bashteroid& bashteroid : bashteroids) {
+            for (const Bashteroid& bashteroid : bashteroids) {
                 float distance = sqrt(pow(spaceships[i]->pos[0] - bashteroid.x, 2) + 
                                     pow(spaceships[i]->pos[1] - bashteroid.y, 2));
 
@@ -389,6 +390,15 @@ void init_asteroids()
             float startSpeed = rand() % 4 + 1;
             X11steroids.push_back(X11steroid(startX, startY, startRadius, startSpeed));
         }
+}
+
+void reset_asteroids() 
+{
+    for (int i = 0; i < 2; ++i) {
+        asteroids[i].y = g.yres;
+        bashteroids[i].y = g.yres;
+        X11steroids[i].y = g.yres;
+    }
 }
 
 void renderAsteroids() 
@@ -510,7 +520,7 @@ const std::vector<Asteroid>& asteroids)
         }
         return false;
     } else {
-        for(const Asteroid& asteroid : asteroids) {
+        for (const Asteroid& asteroid : asteroids) {
             float distance = sqrt(pow(spaceship1.pos[0] - asteroid.x, 2) + pow(spaceship1.pos[1] - asteroid.y, 2));
             if (distance < (spaceship1.radius + asteroid.radius)) {
                 return true;

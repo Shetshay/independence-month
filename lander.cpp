@@ -328,10 +328,14 @@ int X11_wrapper::check_keys(XEvent *e)
                         // Retry
                         g.inEndMenu = false;
 						if(g.twoPlayer) {
+							//init_asteroids();
+							reset_asteroids();
                         	lander.init();
 							lander2.init2();
 						} else {
 							lander.init();
+							reset_asteroids();
+							//init_asteroids();
 						}
                     } else if (g.menuChoice == 1) {
                         // Go back to Main Menu or check scores(need to still work on)
