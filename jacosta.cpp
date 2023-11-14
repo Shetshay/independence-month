@@ -90,20 +90,6 @@ int countPhysics(bool get){
     }
     return test;
 }
-
-int total_running_time(const bool get){
-    static int firsttime = 1;
-    static int start_time;
-    if(firsttime) {
-        start_time = time(NULL);
-        firsttime = 0;
-    }
-    if(get) {
-        return time(NULL) - start_time;
-    }
-    return 0;
-}
-
 void init_stars() 
 { 
     srand(time(NULL));
@@ -188,19 +174,33 @@ void render_slowstars()
 }
 
 bool timer() {
-    static time_t start_time = 0;
-    if (start_time == 0) {
+    static int start_time = 1;
+    if (start_time == 1) {
         start_time = time(NULL);
     }
     
     int elapsed = time(NULL) - start_time;
-    cout << elapsed << endl;
+    //cout << elapsed << endl;
 
     if (elapsed >= 3) {
-        cout << elapsed << endl;
-        start_time = 0;  // Reset the timer
+        //cout << elapsed << endl;
+        elapsed = 0;
+        start_time = 1; // Reset the timer
         return true;  // 3 seconds have passed
     }
     return false;
+}
+
+int total_running_time(const bool get){
+    static int firsttime = 1;
+    static int start_time;
+    if(firsttime) {
+        start_time = time(NULL);
+        firsttime = 0;
+    }
+    if(get) {
+        return time(NULL) - start_time;
+    }
+    return 0;
 }
 

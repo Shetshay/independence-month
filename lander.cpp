@@ -429,13 +429,19 @@ int main()
 					for (float &radius : failureIndicator.explosionRadii) {
 						radius += 150.0f; 
 				}
-				}
+				}/*
 				while(timer()){
 					g.inEndMenu = true;
 					g.failed_landing = 0;
 					secondaryIndicator.reset();
 					failureIndicator.isExploding = false;
-				}  	
+				}*/
+				if(timer()){
+					g.inEndMenu = true;
+					g.failed_landing = 0;
+					secondaryIndicator.reset();
+					failureIndicator.isExploding = false;
+				}	
 		   }
         } else if(g.inMenu){  
 			//if inMenu true display and turn inMenu false
@@ -709,7 +715,9 @@ void render()
         	radius += 150.0f; 
 		}
 	}
+	
 }
+
 
 
 
