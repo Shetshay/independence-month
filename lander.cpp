@@ -209,6 +209,7 @@ void X11_wrapper::swapBuffers()
 
 void X11_wrapper::reshape_window(int width, int height)
 {
+	//XResizeWindow(dpy, win, width, height);
 	//window has been resized.
 	g.xres = width;
 	g.yres = height;
@@ -617,9 +618,6 @@ void render()
 
 	//justins render functions
 	renderAsteroids();
-	render_stars();
-	render_stagstars();
-	render_slowstars();
 	renderBashteroid();
 	renderX11steroid();
 	//commenting out code in case people want to steal our intellectual property
