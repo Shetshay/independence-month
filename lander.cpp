@@ -385,7 +385,7 @@ int main()
 	printf("Press Left or Right arrows for rocket thrust vector.\n");
 	//Justin--initializing asteroids--
 	init_asteroids();
-
+	init_stars();
 	//Main loop
 
 	bool restartCondition = true; // bool for restarting when false it ends
@@ -404,6 +404,7 @@ int main()
         if (!g.inMenu && !g.inEndMenu) {
             physics();
             render();
+			usleep(25000);
             x11.swapBuffers();
            if (g.failed_landing == 1) {
 				g.menuChoice = 0;
@@ -553,7 +554,9 @@ void render()
 
 	
 	render_space_color();
-
+	render_stars();
+	render_slowstars();
+	render_stagstars();
 	//print out score(will need to fix)
 	Rect r;
     r.center = 0;
