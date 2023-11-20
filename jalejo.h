@@ -63,40 +63,6 @@ extern Global g;*/
 extern Lander lander;
 extern Lander lander2;*/
 
-class UFO {
-    public:
-        float pos[2];       // Position of the UFO
-        float radiusTop;    // Radius of the top disc
-        float radiusBottom; // Radius of the bottom dome
-        float heightBottom; // Height of the bottom dome
-
-        UFO();
-};
-extern UFO myUFO;
-
-class Laser {
-public:
-    float pos[2]; // Position [x, y]
-    float length; // Length of the laser
-    float speed;  // Speed of the laser movement
-    bool active;  // Indicates if the laser is currently active or not
-
-    Laser();
-    void fire(float startX, float startY);
-    void move();
-    void render();
-};
-extern Laser ufoLaser;
-
-class AlienHead {
-public:
-    void drawCircle(float cx, float cy, float r, float color[3]);
-    void drawOval(float cx, float cy, float rx, float ry, float angle, float color[3]);
-    void alienrender(float cx, float cy);
-};
-extern AlienHead alien;
-
-
 /*class Lz {
     public:
     float pos[2];
@@ -107,23 +73,6 @@ extern AlienHead alien;
     void moveback();
 };
 extern Lz lz;*/
-
-/*struct Star{
-    float x, y;
-    Star(){
-        x = 0.0f;
-        y = 0.0f;
-    }
-    Star(float ex, float why){
-        x = ex;
-        y = why;
-    }
-};
-
-extern Star stars[100];
-extern Star stagstars[100];
-extern Star slowstars[100];*/
-
 
 class Asteroid{
     public:
@@ -199,17 +148,12 @@ extern Music music;
 };*/
 //extern X11_wrapper x11;
 
-extern void shootlaser();
 //extern void moveLz();
 //extern void change_value();
 //extern void move_stars();
 extern void moveBashteroid();
 extern void asteroidPhysics();
 extern void X11steroidPhysics();
-//extern void render_stars();
-//extern void render_stagstars();
-//extern void render_slowstars();
-//extern void init_stars();
 extern void renderAsteroids();
 extern void renderBashteroid();
 extern void renderX11steroid();

@@ -33,18 +33,19 @@ using namespace std;
 FailureIndicator failureIndicator;
 FailureIndicator2 secondaryIndicator;
 Record record;
+UFO myUFO;
+AlienHead alien;
+Laser ufoLaser;
+
 //---Justin's extern and function declarations---//
 Lz lz;
 Music music;
-UFO myUFO;
 Global g;
 Lander lander;
 Lander lander2;
 vector<Asteroid> asteroids;
 vector<X11steroid> X11steroids;
 vector<Bashteroid> bashteroids;
-Laser ufoLaser;
-AlienHead alien;
 Star stars[100];
 Star stagstars[100];
 Star slowstars[100];
@@ -209,7 +210,7 @@ void X11_wrapper::swapBuffers()
 
 void X11_wrapper::reshape_window(int width, int height)
 {
-	//XResizeWindow(dpy, win, width, height);
+	XResizeWindow(dpy, win, width, height);
 	//window has been resized.
 	g.xres = width;
 	g.yres = height;
@@ -539,12 +540,14 @@ void physics()
 //Justins physics functions------------------
 	moveLz();
 	ufoLaser.move();
+	shootlaser();
 	moveBashteroid();
 	asteroidPhysics();
 	X11steroidPhysics();
 //--------------------------------------------
 	lander_boundaries();
 	move_stars();
+	move_ufo();
 
 }
 
@@ -620,9 +623,10 @@ void render()
 	renderAsteroids();
 	renderBashteroid();
 	renderX11steroid();
-	//commenting out code in case people want to steal our intellectual property
-
+	//AlienHead.alienrender();
 	render_iceblock();
+	ufoLaser.render();
+	renderUFO(myUFO);
 
 	glEnable(GL_BLEND);
 	// makes the shrimp transparent

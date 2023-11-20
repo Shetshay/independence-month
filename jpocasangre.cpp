@@ -137,3 +137,161 @@ double Record::getDistance() {
     total = total + sqrt(dx * dx + dy * dy);
     return total;
 }
+
+//--------Laser executables---------------
+Laser::Laser() 
+{
+    pos[0] = 0.0f;
+    pos[1] = 0.0f;
+    length = 20.0f;
+    speed = 3.0f;
+    active = false;
+}
+
+void Laser::fire(float startX, float startY) 
+{
+    pos[0] = startX;
+    pos[1] = startY;
+    active = true;
+}
+
+void Laser::move() 
+{
+    if (active) {
+        pos[1] += speed; // Move the laser upward
+    }
+}
+
+void Laser::render() 
+{
+    if (active) {
+
+        float laserWidth = 5.0f; // Width of the laser rectangle
+
+        glColor3f(0.8f, 0.0f, 0.5f); // Purple color for the laser
+
+        glBegin(GL_QUADS);
+        
+        glVertex2f(pos[0] - laserWidth/2, pos[1]);
+        glVertex2f(pos[0] + laserWidth/2, pos[1]);
+        glVertex2f(pos[0] + laserWidth/2, pos[1] - length);
+        glVertex2f(pos[0] - laserWidth/2, pos[1] - length);
+        
+        glEnd();
+    }
+}
+//----------------------------------------
+
+//----------UFO executables----------------
+UFO::UFO() 
+{
+    pos[0] = 200.0f;
+    pos[1] = 50.0f;
+    radiusTop = 50.0f;
+    radiusBottom = 30.0f;
+    heightBottom = 20.0f;
+}
+//----------------------------------------
+
+//----------AlienHead executable----------
+void AlienHead::drawCircle(float cx, float cy, float r, float color[3]) 
+{
+    glColor3f(color[0], color[1], color[2]);
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(cx, cy);  // Center
+    for (int ii = 0; ii <= 100; ii++) {
+        float theta = 2.0f * 3.1415926f * float(ii) / 100.0f;
+        float dx = r * cosf(theta);
+        float dy = r * sinf(theta);
+        glVertex2f(cx + dx, cy + dy);
+    }
+    glEnd();
+}
+
+void AlienHead::drawOval(float cx, float cy, float rx, float ry, float angle, float color[3]) 
+{
+    glColor3f(color[0], color[1], color[2]);
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(cx, cy);  // Center
+    for (int ii = 0; ii <= 100; ii++) {
+        float theta = 2.0f * 3.1415926f * float(ii) / 100.0f;
+        float dx = rx * cosf(theta);
+        float dy = ry * sinf(theta);
+        
+        float rotatedX = cx + (dx * cosf(angle) - dy * sinf(angle));
+        float rotatedY = cy + (dx * sinf(angle) + dy * cosf(angle));
+        
+        glVertex2f(rotatedX, rotatedY);
+    }
+    glEnd();
+}
+
+void AlienHead::alienrender(float cx, float cy) 
+{
+    float headColor[3] = {0.2f, 0.9f, 0.2f};  // Yellowish color for the alien head
+    float eyeColor[3] = {1.0f, 0.0f, 0.0f};   // Red color for the eyes
+
+    // Draw the head
+    drawCircle(cx, cy, 15.0f, headColor);
+
+    // Draw the left eye as a tilted oval
+    drawOval(cx - 8.0f, cy + 2.0f, 3.0f, 5.0f, 0.3f, eyeColor);
+
+    // Draw the right eye as a tilted oval
+    drawOval(cx + 8.0f, cy + 2.0f, 3.0f, 5.0f, -0.3f, eyeColor);
+}
+//----------------------------------------
+
+void shootlaser() 
+{
+    if (g.starsmoveback) {
+        //Do nothing
+    } else {
+        if(myUFO.pos[0] < lander.pos[0] + 5 && myUFO.pos[0] > lander.pos[0] - 5) {
+        ufoLaser.fire(myUFO.pos[0], myUFO.pos[1] - myUFO.radiusBottom);
+        }
+    }
+}
+
+void drawOval(float cx, float cy, float rx, float ry, float color[3])
+{
+    int num_segments = 50;
+    glColor3f(color[0], color[1], color[2]);
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(cx, cy);
+    for (int ii = 0; ii <= num_segments; ii++) {
+        float theta = 2.0f * 3.1415926f * float(ii) / float(num_segments);
+        float dx = rx * cosf(theta);
+        float dy = ry * sinf(theta);
+        glVertex2f(cx + dx, cy + dy);
+    }
+    glEnd();
+}
+
+void renderUFO(const UFO &ufo) {
+    float mainBodyColor[3] = {0.6f, 0.6f, 0.6f};
+    float cockpitColor[3] = {0.6f, 0.8f, 1.0f};
+    glPushMatrix();
+    drawOval(ufo.pos[0], ufo.pos[1], ufo.radiusTop, ufo.radiusBottom, mainBodyColor);
+
+    float cockpitOffsetY = ufo.radiusBottom * 0.3f;
+    drawOval(ufo.pos[0], ufo.pos[1] + cockpitOffsetY, ufo.radiusTop * 0.6f, ufo.radiusBottom * 0.5f, cockpitColor);
+    alien.alienrender(ufo.pos[0], ufo.pos[1] + cockpitOffsetY);
+}
+
+void move_ufo() 
+{
+    if(myUFO.pos[0] < 0) {
+        g.inRange = false;
+    }
+
+    if(myUFO.pos[0] > g.xres) {
+        g.inRange = true;
+    }
+
+    if(g.inRange) {
+        myUFO.pos[0]--;
+    } else {
+        myUFO.pos[0]++;
+    }
+}

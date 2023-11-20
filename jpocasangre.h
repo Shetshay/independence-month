@@ -9,6 +9,7 @@
 #define JPOCASANGRE_H
 #include <vector>
 #include <cmath>
+#include "classesLander.h"
 
 class FailureIndicator {
 public:
@@ -52,4 +53,40 @@ public:
     double getDistance();
 };
 
+class UFO {
+    public:
+        float pos[2];       // Position of the UFO
+        float radiusTop;    // Radius of the top disc
+        float radiusBottom; // Radius of the bottom dome
+        float heightBottom; // Height of the bottom dome
+
+        UFO();
+};
+extern UFO myUFO;
+
+class Laser {
+public:
+    float pos[2]; // Position [x, y]
+    float length; // Length of the laser
+    float speed;  // Speed of the laser movement
+    bool active;  // Indicates if the laser is currently active or not
+
+    Laser();
+    void fire(float startX, float startY);
+    void move();
+    void render();
+};
+extern Laser ufoLaser;
+
+class AlienHead {
+public:
+    void drawCircle(float cx, float cy, float r, float color[3]);
+    void drawOval(float cx, float cy, float rx, float ry, float angle, float color[3]);
+    void alienrender(float cx, float cy);
+};
+extern AlienHead alien;
+
+extern void shootlaser();
+extern void move_ufo();
+extern void renderUFO(const UFO &ufo);
 #endif 
