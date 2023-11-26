@@ -29,6 +29,13 @@ using namespace std;
 //#include "highscore.h"
 #include <chrono>
 #include <thread>
+#include <fcntl.h>
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alut.h>
+#ifdef USE_OPENAL_SOUND
+#include </usr/include/AL/alut.h>
+#endif //USE_OPENAL_SOUND
 
 FailureIndicator failureIndicator;
 FailureIndicator2 secondaryIndicator;
@@ -67,6 +74,28 @@ void askForName(std::string& playerName);
 const float GRAVITY = 0.055;
 
 // class and x11 functions 
+
+//ignore this --Justin----
+void testCircle(float centerX, float centerY, float radius) {
+    int segments = 100; // More segments = smoother circle
+    float angleStep = 2.0f * M_PI / segments;
+
+    // Set color to red
+    glColor3f(1.0f, 0.0f, 0.0f);
+
+    // Start drawing the circle
+    glBegin(GL_LINE_LOOP);
+
+    for (int i = 0; i < segments; i++) {
+        float angle = angleStep * i;
+        float x = centerX + cos(angle) * radius;
+        float y = centerY + sin(angle) * radius;
+        glVertex2f(x, y);
+    }
+
+    glEnd();
+}
+
 
 /*Global::Global() {
     lives = 3;
@@ -378,9 +407,6 @@ void render(void);
 int main()
 {	
 	//bool for menu handling
-
-	//lander2.init2();
-
 	logOpen();
 	init_opengl();
 	printf("Press T or Up-arrow for thrust.\n");
@@ -389,6 +415,41 @@ int main()
 	init_asteroids();
 	init_stars();
 	//Main loop
+
+	#ifdef USE_OPENAL_SOUND
+	alutInit(0, NULL);
+	    if(alGetError() != AL_NO_ERROR) {
+        printf("ERROR: aluINIT()\n");
+        return 0;
+    }
+    alGetError();
+    float vec[6] = {0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f};
+    alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
+    alListenerfv(AL_ORIENTATION, vec);
+    alListenerf(AL_GAIN, 1.0f);
+    //--------------
+    ALuint eventBuffer, eventSource;
+    eventBuffer = alutCreateBufferFromFile("reversed.wav");
+    alGenSources(1, &eventSource);
+    alSourcei(eventSource, AL_BUFFER, eventBuffer);
+    alSourcef(eventSource, AL_GAIN, 1.0f);
+    alSourcef(eventSource, AL_PITCH, 1.0f);
+    alSourcei(eventSource, AL_LOOPING, AL_TRUE);
+    //--------------
+    ALuint alBuffer;
+    alBuffer = alutCreateBufferFromFile("8bittourlife.wav");
+
+    ALuint alSource;
+    alGenSources(1, &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_PITCH, 1.0f);
+    alSourcei(alSource, AL_LOOPING, AL_TRUE);
+    if (alGetError() != AL_NO_ERROR) {
+        printf("ERROR: setting source \n");
+        return 0;
+    }
+    alSourcePlay(alSource);
 
 	bool restartCondition = true; // bool for restarting when false it ends
 	do {	//do while loop to keep the game going
@@ -406,6 +467,31 @@ int main()
         if (!g.inMenu && !g.inEndMenu) {
             physics();
             render();
+
+		if (g.starsmoveback && !music.eventOccurred) {
+        	if(music.bgMusicPlaying) {
+            	alSourcePause(alSource);
+            	music.bgMusicPlaying = false;
+        	}
+        	if(!music.eventSoundPlaying) {
+            	alSourcePlay(eventSource);
+            	music.eventSoundPlaying = true;
+        	}
+        	music.eventOccurred = true;
+    	}
+		
+		else if (!g.starsmoveback && music.eventOccurred) {
+        	if (music.eventSoundPlaying) {
+            	alSourceStop(eventSource);
+            	music.eventSoundPlaying = false;
+    		}
+        	if(!music.bgMusicPlaying) {
+            	alSourcePlay(alSource);
+            	music.bgMusicPlaying = true;
+        	}
+        	music.eventOccurred = false;
+    	}
+
 			usleep(25000);
             x11.swapBuffers();
            if (g.failed_landing == 1) {
@@ -457,6 +543,20 @@ int main()
 
 	cleanup_fonts();
 	logClose();
+	
+	alSourceStop(alSource);
+	alSourceStop(eventSource);
+    alDeleteSources(1, &alSource);
+	alDeleteSources(1, &eventSource);
+    alDeleteBuffers(1, &alBuffer);
+    alDeleteBuffers(1, &eventBuffer);
+    ALCcontext *Context = alcGetCurrentContext();
+    ALCdevice *Device = alcGetContextsDevice(Context);
+    alcMakeContextCurrent(NULL);
+    alcDestroyContext(Context);
+    alcCloseDevice(Device);
+	alutExit();
+    #endif //USE_OPENAL_SOUND
 	return 0;
 }
 
@@ -720,7 +820,7 @@ void render()
         	radius += 150.0f; 
 		}
 	}
-	
+	testCircle(lander.pos[0], lander.pos[1], lander.radius);
 }
 
 
