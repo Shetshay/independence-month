@@ -22,57 +22,69 @@ using namespace std;
 #include <string>
 #include <sstream>
 
+// The WriteCallback function is designed to be used as a callback for handling data received during an HTTP request.
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* output) {
+    // Calculate the total size of the received data by multiplying the size of each element by the number of elements.
     size_t total_size = size * nmemb;
+    
+    // Convert the received data (contents) to a string and append it to the existing data in the 'output' string.
+    // This assumes that 'output' is a string that accumulates the data received from multiple callbacks.
     output->append((char*)contents, total_size);
+    
+    // Return the total size of the received data. This return value is often used to check for errors or to monitor the progress of data retrieval.
     return total_size;
 }
+
+//https://curl.se/libcurl/c/
+//https://curl.se/docs/
+
+// Function to send high scores to a server using libcurl
 void sendHighScore(const std::string& playerName, int highScore) {
+    // Initialize libcurl globally
     CURL* curl;
     CURLcode res;
-
     curl_global_init(CURL_GLOBAL_ALL);
 
+    //Initialize a libcurl easy handle
     curl = curl_easy_init();
     if (curl) {
-        // Set the URL of your PHP script
+        //Set the URL of the PHP script that will handle the high score data
         curl_easy_setopt(curl, CURLOPT_URL, "https://cs.csub.edu/~aibrahim/independance_day/highscore.php");
 
-        // Specify that it's a POST request
+        //Specify that it's a POST request
         curl_easy_setopt(curl, CURLOPT_POST, 1);
 
-        // Provide the data to be sent in the POST request
+        //Provide the data to be sent in the POST request (playerName and highScore)
         std::string postData = "name=" + playerName + "&score=" + std::to_string(highScore);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postData.c_str());
 
-        // Set a callback function to handle response data
+        //Set a callback function to handle response data
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 
-        // Create a string to hold the response data
+        //Create a string to hold the response data
         std::string response;
 
-        // Set the response string as the user data for the callback
+        //Set the response string as the user data for the callback
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
-        // Perform the request
+        //Perform the HTTP request
         res = curl_easy_perform(curl);
 
-        // Check for errors
+        //Check for errors during the HTTP request
         if (res != CURLE_OK) {
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
         } else {
-            // Print the response from the PHP script
+            //Print the response from the PHP script
             std::cout << "Response from server: " << response << std::endl;
         }
 
-        // Clean up
+        //Clean up the libcurl easy handle
         curl_easy_cleanup(curl);
     }
 
+    //Clean up libcurl global resources
     curl_global_cleanup();
 }
-
-
 
 
 std::string readHighScores() {
@@ -84,7 +96,7 @@ std::string readHighScores() {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &result);
-
+//https://curl.se/libcurl/c/curl_easy_init.html
         CURLcode res = curl_easy_perform(curl);
         if (res != CURLE_OK) {
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
@@ -97,10 +109,10 @@ std::string readHighScores() {
 }
 
 void displayHighScores() {
-    // Retrieve high scores from the server
+    //Retrieve high scores from the server
     std::string highScores = readHighScores();
 
-    // Render high scores on the screen
+    //Render high scores on the screen
     glClear(GL_COLOR_BUFFER_BIT);
     glPushMatrix();
     glColor3ub(255, 255, 255);
@@ -110,14 +122,14 @@ void displayHighScores() {
     r.center = 0;
     ggprint8b(&r, 16, 0x009900FF, "High Scores:");
 
-    // Split the high scores string into lines
+    //Split the high scores string into lines
     std::istringstream scoresStream(highScores);
     std::string line;
-    int yPos = 490;  // Initial Y position for the scores
+    int yPos = 490;  //Initial Y position for the scores
 
     while (std::getline(scoresStream, line)) {
         ggprint8b(&r, 16, 0x009900FF, line.c_str());
-        r.bot -= 20;  // Move to the next line
+        r.bot -= 20;  //Move to the next line
         yPos -= 20;
     }
 
@@ -126,8 +138,8 @@ void displayHighScores() {
 }
 
 void renderName() {
-    // Adding the player name display
-    glDisable(GL_BLEND); // Disable blending temporarily
+    //Adding the player name display
+    glDisable(GL_BLEND); //Disable blending temporarily
     glClear(GL_COLOR_BUFFER_BIT);
     glPushMatrix();
     glColor3ub(255, 255, 255);
@@ -137,7 +149,7 @@ void renderName() {
     r.center = 0;
     ggprint8b(&r, 16, 0x009900FF, "Player Name: %s", g.playerName.c_str());
     glPopMatrix();
-    glEnable(GL_BLEND); // Enable blending again
+    glEnable(GL_BLEND); //Enable blending again https://learnopengl.com/Advanced-OpenGL/Blending
     x11.swapBuffers();
 }
 
@@ -145,7 +157,7 @@ void askForName(std::string& playerName) {
     if (!playerName.empty()) {
         return;
     }
-    XEvent e;
+    XEvent e; //https://tronche.com/gui/x/xlib/events/structures.html
     KeySym key;
     char text[255];
 
@@ -154,6 +166,7 @@ void askForName(std::string& playerName) {
     bool done = false;
     while (!done) {
         // Check for events without blocking
+        //https://tronche.com/gui/x/xlib/event-handling/XPending.html
         while (XPending(x11.getDisplay())) {
             XNextEvent(x11.getDisplay(), &e);
             if (e.type == KeyPress) {
@@ -173,7 +186,8 @@ void askForName(std::string& playerName) {
             }
             renderName(); // Update the displayed name
         }
-    }
+    } //basically as long as there is no player name the above occurs
+    // if there is a player name, it exits the function using the return statement above
 }
 
 
@@ -211,14 +225,14 @@ std::string readHighScore() {
     // Construct the URL
     std::string url = "https://cs.csub.edu/~aibrahim/independance_day/highscore.php?action=read";
 
-    // ... (similar libcurl setup)
+    //  (similar libcurl setup)
 
     // Perform the request and store the response
     std::string response;
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
-    // ... (perform the request and cleanup)
+    //  (perform the request and cleanup)
 
     return response;
 }
