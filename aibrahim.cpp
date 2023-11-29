@@ -18,8 +18,7 @@ using namespace std;
 #include "log.h"
 #include "fonts.h"
 #include <vector>
-#include "curlver.h"
-#include "curl.h"
+#include "curl/curl.h"
 #include <string>
 #include <sstream>
 
