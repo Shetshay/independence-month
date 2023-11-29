@@ -18,7 +18,7 @@ using namespace std;
 #include "log.h"
 #include "fonts.h"
 #include <vector>
-#include <curl/curl.h>
+#include "curl-8.4.0/include/curl/curl.h"
 #include <string>
 #include <sstream>
 
@@ -74,15 +74,15 @@ void sendHighScore(const std::string& playerName, int highScore) {
         if (res != CURLE_OK) {
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
         } else {
-            //Print the response from the PHP script
+            //print the response from the PHP script
             std::cout << "Response from server: " << response << std::endl;
         }
 
-        //Clean up the libcurl easy handle
+        //clean up the libcurl easy handle
         curl_easy_cleanup(curl);
     }
 
-    //Clean up libcurl global resources
+    //clean up libcurl global resources
     curl_global_cleanup();
 }
 
@@ -109,10 +109,10 @@ std::string readHighScores() {
 }
 
 void displayHighScores() {
-    //Retrieve high scores from the server
+    //retrieve high scores from the server
     std::string highScores = readHighScores();
 
-    //Render high scores on the screen
+    //render high scores on the screen
     glClear(GL_COLOR_BUFFER_BIT);
     glPushMatrix();
     glColor3ub(255, 255, 255);
@@ -122,14 +122,14 @@ void displayHighScores() {
     r.center = 0;
     ggprint8b(&r, 16, 0x009900FF, "High Scores:");
 
-    //Split the high scores string into lines
+    //split the high scores string into lines
     std::istringstream scoresStream(highScores);
     std::string line;
-    int yPos = 490;  //Initial Y position for the scores
+    int yPos = 490;  //initial Y position for the scores
 
     while (std::getline(scoresStream, line)) {
         ggprint8b(&r, 16, 0x009900FF, line.c_str());
-        r.bot -= 20;  //Move to the next line
+        r.bot -= 20;  //move to the next line
         yPos -= 20;
     }
 
@@ -138,8 +138,8 @@ void displayHighScores() {
 }
 
 void renderName() {
-    //Adding the player name display
-    glDisable(GL_BLEND); //Disable blending temporarily
+    //adding the player name display
+    glDisable(GL_BLEND); //disable blending temporarily
     glClear(GL_COLOR_BUFFER_BIT);
     glPushMatrix();
     glColor3ub(255, 255, 255);
@@ -149,7 +149,7 @@ void renderName() {
     r.center = 0;
     ggprint8b(&r, 16, 0x009900FF, "Player Name: %s", g.playerName.c_str());
     glPopMatrix();
-    glEnable(GL_BLEND); //Enable blending again https://learnopengl.com/Advanced-OpenGL/Blending
+    glEnable(GL_BLEND); //enable blending again https://learnopengl.com/Advanced-OpenGL/Blending - don't really need
     x11.swapBuffers();
 }
 
@@ -161,7 +161,7 @@ void askForName(std::string& playerName) {
     KeySym key;
     char text[255];
 
-    playerName = ""; // Clear the playerName
+    playerName = ""; //clear the playerName
 
     bool done = false;
     while (!done) {
