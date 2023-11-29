@@ -518,14 +518,9 @@ int main()
 					for (float &radius : failureIndicator.explosionRadii) {
 						radius += 150.0f; 
 				}
-				}/*
-				while(timer()){
-					g.inEndMenu = true;
-					g.failed_landing = 0;
-					secondaryIndicator.reset();
-					failureIndicator.isExploding = false;
-				}*/
-				if(timer()){
+				}
+
+				if(timer(3)){
 					g.inEndMenu = true;
 					g.failed_landing = 0;
 					secondaryIndicator.reset();
@@ -536,6 +531,7 @@ int main()
 			//if inMenu true display and turn inMenu false
             handleMenu();
         }else if(g.inEndMenu){
+			calculateHighscore(false);
 			endMenu();	
 		}
     }
@@ -667,23 +663,22 @@ void render()
 	r.bot = g.yres - 50;
     r.left = 10;
 
-	int highscore = countPhysics(true) / 50;
+
 
 	//void renderName();
 
 
 	// will implement when checkCollisionBash = True highscore goes back not fully working 
 	// right now
-	if(checkCollisionBash(lander, lander2, bashteroids)) {
-		highscore = highscore - 10;
-		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS: %i", highscore);
+	if(g.starsmoveback == true) {
+		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS: %i", calculateHighscore(false));
 		r.bot = 550;
     	ggprint13(&r, 20, 0x0055ff55, "Player: %s", g.playerName.c_str());
-		g.tempHighscore = highscore;
+		g.tempHighscore = g.highscore;
 	} else {
-		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS: %i", highscore);
+		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS: %i", calculateHighscore(true));
    		ggprint13(&r, 20, 0x0055ff55, "Player: %s", g.playerName.c_str());
-		g.tempHighscore = highscore;
+		g.tempHighscore = g.highscore;
 	}
 
 	/*stats box from gordons lab*/

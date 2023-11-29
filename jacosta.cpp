@@ -173,7 +173,7 @@ void render_slowstars()
     glEnd();
 }
 
-bool timer() {
+bool timer(int timeTaken) {
     static int start_time = 1;
     if (start_time == 1) {
         start_time = time(NULL);
@@ -182,7 +182,7 @@ bool timer() {
     int elapsed = time(NULL) - start_time;
     //cout << elapsed << endl;
 
-    if (elapsed >= 3) {
+    if (elapsed >= timeTaken) {
         //cout << elapsed << endl;
         elapsed = 0;
         start_time = 1; // Reset the timer
@@ -203,4 +203,49 @@ int total_running_time(const bool get){
     }
     return 0;
 }
+
+int countHighscore(bool reset){
+    static int score = 0;
+    if(reset) {
+        score = 0;
+    } else {
+        score++;
+    }
+    return score;
+}
+
+int calculateHighscore(bool scoreBack){
+    static int highscore;
+    static int temphighscore = 0;
+    if(!g.failed_landing){
+    if(scoreBack == true){
+        cout << "normal score" << endl;
+        highscore += countHighscore(false);
+        g.highscore = highscore;
+        temphighscore = highscore;
+    }else{
+        cout << "score reduce" << endl;
+        highscore--;
+        g.highscore = highscore;
+        temphighscore = highscore;
+        if(highscore <= 0){
+            highscore = 0;
+            g.highscore = highscore;
+            temphighscore = highscore;
+        }
+    }
+    } else {
+        cout << "in end reset 0" << endl;
+        highscore = 0;
+        g.highscore = highscore;
+        countHighscore(true);
+    }
+    return temphighscore;
+}
+
+    
+
+
+
+
 

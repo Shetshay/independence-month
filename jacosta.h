@@ -12,6 +12,8 @@ extern void init_stars(void);
 extern void render_stars(void);
 extern void render_slowstars(void);
 extern void render_stagstars(void);
-extern bool timer();
+extern bool timer(int);
+int countHighscore(bool);
+extern int calculateHighscore(bool);
 
 #endif

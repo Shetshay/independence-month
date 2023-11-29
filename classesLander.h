@@ -50,6 +50,7 @@ class Global {
         int tempHighscore;
         bool done;
         bool inscoreMenu;
+        int highscore;
 
 
         std::string playerName;
@@ -80,6 +81,7 @@ class Global {
             done = false;
             tempHighscore = 0;
             inscoreMenu = false;
+            highscore = 0;
             
         }
 };
