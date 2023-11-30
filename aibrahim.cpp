@@ -39,6 +39,7 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* out
 //https://curl.se/docs/
 
 // Function to send high scores to a server using libcurl
+
 void sendHighScore(const std::string& playerName, int highScore) {
     // Initialize libcurl globally
     CURL* curl;
@@ -151,6 +152,7 @@ void renderName() {
     glPopMatrix();
     glEnable(GL_BLEND); //enable blending again https://learnopengl.com/Advanced-OpenGL/Blending - don't really need
     x11.swapBuffers();
+    
 }
 
 void askForName(std::string& playerName) {

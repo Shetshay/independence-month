@@ -340,7 +340,7 @@ int X11_wrapper::check_keys(XEvent *e)
 				g.inscoreMenu = !g.inscoreMenu;
 				break;
 			case XK_Return: // 'Enter' key to select menu option
-                if (g.inMenu){
+            if (g.inMenu){
 				if (g.menuChoice == 0){
                     // Start the game
 					askForName(g.playerName);
@@ -350,7 +350,9 @@ int X11_wrapper::check_keys(XEvent *e)
                     // Activates two Player
 					g.twoPlayer = true;
 					g.inMenu = false;
-                } else if (g.menuChoice == 2) {
+                }else if (g.menuChoice == 2) {
+					g.inscoreMenu = !g.inscoreMenu;
+                } else if (g.menuChoice == 3) {
                     // Quit the game
                     exit(0);
                 }
@@ -369,10 +371,9 @@ int X11_wrapper::check_keys(XEvent *e)
 							//init_asteroids();
 						}
                     } else if (g.menuChoice == 1) {
-                        // Go back to Main Menu or check scores(need to still work on)
-                        //g.inEndMenu = false;
-						g.inscoreMenu = true;
-
+                        //check scores(need to still work on)
+						g.inscoreMenu = !g.inscoreMenu;
+                        
                     } else if (g.menuChoice == 2) {
                         // Quit the game
                         exit(0);
@@ -384,7 +385,7 @@ int X11_wrapper::check_keys(XEvent *e)
                 g.menuChoice = (g.menuChoice + 2) % 3;
                 break;
             case XK_Down: // Down arrow key
-                g.menuChoice = (g.menuChoice + 1) % 3;
+                g.menuChoice = (g.menuChoice + 1) % 4;
                 break;
 		}
 	}
@@ -464,7 +465,7 @@ int main()
             done = x11.check_keys(&e);
         }
         // logic for game menu
-        if (!g.inMenu && !g.inEndMenu) {
+        if (!g.inMenu && !g.inEndMenu && !g.paused) {
             physics();
             render();
 
@@ -519,6 +520,7 @@ int main()
 						radius += 150.0f; 
 				}
 				}
+					sendHighScore(g.playerName, calculateHighscore(false));
 
 				if(timer(3)){
 					g.inEndMenu = true;
@@ -529,11 +531,20 @@ int main()
 		   }
         } else if(g.inMenu){  
 			//if inMenu true display and turn inMenu false
-            handleMenu();
+			if(g.inscoreMenu){
+				displayHighScores();
+			}else{
+				handleMenu();
+			}	
         }else if(g.inEndMenu){
-			calculateHighscore(false);
-			endMenu();	
+			if(g.inscoreMenu){
+				displayHighScores();
+			}else{
+				calculateHighscore(false);
+				endMenu();
+			}	
 		}
+		
     }
 } while (restartCondition);
 
@@ -672,11 +683,12 @@ void render()
 	// right now
 	if(g.starsmoveback == true) {
 		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS: %i", calculateHighscore(false));
-		r.bot = 550;
+		//r.bot = 550;
     	ggprint13(&r, 20, 0x0055ff55, "Player: %s", g.playerName.c_str());
 		g.tempHighscore = g.highscore;
 	} else {
 		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS: %i", calculateHighscore(true));
+		//r.bot = 550;
    		ggprint13(&r, 20, 0x0055ff55, "Player: %s", g.playerName.c_str());
 		g.tempHighscore = g.highscore;
 	}

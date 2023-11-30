@@ -42,9 +42,16 @@ void handleMenu() {
 
         r.bot -= 20;
         if (g.menuChoice == 2)
+            ggprint8b(&r, 16, 0x009900FF, "> Scores");
+        else
+            ggprint8b(&r, 16, 0x00ffffff, "Scores");
+
+        r.bot -= 20;
+        if (g.menuChoice == 3)
             ggprint8b(&r, 16, 0x009900FF, "> Quit");
         else
             ggprint8b(&r, 16, 0x00ffffff, "Quit");
+
 
         glPopMatrix();
         x11.swapBuffers();
@@ -219,12 +226,10 @@ int calculateHighscore(bool scoreBack){
     static int temphighscore = 0;
     if(!g.failed_landing){
     if(scoreBack == true){
-        cout << "normal score" << endl;
         highscore += countHighscore(false);
         g.highscore = highscore;
         temphighscore = highscore;
     }else{
-        cout << "score reduce" << endl;
         highscore--;
         g.highscore = highscore;
         temphighscore = highscore;
@@ -235,7 +240,6 @@ int calculateHighscore(bool scoreBack){
         }
     }
     } else {
-        cout << "in end reset 0" << endl;
         highscore = 0;
         g.highscore = highscore;
         countHighscore(true);
