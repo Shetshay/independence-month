@@ -191,7 +191,7 @@ const std::vector<Bashteroid>& bashteroids)
 
 void renderBashteroid() 
 {
-    for(const Bashteroid& bashteroid : bashteroids) {
+    for (const Bashteroid& bashteroid : bashteroids) {
         glPushMatrix();
         glTranslatef(bashteroid.x, bashteroid.y, 0.0f);
         glLineWidth(5.0f);
@@ -270,13 +270,13 @@ void reset_asteroids()
 void renderAsteroids() 
 {
     glColor3f(1.0f, 1.0f, 1.0f);
-    for(const Asteroid& asteroid : asteroids) {
+    for (const Asteroid& asteroid : asteroids) {
 
         glPushMatrix();
         glTranslatef(asteroid.x, asteroid.y, 0.0f);
         glLineWidth(2.0f);
         glBegin(GL_LINES);
-            for(int i = 0; i < 35; i++) {
+            for (int i = 0; i < 35; i++) {
 
                 glColor3ub(255,0,0);
                 glVertex2f((rnd() * asteroid.radius * 2) - asteroid.radius, 0.0);
@@ -286,7 +286,7 @@ void renderAsteroids()
             glEnd();
 
             glBegin(GL_TRIANGLE_FAN);
-            for(int i= 0; i < 360; i +=15) {
+            for (int i= 0; i < 360; i +=15) {
 
                 float angle = i * 3.14159265f / 180.0f;
                 float x = asteroid.radius * cos(angle);
@@ -309,12 +309,12 @@ void renderAsteroids()
 void renderX11steroid() 
 {
     glColor3f(1.0f, 1.0f, 1.0f);
-    for(const X11steroid& X11steroid : X11steroids) {
+    for (const X11steroid& X11steroid : X11steroids) {
         glPushMatrix();
         glTranslatef(X11steroid.x, X11steroid.y, 0.0f);
         glLineWidth(2.0f);
         glBegin(GL_LINES);
-            for(int i = 0; i < 35; i++) {
+            for (int i = 0; i < 35; i++) {
                 glColor3ub(0,0,0);
                 glVertex2f((rnd() * X11steroid.radius * 2)
                 - X11steroid.radius, 0.0);
@@ -323,7 +323,7 @@ void renderX11steroid()
             }
         glEnd();
         glBegin(GL_TRIANGLE_FAN);
-            for(int i= 0; i < 360; i +=15) {
+            for (int i= 0; i < 360; i +=15) {
                 float angle = i * 3.14159265f / 180.0f;
                 float x = X11steroid.radius * cos(angle);
                 float y = X11steroid.radius * sin(angle);
@@ -347,9 +347,8 @@ const std::vector<Asteroid>& asteroids)
 
         for (int i = 0; i < 2; i++) {
             for (const Asteroid& asteroid : asteroids) {
-                float distance = sqrt(pow(spaceships[i]->pos[0] - asteroid.x, 2) + 
-                                    pow(spaceships[i]->pos[1] - asteroid.y, 2));
-
+                float distance = sqrt(pow(spaceships[i]->pos[0] - asteroid.x, 2) 
+                    + pow(spaceships[i]->pos[1] - asteroid.y, 2));
                 if (distance < (spaceships[i]->radius + asteroid.radius)) {
                     return true; 
                 }
@@ -358,7 +357,8 @@ const std::vector<Asteroid>& asteroids)
         return false;
     } else {
         for (const Asteroid& asteroid : asteroids) {
-            float distance = sqrt(pow(spaceship1.pos[0] - asteroid.x, 2) + pow(spaceship1.pos[1] - asteroid.y, 2));
+            float distance = sqrt(pow(spaceship1.pos[0] - asteroid.x, 2)
+                + pow(spaceship1.pos[1] - asteroid.y, 2));
             if (distance < (spaceship1.radius + asteroid.radius)) {
                 return true;
             }
@@ -377,7 +377,7 @@ const Lander& spaceship2, const std::vector<X11steroid>& X11steroids)
         for (int i = 0; i < 2; i++) {
             for (const X11steroid& X11steroid : X11steroids) {
                 float distance = sqrt(pow(spaceships[i]->pos[0] - X11steroid.x, 2) + 
-                                    pow(spaceships[i]->pos[1] - X11steroid.y, 2));
+                    pow(spaceships[i]->pos[1] - X11steroid.y, 2));
 
                 if (distance < (spaceships[i]->radius + X11steroid.radius)) {
                     return true; 
@@ -386,7 +386,7 @@ const Lander& spaceship2, const std::vector<X11steroid>& X11steroids)
         }
         return false;
     } else {
-        for(const X11steroid& X11steroid : X11steroids) {
+        for (const X11steroid& X11steroid : X11steroids) {
             float distance = sqrt(pow(spaceship1.pos[0] - X11steroid.x, 2) 
             + pow(spaceship1.pos[1] - X11steroid.y, 2));
             if (distance < (spaceship1.radius + X11steroid.radius)) {
@@ -431,7 +431,7 @@ void asteroidPhysics()
         //cout << "Spaceship collided with an asteroid!" << endl;
         g.failed_landing = 1;
     }
-    if(g.starsmoveback) {
+    if (g.starsmoveback) {
         for (Asteroid& asteroid : asteroids) {
             asteroid.moveback();
         }
