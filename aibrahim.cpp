@@ -156,9 +156,9 @@ void renderName() {
 }
 
 void askForName(std::string& playerName) {
-    if (!playerName.empty()) {
+   /* if (!playerName.empty()) {
         return;
-    }
+    }*/
     XEvent e; //https://tronche.com/gui/x/xlib/events/structures.html
     KeySym key;
     char text[255];

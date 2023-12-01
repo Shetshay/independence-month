@@ -17,76 +17,41 @@
 #include <vector>
 using namespace std;
 
-/*vector<Asteroid> asteroids;
-
-bool checkCollision(const Lander& lander, const std::vector<Asteroid>& asteroids) {
-    // Get the boundaries of the lander
-    float landerLeft = lander.pos[0] - lander.width / 2;
-    float landerRight = lander.pos[0] + lander.width / 2;
-    float landerTop = lander.pos[1] + lander.height / 2;
-    float landerBottom = lander.pos[1] - lander.height / 2;
-
-    // Check for collision with each asteroid
-    for (const Asteroid& asteroid : asteroids) {
-        // Get the boundaries of the asteroid
-        float asteroidLeft = asteroid.posX - asteroid.radius;
-        float asteroidRight = asteroid.posX + asteroid.radius;
-        float asteroidTop = asteroid.posY + asteroid.radius;
-        float asteroidBottom = asteroid.posY - asteroid.radius;
-
-        // Check for collision by comparing boundaries
-        if (landerRight >= asteroidLeft &&
-            landerLeft <= asteroidRight &&
-            landerTop >= asteroidBottom &&
-            landerBottom <= asteroidTop) {
-            // Collision detected
-            return true;
-        }
-    }
-
-    // No collision detected
-    return false;
-}*/
-/*
-void handleContinueInput(XEvent& e, bool& showContinueScreen, bool& collision, bool& inMenu) {
-    if (e.type == KeyPress) {
-        if (showContinueScreen) {
-            if (e.xkey.keycode == XKeysymToKeycode(x11.getDisplay, XK_y)) {
-                // User pressed "c" key to continue the game
-                showContinueScreen = false; // Hide the "Continue?" screen
-                collision = false; // Reset the collision flag
-                lander.pos[0] += lander.vel[0];
-				lander.pos[1] += lander.vel[1];
-				lander.vel[1] -= GRAVITY;
-            } else if (e.xkey.keycode == XKeysymToKeycode(x11.getDisplay, XK_n)) {
-                // User pressed "m" key to return to the main menu
-                showContinueScreen = false; // Hide the "Continue?" screen
-                inMenu = true; // Return to the main menu
-                // Handle returning to the main menu here
-            }
-        }
-    }
-}
-
-void renderContinueScreen(int countdown) {
+void renderContinueScreen() {
+    // Render "Continue?" message
     glClear(GL_COLOR_BUFFER_BIT);
     glPushMatrix();
     // Set the color and text size
     glColor3ub(255, 255, 255);
+    int windowWidth = g.xres;
+    int windowHeight = g.yres;
     Rect r;
-    r.bot = 400;
-    r.left = 200;
+    r.bot = windowHeight / 2;
+    r.left = windowWidth / 4;
     r.center = 0;
 
-    // Display countdown
-    ggprint8b(&r, 16, 0, "CONTINUE?: %d seconds", countdown);
+    if(g.countdown > 0){
+        //countdown has time in between seconds
+        usleep(1000000);
+        g.countdown--;
+    }
+    //render continue
+    ggprint13(&r, 20, 0x00ffff00, "Continue?");
+    
+    //render countdown
+    ggprint13(&r, 20, 0x00ffff00, "Countdown: %d", g.countdown);
 
-    // Display instructions
-    r.bot = 300;
-    ggprint8b(&r, 16, 0, "Press 'Y' to continue, 'N' to return to the main menu");
+    //render options
+    ggprint13(&r, 20, 0x00ffff00, "Press C to Continue or");
+    ggprint13(&r, 20, 0x00ffff00, "M to go back to Main Menu");
+    //countdown reaches 0, go to game over
+    if(g.countdown==0){
+        g.inContinue = false;
+        g.inEndMenu = true;
+    }
     glPopMatrix();
     x11.swapBuffers();
-}*/
+}
 
 void renderPauseScreen() {
     glClear(GL_COLOR_BUFFER_BIT);

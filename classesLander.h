@@ -51,7 +51,9 @@ class Global {
         bool done;
         bool inscoreMenu;
         int highscore;
-
+	int countdown;
+        bool inContinue;
+        bool yesContinue;
 
         std::string playerName;
 
@@ -82,6 +84,9 @@ class Global {
             tempHighscore = 0;
             inscoreMenu = false;
             highscore = 0;
+	    countdown = 10;
+            inContinue = false;
+            yesContinue = false;
             
         }
 };

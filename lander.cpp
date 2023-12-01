@@ -62,7 +62,9 @@ bool checkCollisionBash(const Lander& spaceship, const Lander& spaceship2, const
 extern int mouse_move_timer(const bool get);
 
 //----------------------------------//
-
+void renderPauseScreen();
+void renderContinueScreen();
+//
 //Andrew's extern---------
 void askForName(std::string& playerName);
 //------------------------
@@ -322,6 +324,15 @@ int X11_wrapper::check_keys(XEvent *e)
 	if (e->type == KeyRelease)
 		g.keys[key] = 0;
 	if (e->type == KeyPress) {
+		if (g.inContinue) {
+    		if (key == XK_c) {
+        		g.yesContinue = true;
+    		} else if (key == XK_m) {
+        		g.inContinue = false;
+        		g.inMenu = true;
+			g.inEndMenu = false;
+    		}
+		} else {
 		switch (key) {
 			case XK_r:
 				//Key R was pressed
@@ -346,6 +357,8 @@ int X11_wrapper::check_keys(XEvent *e)
 					askForName(g.playerName);
 					g.setPlayerName(g.playerName);
 					g.inMenu = false;
+					lander.init();
+					reset_asteroids();
                 } else if (g.menuChoice == 1) {
                     // Activates two Player
 					g.twoPlayer = true;
@@ -378,6 +391,7 @@ int X11_wrapper::check_keys(XEvent *e)
                         // Quit the game
                         exit(0);
                     }
+				
                 }
                 break;
                 
@@ -387,6 +401,7 @@ int X11_wrapper::check_keys(XEvent *e)
             case XK_Down: // Down arrow key
                 g.menuChoice = (g.menuChoice + 1) % 4;
                 break;
+		}
 		}
 	}
 	return 0;
@@ -465,7 +480,7 @@ int main()
             done = x11.check_keys(&e);
         }
         // logic for game menu
-        if (!g.inMenu && !g.inEndMenu && !g.paused) {
+        if (!g.inMenu && !g.inEndMenu && !g.inContinue && !g.paused) {
             physics();
             render();
 
@@ -497,6 +512,9 @@ int main()
             x11.swapBuffers();
            if (g.failed_landing == 1) {
 				g.menuChoice = 0;
+				g.countdown = 10;
+				g.inContinue = true;
+				g.yesContinue = false;
 
 				glColor3ub(250, 0, 0); 
 				failureIndicator.drawExplosion(lander.pos[0], lander.pos[1]);
@@ -529,13 +547,25 @@ int main()
 					failureIndicator.isExploding = false;
 				}	
 		   }
-        } else if(g.inMenu){  
+        } else if(g.inMenu){
+			lander.init();
+	      		reset_asteroids();	
 			//if inMenu true display and turn inMenu false
 			if(g.inscoreMenu){
 				displayHighScores();
 			}else{
 				handleMenu();
-			}	
+			}
+	}else if(g.inContinue){
+			renderContinueScreen();
+			//"c" is pressed/continue is chosen
+			if(g.yesContinue){
+				g.failed_landing = 0;
+				g.inContinue = false;
+
+				lander.init();
+				lander2.init2(); // Reinitialize game state or similar logic
+			}
         }else if(g.inEndMenu){
 			if(g.inscoreMenu){
 				displayHighScores();
@@ -543,7 +573,9 @@ int main()
 				calculateHighscore(false);
 				endMenu();
 			}	
-		}
+	}else if(g.paused == true){
+			renderPauseScreen();
+    	}
 		
     }
 } while (restartCondition);
