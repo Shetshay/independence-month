@@ -157,37 +157,7 @@ void Bashteroid::reversereset() {
     y = 0 - radius;
 }
         
-//-----------------------------------------
-
-//-----Class Lander executables------------
-/*Lander::Lander() 
-{
-    init();
-}
-void Lander::init() 
-{
-    pos[0] = 200.0f;
-    pos[1] = g.yres - 60.0f;
-    vel[0] = vel[1] = 0.0f;
-    //3 vertices of triangle-shaped rocket lander
-    verts[0][0] = -10.0f;
-    verts[0][1] =   0.0f;
-    verts[1][0] =   0.0f;
-    verts[1][1] =  30.0f;
-    verts[2][0] =  10.0f;
-    verts[2][1] =   0.0f;
-
-    windowVerts[0][0] = -5.0f; windowVerts[0][1] = 10.0f;
-    windowVerts[1][0] = 0.0f; windowVerts[1][1] = 20.0f;
-    windowVerts[2][0] = 5.0f; windowVerts[2][1] = 10.0f;
-    angle = 0.0;
-    thrust = 0.0f;
-    g.failed_landing = 0;
-    radius = 10.0f;
-    prevPos[0] = pos[0];
-    prevPos[1] = pos[1];
-}*/
-//-----------------------------------------
+//------------------------------
 
 bool checkCollisionBash(const Lander& spaceship1, const Lander& spaceship2,
 const std::vector<Bashteroid>& bashteroids)
@@ -368,35 +338,6 @@ void renderX11steroid()
     }
 }
 
-/*void music_effects() 
-{
-
-    if(g.starsmoveback && !music.eventOccurred) {
-        if(music.musicbgMusicPlaying) {
-            alSourcePause(alSource);
-            music.bgMusicPlaying = false;
-        }
-        if(!music.eventSoundPlaying) {
-            alSourcePlay(eventSource);
-            eventSoundPlaying = true;
-        }
-        eventOccurred = true;
-    }
-    else if(!g.starsmoveback && music.eventOccurred) {
-        if(music.eventSoundPlaying) {
-            alSourceStop(eventSource);
-            music.eventSoundPlaying = false;
-        }
-        if(!music.bgMusicPlaying) {
-            alSourcePlay(alSource)
-            music.bgMusicPlaying = true;
-        }
-        eventOccured = false;
-    }
-}*/
-
-
-
 bool checkCollision(const Lander& spaceship1, const Lander& spaceship2, 
 const std::vector<Asteroid>& asteroids) 
 {
@@ -455,6 +396,7 @@ const Lander& spaceship2, const std::vector<X11steroid>& X11steroids)
     }
     return false;
 }
+
 const int COOLDOWN_FRAMES = 60;
 int collisionCooldown = 0;
 void X11steroidPhysics() 

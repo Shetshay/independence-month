@@ -89,4 +89,5 @@ extern AlienHead alien;
 extern void shootlaser();
 extern void move_ufo();
 extern void renderUFO(const UFO &ufo);
+
 #endif 

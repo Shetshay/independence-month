@@ -155,10 +155,15 @@ void Laser::fire(float startX, float startY)
     active = true;
 }
 
+bool checkCollisionLaser(const Laser& laser, const Lander& lander);
+
 void Laser::move() 
 {
     if (active) {
         pos[1] += speed; // Move the laser upward
+    }
+    if (checkCollisionLaser(ufoLaser, lander)) {
+        g.failed_landing = 1;
     }
 }
 
@@ -228,10 +233,10 @@ void AlienHead::drawOval(float cx, float cy, float rx, float ry, float angle, fl
 
 void AlienHead::alienrender(float cx, float cy) 
 {
-    float headColor[3] = {0.2f, 0.9f, 0.2f};  // Yellowish color for the alien head
+    float headColor[3] = {0.2f, 0.9f, 0.2f};  // Green color for the alien head
     float eyeColor[3] = {1.0f, 0.0f, 0.0f};   // Red color for the eyes
 
-    // Draw the head
+    // Draws the head
     drawCircle(cx, cy, 15.0f, headColor);
 
     // Draw the left eye as a tilted oval
@@ -253,6 +258,29 @@ void shootlaser()
     }
 }
 
+bool checkCollisionLaser(const Laser& Laser, const Lander& lander) 
+{
+    if (!Laser.active) {
+        return false;
+    }
+
+    float laserLeft = Laser.pos[0] - Laser.length / 2 + 3;
+    float laserRight = Laser.pos[0] + Laser.length / 2 - 3;
+    float laserTop = Laser.pos[1] - 3;
+    float laserBottom = Laser.pos[1] - Laser.length + 3;
+
+    for(int i = 0; i < 3; ++i) {
+        float x = lander.pos[0] + lander.verts[i][0];
+        float y = lander.pos[1] + lander.verts[i][1];
+
+        if(x >= laserLeft && x <= laserRight && y <= laserTop && y >= laserBottom) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void drawOval(float cx, float cy, float rx, float ry, float color[3])
 {
     int num_segments = 50;
@@ -268,7 +296,8 @@ void drawOval(float cx, float cy, float rx, float ry, float color[3])
     glEnd();
 }
 
-void renderUFO(const UFO &ufo) {
+void renderUFO(const UFO &ufo) 
+{
     float mainBodyColor[3] = {0.6f, 0.6f, 0.6f};
     float cockpitColor[3] = {0.6f, 0.8f, 1.0f};
     glPushMatrix();
@@ -281,15 +310,15 @@ void renderUFO(const UFO &ufo) {
 
 void move_ufo() 
 {
-    if(myUFO.pos[0] < 0) {
+    if (myUFO.pos[0] < 0) {
         g.inRange = false;
     }
 
-    if(myUFO.pos[0] > g.xres) {
+    if (myUFO.pos[0] > g.xres) {
         g.inRange = true;
     }
 
-    if(g.inRange) {
+    if (g.inRange) {
         myUFO.pos[0]--;
     } else {
         myUFO.pos[0]++;
