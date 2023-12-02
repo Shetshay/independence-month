@@ -32,8 +32,9 @@ void renderContinueScreen() {
 
     if(g.countdown > 0){
         //countdown has time in between seconds
-        usleep(1000000);
+        if(timerCountdown(1)){
         g.countdown--;
+        }
     }
     //render continue
     ggprint13(&r, 20, 0x00ffff00, "Continue?");
@@ -42,13 +43,15 @@ void renderContinueScreen() {
     ggprint13(&r, 20, 0x00ffff00, "Countdown: %d", g.countdown);
 
     //render options
-    ggprint13(&r, 20, 0x00ffff00, "Press C to Continue or");
+    ggprint13(&r, 20, 0x00ffff00, "Press C to Retry or");
     ggprint13(&r, 20, 0x00ffff00, "M to go back to Main Menu");
     //countdown reaches 0, go to game over
+    /*
     if(g.countdown==0){
         g.inContinue = false;
         g.inEndMenu = true;
     }
+    */
     glPopMatrix();
     x11.swapBuffers();
 }
@@ -204,4 +207,22 @@ void Lz::moveback()
     pos[1] = 0;
     change_value();
     }
+}
+
+bool timerCountdown(int timeTaken) {
+    static int start_time = 1;
+    if (start_time == 1) {
+        start_time = time(NULL);
+    }
+    
+    int elapsed = time(NULL) - start_time;
+    //cout << elapsed << endl;
+
+    if (elapsed >= timeTaken) {
+        //cout << elapsed << endl;
+        elapsed = 0;
+        start_time = 1; // Reset the timer
+        return true;  // 3 seconds have passed
+    }
+    return false;
 }

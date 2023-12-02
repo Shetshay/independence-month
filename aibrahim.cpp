@@ -76,7 +76,7 @@ void sendHighScore(const std::string& playerName, int highScore) {
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
         } else {
             //print the response from the PHP script
-            std::cout << "Response from server: " << response << std::endl;
+            //std::cout << "Response from server: " << response << std::endl;
         }
 
         //clean up the libcurl easy handle
@@ -121,6 +121,7 @@ void displayHighScores() {
     r.bot = 520;
     r.left = 10;
     r.center = 0;
+    cout << "bro " << endl;
     ggprint8b(&r, 16, 0x009900FF, "High Scores:");
 
     //split the high scores string into lines
@@ -133,6 +134,8 @@ void displayHighScores() {
         r.bot -= 20;  //move to the next line
         yPos -= 20;
     }
+
+    ggprint8b(&r, 16, 0x009900FF, "Press Enter to Go Back");
 
     glPopMatrix();
     x11.swapBuffers();

@@ -7,5 +7,6 @@ extern void lander_boundaries();
 extern void render_iceblock();
 extern void renderPauseScreen();
 extern void moveLz();
+extern bool timerCountdown(int);
 
 #endif

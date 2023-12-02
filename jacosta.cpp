@@ -69,9 +69,9 @@ void endMenu() {
         ggprint8b(&r, 16, 0x009966FF, "GAME OVER");
         r.bot -= 40;
         if (g.menuChoice == 0)
-            ggprint8b(&r, 16, 0x009900FF, "> Retry");
+            ggprint8b(&r, 16, 0x009900FF, "> Back to Menu");
         else
-            ggprint8b(&r, 16, 0x00ffffff, "Retry");
+            ggprint8b(&r, 16, 0x00ffffff, "Back to Menu");
 
         r.bot -= 20;
         if (g.menuChoice == 1)

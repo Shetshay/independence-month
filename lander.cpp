@@ -330,9 +330,9 @@ int X11_wrapper::check_keys(XEvent *e)
     		} else if (key == XK_m) {
         		g.inContinue = false;
         		g.inMenu = true;
-			g.inEndMenu = false;
+				g.inEndMenu = false;
     		}
-		} else {
+			}
 		switch (key) {
 			case XK_r:
 				//Key R was pressed
@@ -359,10 +359,15 @@ int X11_wrapper::check_keys(XEvent *e)
 					g.inMenu = false;
 					lander.init();
 					reset_asteroids();
+					g.twoPlayer = false;
+					//Reset Alien Laser
                 } else if (g.menuChoice == 1) {
                     // Activates two Player
 					g.twoPlayer = true;
 					g.inMenu = false;
+					lander.init();
+					lander2.init2();
+					reset_asteroids();
                 }else if (g.menuChoice == 2) {
 					g.inscoreMenu = !g.inscoreMenu;
                 } else if (g.menuChoice == 3) {
@@ -371,7 +376,7 @@ int X11_wrapper::check_keys(XEvent *e)
                 }
 				}else if (g.inEndMenu) {
                     if (g.menuChoice == 0) {
-                        // Retry
+                        /* Back to Main Menu
                         g.inEndMenu = false;
 						if(g.twoPlayer) {
 							//init_asteroids();
@@ -383,6 +388,11 @@ int X11_wrapper::check_keys(XEvent *e)
 							reset_asteroids();
 							//init_asteroids();
 						}
+						*/
+						g.inMenu = true;
+						g.inEndMenu = false;
+						g.paused = false;
+					
                     } else if (g.menuChoice == 1) {
                         //check scores(need to still work on)
 						g.inscoreMenu = !g.inscoreMenu;
@@ -403,9 +413,8 @@ int X11_wrapper::check_keys(XEvent *e)
                 break;
 		}
 		}
+		return 0;
 	}
-	return 0;
-}
 
 X11_wrapper x11;
 // end of x11 function 
@@ -513,7 +522,7 @@ int main()
            if (g.failed_landing == 1) {
 				g.menuChoice = 0;
 				g.countdown = 10;
-				g.inContinue = true;
+				//g.inContinue = true;
 				g.yesContinue = false;
 
 				glColor3ub(250, 0, 0); 
@@ -541,14 +550,16 @@ int main()
 					sendHighScore(g.playerName, calculateHighscore(false));
 
 				if(timer(3)){
-					g.inEndMenu = true;
+					//g.inEndMenu = true;
+					g.inContinue = true;
 					g.failed_landing = 0;
 					secondaryIndicator.reset();
+					//Reset Alien Laser
 					failureIndicator.isExploding = false;
 				}	
 		   }
         } else if(g.inMenu){
-			lander.init();
+				lander.init();
 	      		reset_asteroids();	
 			//if inMenu true display and turn inMenu false
 			if(g.inscoreMenu){
@@ -560,11 +571,29 @@ int main()
 			renderContinueScreen();
 			//"c" is pressed/continue is chosen
 			if(g.yesContinue){
+				if(g.twoPlayer == true){
 				g.failed_landing = 0;
 				g.inContinue = false;
-
+				secondaryIndicator.reset();
+				failureIndicator.isExploding = false;
 				lander.init();
 				lander2.init2(); // Reinitialize game state or similar logic
+				//Reset Alien Laser
+				}else{
+					g.failed_landing = 0;
+					g.inContinue = false;
+					secondaryIndicator.reset();
+					failureIndicator.isExploding = false;
+					lander.init();
+					lander2.init2();
+					//Reset Alien Laser
+				}
+
+
+			}
+			if(g.countdown == 0){
+				g.inContinue = false;
+        		g.inEndMenu = true;
 			}
         }else if(g.inEndMenu){
 			if(g.inscoreMenu){

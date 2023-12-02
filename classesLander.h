@@ -51,7 +51,7 @@ class Global {
         bool done;
         bool inscoreMenu;
         int highscore;
-	int countdown;
+	    int countdown;
         bool inContinue;
         bool yesContinue;
 
