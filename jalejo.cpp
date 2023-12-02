@@ -65,6 +65,8 @@ void Asteroid::reset()
 {
     x = rand() % g.xres;
     y = g.yres + radius;
+    radius = rand() % 20 + 10;
+    speed = rand() % 3 + 3;
 }
 
 void Asteroid:: reversereset()
@@ -104,6 +106,8 @@ void X11steroid::reset()
 {
     x = rand() % g.xres;
     y = g.yres + radius;
+    radius = rand() % 20 + 10;
+    speed = rand() % 3 + 3;
 }
 
 void X11steroid:: reversereset()
@@ -142,6 +146,8 @@ void Bashteroid::reset()
 {
     x = rand() % g.xres;
     y = g.yres + radius;
+    radius = rand() % 20 + 10;
+    speed = rand() % 3 + 3;
 }
 
 void Bashteroid::moveback() 

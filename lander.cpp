@@ -556,6 +556,7 @@ int main()
 					secondaryIndicator.reset();
 					//Reset Alien Laser
 					failureIndicator.isExploding = false;
+					ufoLaser.reset();
 				}	
 		   }
         } else if(g.inMenu){
@@ -579,6 +580,7 @@ int main()
 				lander.init();
 				lander2.init2(); // Reinitialize game state or similar logic
 				//Reset Alien Laser
+				ufoLaser.reset();
 				}else{
 					g.failed_landing = 0;
 					g.inContinue = false;
@@ -587,6 +589,7 @@ int main()
 					lander.init();
 					lander2.init2();
 					//Reset Alien Laser
+					ufoLaser.reset();
 				}
 
 
@@ -799,6 +802,7 @@ void render()
 	glEnable(GL_BLEND);
 	// makes the shrimp transparent
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	// 	Draw Lander
 	glPushMatrix();
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // Set initial color to white with full opacity
@@ -812,6 +816,13 @@ void render()
 	glBegin(GL_TRIANGLES);
 	for (int i=0; i<3; i++) {
 		glVertex2f(lander.verts[i][0], lander.verts[i][1]);
+	}
+	glEnd();
+
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glBegin(GL_TRIANGLES);
+	for (int i = 0; i < 3; i++) {
+		glVertex2f(lander.windowVerts[i][0], lander.windowVerts[i][1]);
 	}
 	glEnd();
 	//Lander thrust
@@ -841,6 +852,13 @@ void render()
 		glBegin(GL_TRIANGLES);
 		for (int i=0; i<3; i++) {
 			glVertex2f(lander2.verts[i][0], lander2.verts[i][1]);
+		}
+		glEnd();
+
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glBegin(GL_TRIANGLES);
+		for (int i = 0; i < 3; i++) {
+		glVertex2f(lander.windowVerts[i][0], lander.windowVerts[i][1]);
 		}
 		glEnd();
 		//Lander thrust
