@@ -155,6 +155,11 @@ void Laser::fire(float startX, float startY)
     active = true;
 }
 
+void Laser::reset() 
+{
+    pos[1] = 0.0f;
+}
+
 bool checkCollisionLaser(const Laser& laser, const Lander& lander);
 
 void Laser::move() 

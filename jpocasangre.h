@@ -75,6 +75,7 @@ public:
     void fire(float startX, float startY);
     void move();
     void render();
+    void reset();
 };
 extern Laser ufoLaser;
 
