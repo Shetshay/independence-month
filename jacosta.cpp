@@ -104,16 +104,20 @@ void init_stars()
         float x = static_cast<float>(rand() % g.xres);
         float y = static_cast<float>(rand() % g.yres);
         stars[i] = Star(x, y);
+        acidstars[i] = Star(x - 2, y - 2);
     }
     for (int i = 0; i < NUM_STARS; i++) {
         float x = static_cast<float>(rand() % g.xres);
         float y = static_cast<float>(rand() % g.yres);
         stagstars[i] = Star(x,y);
+        acidstagstars[i] = Star(x - 2 ,y - 2);
     }
     for (int i = 0; i < NUM_STARS; i++) {
         float x = static_cast<float>(rand() % g.xres);
         float y = static_cast<float>(rand() % g.yres);
         slowstars[i] = Star(x,y);
+        acidslowstars[i] = Star(x - 2, y - 2);
+
     }
 }
 
@@ -122,28 +126,48 @@ void move_stars()
     if (g.starsmoveback) {
         for(int j = 0; j < 100; j++) {
             stars[j].y += 1.0f;
+            acidstars[j].y += 1.0f;
             slowstars[j].y += 0.5f;
+            acidslowstars[j].y += 0.5f;
             stagstars[j].y += 0.25f;
-            if(stars[j].y > g.yres)
+            acidstagstars[j].y += 0.25f;
+            if(stars[j].y > g.yres) {
                 stars[j].y = 0;
-            if(slowstars[j].y > g.yres)
+                acidstars[j].y = 0 - 2;
+            }
+            if(slowstars[j].y > g.yres) {
                 slowstars[j].y = 0;
-            if(stagstars[j].y > g.yres)
+                acidslowstars[j].y = 0 - 2;
+            }
+            if(stagstars[j].y > g.yres) {
                 stagstars[j].y = 0;
+                acidstagstars[j].y = 0 - 2;
+            }
         }
     } else {
         for (int j = 0; j < 100; j++) {
             stars[j].y -= 1.0f;
+            acidstars[j].y -= 1.0f;
             slowstars[j].y -= 0.5f;
+            acidslowstars[j].y -= 0.5f;
             stagstars[j].y -= 0.25f;
-            if (stars[j].y < 0)
+            acidstagstars[j].y -= 0.25f;
+            if (stars[j].y < 0) {
                 stars[j].y = g.yres;
-            if (slowstars[j].y < 0) 
+                acidstars[j].y = g.yres - 2;
+            }
+            /*if (acidstars[j].y < 0)
+                acidstars[j].y = g.yres;*/                
+            if (slowstars[j].y < 0) {
                 slowstars[j].y = g.yres;
-            if (stagstars[j].y < 0)
+                acidslowstars[j].y = g.yres - 2;
+            }
+            if (stagstars[j].y < 0) {
                 stagstars[j].y = g.yres;
+                acidstagstars[j].y = g.yres - 2;
             }
 	    }
+    }
 }
 
 void render_stars()
@@ -154,6 +178,11 @@ void render_stars()
     for(int i = 0; i < NUM_STARS; i++){
 
         glVertex2f(stars[i].x, stars[i].y);
+        //glVertex2f(acidstars[i].x, acidstars[i].y);
+    }
+    for(int i = 0; i < NUM_STARS; i++) {
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex2f(acidstars[i].x, acidstars[i].y);
     }
     glEnd();
 }
@@ -166,6 +195,10 @@ void render_stagstars()
 
         glVertex2f(stagstars[i].x, stagstars[i].y);
     }
+    for(int i = 0; i < NUM_STARS; i++) {
+        glColor3f(0.0f, 0.0f, 1.0f);
+        glVertex2f(acidstagstars[i].x, acidstagstars[i].y);
+    }
     glEnd();
 }
 
@@ -176,6 +209,10 @@ void render_slowstars()
     for(int i = 0; i < 100; i++){
 
         glVertex2f(slowstars[i].x, slowstars[i].y);
+    }
+    for(int i = 0; i < NUM_STARS; i++) {
+        glColor3f(0.0f, 1.0f, 0.0f);
+        glVertex2f(acidslowstars[i].x, acidslowstars[i].y);
     }
     glEnd();
 }

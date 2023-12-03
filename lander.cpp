@@ -56,6 +56,9 @@ vector<Bashteroid> bashteroids;
 Star stars[100];
 Star stagstars[100];
 Star slowstars[100];
+Star acidstars[100];
+Star acidslowstars[100];
+Star acidstagstars[100];
 bool checkCollision(const Lander& spaceship, const Lander& spaceship2, const std::vector<Asteroid>& asteroids);
 bool checkCollisionX11steroid(const Lander& spaceship, const Lander& spaceship2, const std::vector<X11steroid>& X11steroids);
 bool checkCollisionBash(const Lander& spaceship, const Lander& spaceship2, const std::vector<Bashteroid>& bashteroids);
@@ -879,6 +882,7 @@ void render()
 
 	if (g.failed_landing) {
 	//show crash graphics here...
+	x11.reshape_window(400, 600);
 	}
 	
 

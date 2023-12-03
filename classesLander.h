@@ -161,5 +161,8 @@ struct Star{
 extern Star stars[100];
 extern Star stagstars[100];
 extern Star slowstars[100];
+extern Star acidstars[100];
+extern Star acidslowstars[100];
+extern Star acidstagstars[100];
 
 #endif
