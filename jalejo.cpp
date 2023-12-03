@@ -200,7 +200,6 @@ void renderBashteroid()
     for (const Bashteroid& bashteroid : bashteroids) {
         glPushMatrix();
         glTranslatef(bashteroid.x, bashteroid.y, 0.0f);
-        glLineWidth(5.0f);
 
         // Lines with gradient from purple to blue
         glBegin(GL_LINES);
@@ -280,7 +279,6 @@ void renderAsteroids()
 
         glPushMatrix();
         glTranslatef(asteroid.x, asteroid.y, 0.0f);
-        glLineWidth(2.0f);
         glBegin(GL_LINES);
             for (int i = 0; i < 35; i++) {
 
@@ -318,7 +316,6 @@ void renderX11steroid()
     for (const X11steroid& X11steroid : X11steroids) {
         glPushMatrix();
         glTranslatef(X11steroid.x, X11steroid.y, 0.0f);
-        glLineWidth(2.0f);
         glBegin(GL_LINES);
             for (int i = 0; i < 35; i++) {
                 glColor3ub(0,0,0);
