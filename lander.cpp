@@ -550,7 +550,7 @@ int main()
 						radius += 150.0f; 
 				}
 				}
-					sendHighScore(g.playerName, calculateHighscore(false));
+					sendHighScore(g.playerName, countHighscore(false));
 
 				if(timer(3)){
 					//g.inEndMenu = true;
@@ -560,6 +560,7 @@ int main()
 					//Reset Alien Laser
 					failureIndicator.isExploding = false;
 					ufoLaser.reset();
+					countHighscore(true);
 				}	
 		   }
         } else if(g.inMenu){
@@ -605,7 +606,7 @@ int main()
 			if(g.inscoreMenu){
 				displayHighScores();
 			}else{
-				calculateHighscore(false);
+				//countHighscore(false);
 				endMenu();
 			}	
 	}else if(g.paused == true){
@@ -743,22 +744,13 @@ void render()
 
 
 
-	//void renderName();
 
 
-	// will implement when checkCollisionBash = True highscore goes back not fully working 
-	// right now
-	if(g.starsmoveback == true) {
-		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS: %i", calculateHighscore(false));
+
+		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS: %i", countHighscore(false));
 		//r.bot = 550;
     	ggprint13(&r, 20, 0x0055ff55, "Player: %s", g.playerName.c_str());
 		g.tempHighscore = g.highscore;
-	} else {
-		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS: %i", calculateHighscore(true));
-		//r.bot = 550;
-   		ggprint13(&r, 20, 0x0055ff55, "Player: %s", g.playerName.c_str());
-		g.tempHighscore = g.highscore;
-	}
 
 	/*stats box from gordons lab*/
     if(g.showBox){

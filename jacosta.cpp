@@ -250,38 +250,32 @@ int total_running_time(const bool get){
 
 int countHighscore(bool reset){
     static int score = 0;
+    static time_t lastIncrement = 0;
     if(reset) {
         score = 0;
+        lastIncrement = time(NULL);
     } else {
-        score++;
-    }
-    return score;
-}
-
-int calculateHighscore(bool scoreBack){
-    static int highscore;
-    static int temphighscore = 0;
-    if(!g.failed_landing){
-    if(scoreBack == true){
-        highscore += countHighscore(false);
-        g.highscore = highscore;
-        temphighscore = highscore;
-    }else{
-        highscore--;
-        g.highscore = highscore;
-        temphighscore = highscore;
-        if(highscore <= 0){
-            highscore = 0;
-            g.highscore = highscore;
-            temphighscore = highscore;
+        if(!g.failed_landing){
+        if(g.starsmoveback == false){
+        time_t currentTime = time(NULL);
+        if (currentTime - lastIncrement >= 2){
+            score++;
+            lastIncrement = currentTime;
+        }
+        }else{
+            time_t currentTime = time(NULL);
+            if (currentTime - lastIncrement >= 2){
+            score--;
+            lastIncrement = currentTime;
+            if(score <= 0){
+                score = 0;
+            }
+        }
         }
     }
-    } else {
-        highscore = 0;
-        g.highscore = highscore;
-        countHighscore(true);
     }
-    return temphighscore;
+
+    return score;
 }
 
     
