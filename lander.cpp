@@ -106,7 +106,7 @@ Lander::Lander()
 void Lander::init() 
 {
 	pos[0] = 200.0f;
-    pos[1] = g.yres - 200.0f;
+    pos[1] = g.yres - 300.0f;
     vel[0] = vel[1] = 0.0f;
     //3 vertices of triangle-shaped rocket lander
     verts[0][0] = -10.0f;
@@ -128,7 +128,7 @@ void Lander::init()
 void Lander::init2() 
 {
     pos[0] = 150.0f;
-    pos[1] = g.yres - 200.0f;
+    pos[1] = g.yres - 300.0f;
     vel[0] = vel[1] = 0.0f;
     //3 vertices of triangle-shaped rocket lander
     verts[0][0] = -10.0f;
@@ -564,6 +564,8 @@ int main()
 				lander2.init2(); // Reinitialize game state or similar logic
 				//Reset Alien Laser
 				ufoLaser.reset();
+				g.color = 1.0f;
+				reset_asteroids();
 				} else {
 					g.failed_landing = 0;
 					g.inContinue = false;
@@ -573,6 +575,8 @@ int main()
 					lander2.init2();
 					//Reset Alien Laser
 					ufoLaser.reset();
+					g.color = 1.0f;
+					reset_asteroids();
 				}
 			}
 			if (g.countdown == 0) {
