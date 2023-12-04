@@ -762,7 +762,7 @@ void render()
 	glPushMatrix();
 	glColor4f(1.0f, g.color, g.color, 1.0f);
 	g.color -= 0.001f;
-	if (g.color < 0) {
+	if (g.color < 0.0f) {
 		g.failed_landing = 1;
 	}
 	if (g.failed_landing) {
@@ -804,7 +804,7 @@ void render()
 		glPushMatrix();
 		glColor4f(1.0f, g.color, g.color, 1.0f);
 		g.color -= 0.001f;
-		if (g.color < 0) {
+		if (g.color < 0.0f) {
 			g.failed_landing = 1;
 		}
 	
