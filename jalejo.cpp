@@ -178,7 +178,7 @@ const std::vector<Bashteroid>& bashteroids)
                                     pow(spaceships[i]->pos[1] - bashteroid.y, 2));
 
                 if (distance < (spaceships[i]->radius + bashteroid.radius)) {
-                    return true;  // A collision is found with the Bashteroid.
+                    return true; //collision found
                 }
             }
         }
@@ -205,10 +205,10 @@ void renderBashteroid()
         glBegin(GL_LINES);
         for (int i = 0; i < 35; i++) {
             // Purple color
-            glColor3ub(128, 0, 128);  // RGB for purple
+            glColor3ub(128, 0, 128); 
             glVertex2f((rnd() * bashteroid.radius * 2) - bashteroid.radius, 0.0);
             // Blue color
-            glColor3ub(0, 0, 255);    // RGB for blue
+            glColor3ub(0, 0, 255); 
             glVertex2f(0.0 + rnd() * 14.0 - 7.0, (50.0 + rnd() * 50.0));
         }
         glEnd();
@@ -222,11 +222,11 @@ void renderBashteroid()
     
             float t = static_cast<float>(i) / 360.0f;
        
-            float red = (1.0f - t) * 128.0f;  // Red channel starts at 128 for purple and goes to 0 for blue
-            float green = 0.0f;                // Green channel stays at 0 for both purple and blue
-            float blue = t * 255.0f + (1.0f - t) * 128.0f; // Blue channel starts at 128 for purple and goes to 255 for blue
+            float red = (1.0f - t) * 128.0f;
+            float green = 0.0f;                
+            float blue = t * 255.0f + (1.0f - t) * 128.0f; 
 
-            glColor3f(red / 255.0f, green, blue / 255.0f); // Normalize the RGB values by dividing by 255
+            glColor3f(red / 255.0f, green, blue / 255.0f); 
             glVertex2f(x, y);
         }
         glEnd();

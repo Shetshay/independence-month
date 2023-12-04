@@ -148,6 +148,10 @@ void render_iceblock ()
 	if(lander.pos[0] <= lz.pos[0] + 20 && lander.pos[0] >= lz.pos[0] - 20 && lander.pos[1] <= lz.pos[1] + 20 && lander.pos[1] >= lz.pos[1] - 20) {
         g.color = 1.0f;
     }
+
+    if(lander2.pos[0] <= lz.pos[0] + 20 && lander2.pos[0] >= lz.pos[0] - 20 && lander2.pos[1] <= lz.pos[1] + 20 && lander2.pos[1] >= lz.pos[1] - 20) {
+        g.color = 1.0f;
+    }
     glColor3ub(173, 216, 230);
     glTranslatef(lz.pos[0], lz.pos[1], 0.0f);
     glBegin(GL_QUADS);

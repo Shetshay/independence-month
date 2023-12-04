@@ -1,10 +1,5 @@
 // modified by group 2 // andrew, justin, gus, john, jacob
-//
-//author: Gordon Griesel
-//date: Fall 2023
-//purpose: 1. learn OpenGL
-//         2. write an aerospace related program
-//         3. prepare to apply for a job at SpaceX
+// 12/3/2023
 
 #include <iostream>
 using namespace std;
@@ -81,7 +76,8 @@ const float GRAVITY = 0.055;
 // class and x11 functions 
 
 //ignore this --Justin----
-void testCircle(float centerX, float centerY, float radius) {
+void testCircle(float centerX, float centerY, float radius) 
+{
     int segments = 100; // More segments = smoother circle
     float angleStep = 2.0f * M_PI / segments;
 
@@ -101,35 +97,15 @@ void testCircle(float centerX, float centerY, float radius) {
     glEnd();
 }
 
-
-/*Global::Global() {
-    lives = 3;
-    xres = 400;
-    yres = 600;
-    failed_landing = 0;
-    landed = 0;
-    color_reset = 0;
-    accptl_angle = 90;
-    temp_velocity = 0.0;
-    showBox = false;
-    nxtlanderX1 = 200.0f; nxtlanderX2 = 117.0f; nxtlanderX3 = 140.0f; nxtlanderX4 = 160.0f; nxtlanderX5 = 180.0f;
-    nxtlanderY1 = 600.0f; nxtlander2Y = 600.0f; nxtlander3Y = 600.0f; nxtlander4Y = 600.0f; nxtlander5Y = 600.0f;
-    lb = 50.0f;
-    ub = 350.0f;
-}*/
-
-//Global g;
-
-
-
 // Definitions for Lander
-Lander::Lander() {
+Lander::Lander() 
+{
 	init();
 }
 
-
-void Lander::init() {
-    pos[0] = 200.0f;
+void Lander::init() 
+{
+	pos[0] = 200.0f;
     pos[1] = g.yres - 200.0f;
     vel[0] = vel[1] = 0.0f;
     //3 vertices of triangle-shaped rocket lander
@@ -149,7 +125,8 @@ void Lander::init() {
     radius = 10.0f;
 }
 
-void Lander::init2() {
+void Lander::init2() 
+{
     pos[0] = 150.0f;
     pos[1] = g.yres - 200.0f;
     vel[0] = vel[1] = 0.0f;
@@ -171,11 +148,13 @@ void Lander::init2() {
 }
 
 
-Display* X11_wrapper::getDisplay() const {
+Display* X11_wrapper::getDisplay() const 
+{
     return dpy;
 }
 
-Window X11_wrapper::getWindow() const {
+Window X11_wrapper::getWindow() const 
+{
     return win;
 }
 
@@ -335,7 +314,7 @@ int X11_wrapper::check_keys(XEvent *e)
         		g.inMenu = true;
 				g.inEndMenu = false;
     		}
-			}
+		}
 		switch (key) {
 			case XK_r:
 				//Key R was pressed
@@ -354,8 +333,8 @@ int X11_wrapper::check_keys(XEvent *e)
 				g.inscoreMenu = !g.inscoreMenu;
 				break;
 			case XK_Return: // 'Enter' key to select menu option
-            if (g.inMenu){
-				if (g.menuChoice == 0){
+            if (g.inMenu) {
+				if (g.menuChoice == 0) {
                     // Start the game
 					askForName(g.playerName);
 					g.setPlayerName(g.playerName);
@@ -371,13 +350,13 @@ int X11_wrapper::check_keys(XEvent *e)
 					lander.init();
 					lander2.init2();
 					reset_asteroids();
-                }else if (g.menuChoice == 2) {
+                } else if (g.menuChoice == 2) {
 					g.inscoreMenu = !g.inscoreMenu;
                 } else if (g.menuChoice == 3) {
                     // Quit the game
                     exit(0);
                 }
-				}else if (g.inEndMenu) {
+				} else if (g.inEndMenu) {
                     if (g.menuChoice == 0) {
                         /* Back to Main Menu
                         g.inEndMenu = false;
@@ -417,7 +396,7 @@ int X11_wrapper::check_keys(XEvent *e)
 		}
 		}
 		return 0;
-	}
+}
 
 X11_wrapper x11;
 // end of x11 function 
@@ -497,11 +476,11 @@ int main()
             render();
 
 		if (g.starsmoveback && !music.eventOccurred) {
-        	if(music.bgMusicPlaying) {
+        	if (music.bgMusicPlaying) {
             	alSourcePause(alSource);
             	music.bgMusicPlaying = false;
         	}
-        	if(!music.eventSoundPlaying) {
+        	if (!music.eventSoundPlaying) {
             	alSourcePlay(eventSource);
             	music.eventSoundPlaying = true;
         	}
@@ -513,7 +492,7 @@ int main()
             	alSourceStop(eventSource);
             	music.eventSoundPlaying = false;
     		}
-        	if(!music.bgMusicPlaying) {
+        	if (!music.bgMusicPlaying) {
             	alSourcePlay(alSource);
             	music.bgMusicPlaying = true;
         	}
@@ -563,20 +542,20 @@ int main()
 					countHighscore(true);
 				}	
 		   }
-        } else if(g.inMenu){
+        } else if (g.inMenu) {
 				lander.init();
 	      		reset_asteroids();	
 			//if inMenu true display and turn inMenu false
-			if(g.inscoreMenu){
+			if (g.inscoreMenu) {
 				displayHighScores();
-			}else{
+			} else {
 				handleMenu();
 			}
-	}else if(g.inContinue){
+		} else if (g.inContinue) {
 			renderContinueScreen();
 			//"c" is pressed/continue is chosen
-			if(g.yesContinue){
-				if(g.twoPlayer == true){
+			if (g.yesContinue) {
+				if (g.twoPlayer == true) {
 				g.failed_landing = 0;
 				g.inContinue = false;
 				secondaryIndicator.reset();
@@ -585,7 +564,7 @@ int main()
 				lander2.init2(); // Reinitialize game state or similar logic
 				//Reset Alien Laser
 				ufoLaser.reset();
-				}else{
+				} else {
 					g.failed_landing = 0;
 					g.inContinue = false;
 					secondaryIndicator.reset();
@@ -595,21 +574,19 @@ int main()
 					//Reset Alien Laser
 					ufoLaser.reset();
 				}
-
-
 			}
-			if(g.countdown == 0){
+			if (g.countdown == 0) {
 				g.inContinue = false;
         		g.inEndMenu = true;
 			}
-        }else if(g.inEndMenu){
-			if(g.inscoreMenu){
+        	} else if (g.inEndMenu) {
+			if (g.inscoreMenu) {
 				displayHighScores();
-			}else{
+			} else {
 				//countHighscore(false);
 				endMenu();
 			}	
-	}else if(g.paused == true){
+	} else if (g.paused == true) {
 			renderPauseScreen();
     	}
 		
@@ -661,10 +638,7 @@ void physics()
 	lander.pos[0] += lander.vel[0];
 	lander.pos[1] += lander.vel[1];
 	lander.vel[1] -= GRAVITY;
-
-
 	//lz.pos[0] += 0.6f;
-
 	//apply thrust
 	//convert angle to radians...
 	float ang = ((lander.angle+90.0) / 360.0) * (3.14159 * 2.0);
@@ -684,7 +658,7 @@ void physics()
 		lander.angle -= 1.5;
 
 // two player mode bool
-	if(g.twoPlayer){
+	if (g.twoPlayer) {
 		lander2.pos[0] += lander2.vel[0];
 		lander2.pos[1] += lander2.vel[1];
 		lander2.vel[1] -= GRAVITY;
@@ -730,7 +704,6 @@ void render()
 {
 
 	glClear(GL_COLOR_BUFFER_BIT);
-
 	
 	render_space_color();
 	render_stars();
@@ -742,18 +715,13 @@ void render()
 	r.bot = g.yres - 50;
     r.left = 10;
 
-
-
-
-
-
 		ggprint13(&r, 20, 0x0055ff55, "HIGH SCORE IS: %i", countHighscore(false));
 		//r.bot = 550;
     	ggprint13(&r, 20, 0x0055ff55, "Player: %s", g.playerName.c_str());
 		g.tempHighscore = g.highscore;
 
 	/*stats box from gordons lab*/
-    if(g.showBox){
+    if (g.showBox) {
 	    //draw a gray box 
 	    glColor3ub(100,100,100);
 	    glPushMatrix();
@@ -800,10 +768,14 @@ void render()
 
 	// 	Draw Lander
 	glPushMatrix();
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // Set initial color to white with full opacity
+	glColor4f(1.0f, g.color, g.color, 1.0f);
+	g.color -= 0.001f;
+	if (g.color < 0) {
+		g.failed_landing = 1;
+	}
 	if (g.failed_landing) {
     	// Color red
-    	glColor4f(1.0f, 0.0f, 0.0f, 0.0f);
+    	glColor3f(1.0f, 0.0f, 0.0f);
 	}
 
 	glTranslatef(lander.pos[0], lander.pos[1], 0.0f);
@@ -835,9 +807,14 @@ void render()
 	}
 	glPopMatrix();
 
-	if(g.twoPlayer){
+	if (g.twoPlayer) {
 		glPushMatrix();
-		glColor3ub(250, 250, 250);
+		glColor4f(1.0f, g.color, g.color, 1.0f);
+		g.color -= 0.001f;
+		if (g.color < 0) {
+			g.failed_landing = 1;
+		}
+	
 		if (g.failed_landing) {
 			glColor3ub(250, 0, 0); //Red color USLEEP WHILE LOOP TO INDICATE LIFE LOST
 		}
@@ -853,7 +830,7 @@ void render()
 		glColor3f(1.0f, 0.0f, 0.0f);
 		glBegin(GL_TRIANGLES);
 		for (int i = 0; i < 3; i++) {
-		glVertex2f(lander.windowVerts[i][0], lander.windowVerts[i][1]);
+			glVertex2f(lander.windowVerts[i][0], lander.windowVerts[i][1]);
 		}
 		glEnd();
 		//Lander thrust
@@ -902,7 +879,7 @@ void render()
         	radius += 150.0f; 
 		}
 	}
-	testCircle(lander.pos[0], lander.pos[1], lander.radius);
+	//testCircle(lander.pos[0], lander.pos[1], lander.radius);
 }
 
 
