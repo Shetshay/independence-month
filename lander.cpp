@@ -759,7 +759,6 @@ void render()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// 	Draw Lander only when g.failed_landing is false
-	if(g.failed_landing == false){
 	glPushMatrix();
 	glColor4f(1.0f, g.color, g.color, 1.0f);
 	g.color -= 0.001f;
@@ -799,7 +798,8 @@ void render()
 		glEnd();
 	}
 	glPopMatrix();
-	}
+
+
 	if (g.twoPlayer) {
 		glPushMatrix();
 		glColor4f(1.0f, g.color, g.color, 1.0f);
