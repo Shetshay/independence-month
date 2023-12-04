@@ -358,19 +358,7 @@ int X11_wrapper::check_keys(XEvent *e)
                 }
 				} else if (g.inEndMenu) {
                     if (g.menuChoice == 0) {
-                        /* Back to Main Menu
-                        g.inEndMenu = false;
-						if(g.twoPlayer) {
-							//init_asteroids();
-							reset_asteroids();
-                        	lander.init();
-							lander2.init2();
-						} else {
-							lander.init();
-							reset_asteroids();
-							//init_asteroids();
-						}
-						*/
+                        // Back to Main Menu
 						g.inMenu = true;
 						g.inEndMenu = false;
 						g.paused = false;
@@ -509,7 +497,7 @@ int main()
 
 				glColor3ub(250, 0, 0); 
 				failureIndicator.drawExplosion(lander.pos[0], lander.pos[1]);
-				secondaryIndicator.drawFragments();  
+				//secondaryIndicator.drawFragments();  
 
 
 				if (!failureIndicator.isExploding) {
@@ -529,12 +517,12 @@ int main()
 						radius += 150.0f; 
 				}
 				}
-					sendHighScore(g.playerName, countHighscore(false));
 
 				if(timer(3)){
 					//g.inEndMenu = true;
 					g.inContinue = true;
 					g.failed_landing = 0;
+					sendHighScore(g.playerName, countHighscore(false));
 					secondaryIndicator.reset();
 					//Reset Alien Laser
 					failureIndicator.isExploding = false;
@@ -770,7 +758,8 @@ void render()
 	// makes the shrimp transparent
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// 	Draw Lander
+	// 	Draw Lander only when g.failed_landing is false
+	if(g.failed_landing == false){
 	glPushMatrix();
 	glColor4f(1.0f, g.color, g.color, 1.0f);
 	g.color -= 0.001f;
@@ -810,7 +799,7 @@ void render()
 		glEnd();
 	}
 	glPopMatrix();
-
+	}
 	if (g.twoPlayer) {
 		glPushMatrix();
 		glColor4f(1.0f, g.color, g.color, 1.0f);
@@ -883,7 +872,6 @@ void render()
         	radius += 150.0f; 
 		}
 	}
-	//testCircle(lander.pos[0], lander.pos[1], lander.radius);
 }
 
 
